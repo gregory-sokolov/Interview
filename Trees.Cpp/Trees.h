@@ -125,7 +125,7 @@ public:
 
 	/// Breadth-first traversal (BFT)
 	template<typename V>
-	void TraverseInBreadth(V& visit) const
+	void Bft(V& visit) const
 	{
 		TreeNode<T>* tn = root;
 		std::queue<TreeNode<T>*> qtn;
