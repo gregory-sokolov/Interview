@@ -102,7 +102,7 @@ public:
 		auto vf = vi != vertices.cend() ? *vi : add(from);
 		vi = std::find_if(vertices.begin(), vertices.end(), [&to](GraphVertex<T, C>* v) { return v->key == to; });
 		auto vt = vi != vertices.cend() ? *vi : add(to);
-		
+
 		auto duplicate = find_if(vf->neighbors.begin(), vf->neighbors.end(),
 			[&vt](std::pair<GraphVertex<T, C>*, C> nb) { return nb.first->key == vt->key; });
 		if (duplicate == vf->neighbors.cend() || duplicate->second != cost)

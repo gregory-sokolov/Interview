@@ -3,7 +3,9 @@
 #include <list>
 #include <unordered_map>
 
-// LRU Cache
+///
+/// LRU Cache
+///
 template<typename K, typename T>
 class LruCache
 {
