@@ -1,6 +1,6 @@
-// Interview.cpp : Defines the entry point for the console application.
+// 
+// C++: Exercises
 //
-
 #include "stdafx.h"
 
 #include <cstdlib>
@@ -19,7 +19,7 @@
 #include <cmath>
 #include <ctime>
 
-#include "Interview.h"
+#include "Cpp.h"
 
 using namespace std;
 
