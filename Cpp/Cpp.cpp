@@ -63,6 +63,7 @@ int _tmain(int argc, _TCHAR* argv[])
         auto ax = rx;
         auto& arx = x;
         const auto& arcx = x;
+		cout << endl;
 
 		// STL: std::transform one vector to another
 		vector<pair<int, int>> vpii = { make_pair(1, 2), make_pair(3, 1), make_pair(5, 4), make_pair(7, 8) };

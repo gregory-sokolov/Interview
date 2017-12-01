@@ -2,6 +2,7 @@
 
 #include <utility>
 #include <vector>
+#include <algorithm>
 
 ///
 /// EPI. Chapter 11. Searching
@@ -29,5 +30,56 @@ public:
 		}
 
 		return std::make_pair(max1, max2);
+	}
+
+	/// Yandex. Find number x in an ascendingly sorted matrix m*n.
+	/// Scans all rows with binary search.
+	/// Time: O(m*log(n)), space: O(1)
+	static std::pair<int, int> SearchSortedMatrixBs(const std::vector<std::vector<int>>& a, const int x)
+	{
+		auto result = std::make_pair(-1, -1);
+		for (unsigned i = 0; i < a.size(); ++i)
+		{
+			auto rx = std::lower_bound(a[i].cbegin(), a[i].cend(), x);
+			if (rx != a[i].cend() && *rx == x)
+			{
+				result = std::make_pair(i, rx - a[i].cbegin());
+				break;
+			}
+		}
+
+		return result;
+	}
+
+	/// EPI 11.10. Search in a sorted 2D-array m*n.
+	/// Compares x with the row ending element a[r][c - 1]:
+	/// - a[r][c - 1] == x - result is found,
+	/// - a[r][c - 1] < x - eliminate the column ñ - 1 by decrementing the column counter,
+	/// - a[r][c - 1] > x - eliminate the row r by incrementing the row counter
+	/// The resulting scan worst case: T(n) = 2d - 1, where d - diagonal of the matrix (diagonal search).
+	/// Time: O(d), space: O(1)
+	static std::pair<int, int> SearchSortedMatrixDs(const std::vector<std::vector<int>>& a, const int x)
+	{
+		auto result = std::make_pair(-1, -1);
+
+		int row = 0, col = a[0].size() - 1;
+		while (row < a.size() && col >= 0)
+		{
+			if (a[row][col] == x)
+			{
+				result = std::make_pair(row, col);
+				break;
+			}
+			else if (a[row][col] > x)
+			{
+				--col;
+			}
+			else // a[row][col] < x
+			{
+				++row;
+			}
+		}
+
+		return result;
 	}
 };
