@@ -65,6 +65,21 @@ int _tmain(int argc, _TCHAR* argv[])
         const auto& arcx = x;
 		cout << endl;
 
+		// STL: working with matrixes
+		int mxm = 4, mxn = 3;
+		vector<vector<unsigned>> mx01(mxm, vector<unsigned>(mxn));
+		cout << "Matrix (" << mxm << "*" << mxn << "):" << endl;
+		for (auto&& row : mx01)
+		{
+			for (auto it = row.cbegin(); it != row.cend(); ++it)
+			{
+				// setiosflags(ios::right) << setw(2) << setfill('0')
+				cout << *it << (it != row.cend() - 1 ? " " : "");
+			}
+			cout << endl;
+		}
+		cout << endl;
+
 		// STL: std::transform one vector to another
 		vector<pair<int, int>> vpii = { make_pair(1, 2), make_pair(3, 1), make_pair(5, 4), make_pair(7, 8) };
 		vector<int> vt;
@@ -106,7 +121,6 @@ int _tmain(int argc, _TCHAR* argv[])
 		cout << "Value: 21, lower_bound: [" << bs6 - vi01.cbegin() << "]" << endl;
 		cout << "Value: 4, upper_bound: [" << bs7 - vi01.cbegin() << "]" << endl;
 		cout << "Value: 21, upper_bound: [" << bs8 - vi01.cbegin() << "]" << endl;
-		cout << endl;
     }
     cout << endl;
 

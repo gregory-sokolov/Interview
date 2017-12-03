@@ -31,7 +31,7 @@ namespace Combinatorics.Cs
 			foreach (var test in testMss)
 			{
 				Console.WriteLine((count++).ToString().PadLeft(2, '0') + ": [" + string.Join(", ", test) + "]");
-				var result = solutions.MaxSumSubarray(test);
+				var result = solutions.Mssa(test);
 				Console.WriteLine("    {0} [{1}, {2}]", result.Key, result.Value.Key, result.Value.Value);
 			}
 			Console.WriteLine();
@@ -52,7 +52,7 @@ namespace Combinatorics.Cs
 			foreach (var test in testMps)
 			{
 				Console.WriteLine((count++).ToString().PadLeft(2, '0') + ": [" + string.Join(", ", test) + "]");
-				var result = solutions.MaxProductSubarray(test);
+				var result = solutions.Mpsa(test);
 				Console.WriteLine("    {0} [{1}, {2}]", result.Key, result.Value.Key, result.Value.Value);
 			}
 			Console.WriteLine();
@@ -74,8 +74,28 @@ namespace Combinatorics.Cs
 			foreach (var test in testLnds)
 			{
 				Console.WriteLine("Test " + (count++).ToString().PadLeft(2, '0') + ": [" + string.Join(", ", test) + "]");
-				var result = solutions.Lnds(test);
+				var result = solutions.Lndss(test);
 				Console.WriteLine("Result: {0}", result.Count > 0 ? "[" + string.Join(", ", result) + "]": "-");
+				Console.WriteLine();
+			}
+			Console.WriteLine();
+
+			Console.WriteLine("== Longest Common Subsequence (LCSS) ==");
+			var testLcss = new Dictionary<string, string>
+			{
+				{ string.Empty, string.Empty },
+				{ "AGGTAB", "GXTXAYB" },
+				{ "hello world", "hlwrld" },
+				{ "abcdefghijklmn", "oprstuvwxyz" }
+			};
+			count = 1;
+			foreach (var test in testLcss)
+			{
+				Console.WriteLine("Test " + (count++).ToString().PadLeft(2, '0') + ":");
+				Console.WriteLine(test.Key);
+				Console.WriteLine(test.Value);
+				var result = solutions.Lcss(test.Key, test.Value);
+				Console.WriteLine("Result ({0}): {1}", result.Length, !string.IsNullOrWhiteSpace(result) ? result : "-");
 				Console.WriteLine();
 			}
 			Console.WriteLine();

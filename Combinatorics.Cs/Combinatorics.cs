@@ -16,7 +16,7 @@ namespace Combinatorics.Cs
 		/// Variables: tracking max sum (ts), overall max sum (ms) and related subarray indexes (mi, mj).
 		/// Time: O(n), space: O(1)
 		/// </summary>
-		public KeyValuePair<int, KeyValuePair<int, int>> MaxSumSubarray(IList<int> a)
+		public KeyValuePair<int, KeyValuePair<int, int>> Mssa(IList<int> a)
 		{
 			if (a == null || a.Count == 0)
 			{
@@ -59,7 +59,7 @@ namespace Combinatorics.Cs
 		/// Range search is based on rolling back each maximum candidate by dividing it consequently by previous array items.
 		/// Time: O(n), space: O(1)
 		/// </summary>
-		public int MaxProductSubarrayOriginal(IList<int> a)
+		public int MpsaOriginal(IList<int> a)
 		{
 			int pmax = a[0], pmin = a[0], result = a[0];
 			for (var i = 1; i < a.Count; ++i)
@@ -80,7 +80,7 @@ namespace Combinatorics.Cs
 			return result;
 		}
 		/// Version with subarray range
-		public KeyValuePair<int, KeyValuePair<int, int>> MaxProductSubarray(IList<int> a)
+		public KeyValuePair<int, KeyValuePair<int, int>> Mpsa(IList<int> a)
 		{
 			if (a == null || a.Count == 0)
 			{
@@ -133,7 +133,7 @@ namespace Combinatorics.Cs
 		/// To find the length only, it's enough just to keep the array of endings.
 		/// Time: O(n*log(n)), space: O(n)
 		/// </summary>
-		public IList<int> Lnds(IList<int> a)
+		public IList<int> Lndss(IList<int> a)
 		{
 			if (a == null || a.Count == 0)
 			{
@@ -182,6 +182,54 @@ namespace Combinatorics.Cs
 			{
 				Console.WriteLine("  " + string.Join("-", list));
 			}
+		}
+
+		/// Yandex. Longest Common Subsequence (LCSS).
+		/// Returns LCSS of two strings with lengths m and n.
+		/// Classical DP algorithm based on tabular memoization, where we build the matrix of matches.
+		/// Time: O(m*n), space: O(n) for matrix
+		public string Lcss(string s1, string s2)
+		{
+			if (string.IsNullOrWhiteSpace(s1) || string.IsNullOrWhiteSpace(s2))
+			{
+				return string.Empty;
+			}
+
+			var M = new int[s1.Length + 1, s2.Length + 1];
+			for (var i = 1; i <= s1.Length; ++i)
+			{
+				for (var j = 1; j <= s2.Length; ++j)
+				{
+					if (s1[i - 1] == s2[j - 1])
+					{
+						M[i, j] = 1 + M[i - 1, j - 1];
+					}
+					else
+					{
+						M[i, j] = Math.Max(M[i - 1, j], M[i, j - 1]);
+					}
+				}
+			}
+
+			var result = string.Empty;
+			for (int i = s1.Length, j = s2.Length; i > 0 && j > 0;)
+			{
+				if (s1[i - 1] == s2[j - 1])
+				{
+					result = s1[i - 1] + result;
+					--i; --j;
+				}
+				else if (M[i - 1, j] > M[i, j - 1])
+				{
+					--i;
+				}
+				else
+				{
+					--j;
+				}
+			}
+
+			return result;
 		}
 	}
 }

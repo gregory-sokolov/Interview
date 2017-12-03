@@ -1,5 +1,6 @@
 #pragma once
 
+#include <string>
 #include <vector>
 #include <deque>
 #include <algorithm>
@@ -35,10 +36,10 @@ public:
 		}
 	}
 
-	/// EPI 15.5.1. Max sum subarray problem (MSS).
+	/// EPI 15.5.1. Max sum subarray problem (MSSA).
 	/// Finds max sum subarray using modified Kadane's algorithm (dynamic programming).
 	/// Handles positive and negative numbers.
-	static std::pair<long long, std::pair<unsigned, unsigned>> MaxSumSubarray(const std::vector<int>& input)
+	static std::pair<long long, std::pair<unsigned, unsigned>> Mssa(const std::vector<int>& input)
 	{
 		long long max = input[0], current = input[0];
 		unsigned start = 0, end = 0, max_start = 0, max_end = 0;
@@ -66,12 +67,12 @@ public:
 		return std::make_pair(max, std::make_pair(max_start, max_end));
 	}
 
-	/// EPI 15.7. Longest sum subarray problem (LSS)
+	/// EPI 15.7. Longest sum subarray problem (LSSA)
 	/// Finds all subarrays whose sum equals or less than the target number.
 	/// Moves the "window" with the sum through the entire array, removing only leading items if sum exceeds target.
-	/// When encountered zeroes, runs a sort of "greedy" search to generate all required subsequences.
+	/// When encountering zeroes, runs a sort of "greedy" search to generate all required subsequences.
 	/// Time: O(n)
-	static void LongestSumSubarray(const std::vector<int>& input, long long target,
+	static void Lssa(const std::vector<int>& input, long long target,
 		std::vector<std::deque<std::pair<unsigned, int>>>& results)
 	{
 		std::deque<std::pair<unsigned, int>> dq;
@@ -158,6 +159,54 @@ public:
 				}
 			}
 		}
+	}
+
+	/// Yandex. Longest Common Subsequence (LCSS).
+	/// Returns LCSS of two strings with lengths m and n.
+	/// Classical DP algorithm based on tabular memoization, where we build the matrix of matches.
+	/// Time: O(m*n), space: O(n) for matrix
+	static std::string Lcss(std::string s1, std::string s2)
+	{
+		if (s1.size() == 0 || s2.size() == 0)
+		{
+			return "";
+		}
+
+		vector<vector<unsigned>> M(s1.size() + 1, vector<unsigned>(s2.size() + 1));
+		for (unsigned i = 1; i <= s1.size(); ++i)
+		{
+			for (unsigned j = 1; j <= s2.size(); ++j)
+			{
+				if (s1[i - 1] == s2[j - 1])
+				{
+					M[i][j] = 1 + M[i - 1][j - 1];
+				}
+				else
+				{
+					M[i][j] = std::max(M[i - 1][j], M[i][j - 1]);
+				}
+			}
+		}
+
+		std::string result;
+		for (unsigned i = s1.size(), j = s2.size(); i > 0 && j > 0;)
+		{
+			if (s1[i - 1] == s2[j - 1])
+			{
+				result = s1[i - 1] + result;
+				--i; --j;
+			}
+			else if (M[i - 1][j] > M[i][j - 1])
+			{
+				--i;
+			}
+			else
+			{
+				--j;
+			}
+		}
+
+		return result;
 	}
 };
 

@@ -5,6 +5,7 @@
 #include "stdafx.h"
 
 #include <iostream>
+#include <iomanip>
 #include <iterator>
 #include <string>
 #include <vector>
@@ -48,7 +49,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	}
 	cout << endl;
 
-	cout << "- Sequences to sum -" << endl;
+	cout << "- Longest sum subarray (LSSA) -" << endl;
 	{
 		vector<int> vi1 = { 7, 3, 5, 2, 10, 5, 0, 15, 0, 0, 12, 3 };
 		//vector<int> vi2 = { 1, 2, 2, 0, 5, -5, 0, 8, -8, 1, 7, -3 };
@@ -62,7 +63,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		// long long sum = 0;
 		cout << "Sum to match: " << sum << endl;
 		vector<deque<pair<unsigned, int>>> matches;
-		Combinatorics::LongestSumSubarray(vi1, sum, matches);
+		Combinatorics::Lssa(vi1, sum, matches);
 		cout << "Sequences: " << (matches.size() != 0 ? to_string(matches.size()) : "not found") << endl;
 		for (auto mi = matches.begin(); mi != matches.end(); ++mi)
 		{
@@ -86,14 +87,14 @@ int _tmain(int argc, _TCHAR* argv[])
 			cout << *it << (it != vi2.end() - 1 ? ", " : "");
 		}
 		cout << endl;
-		auto kadane = Combinatorics::MaxSumSubarray(vi2);
+		auto kadane = Combinatorics::Mssa(vi2);
 		cout << "Max sum subarray (Kadane's): " << kadane.first << ", [" <<
 			kadane.second.first << ", " << kadane.second.second << "]";
 		cout << endl;
 	}
 	cout << endl;
 
-	cout << "- Combinations: three-sum -" << endl;
+	cout << "- Custom LSSA: three-sum -" << endl;
 	{
 		vector<int> vi3 = { 1, 2, 2, 5, -5, 8, 8, 1, 7, -3 };
 		vector<int> vi4(vi3);
@@ -124,6 +125,34 @@ int _tmain(int argc, _TCHAR* argv[])
 			{
 				cout << sum << (sum < high - 1 ? ", " : "");
 			}
+		}
+		cout << endl;
+	}
+	cout << endl;
+
+	cout << "- Longest common subsequence (LCSS) -" << endl;
+	{
+		vector<pair<string, string>> testLcss = 
+		{ 
+			{ "", "" },
+			{ "ABC", "" },
+			{ "", "abc" },
+			{ "AGGTAB", "GXTXAYB" },
+			{ "hello world", "hlwrld" },
+			{ "abcdefghijklmn", "oprstuvwxyz" },
+			{ "JATAXGPDMYLDXUKDNFTPRRUMBMEMLROWRHWOQNTCLGHLCRORZHGSBAECPLPCCDYVNXMDMFHAOPLQ", "IZKHIQBJTIMITDKXIKSXJECWMKWABHSL" }
+
+		};
+		unsigned i = 0;
+		for (auto&& test : testLcss)
+		{
+			auto result = Combinatorics::Lcss(test.first, test.second);
+
+			cout << "Test " << setiosflags(ios::right) << setw(2) << setfill('0') << ++i << ":" << endl;
+			cout << "(" << test.first.size() << "): " << test.first << endl;
+			cout << "(" << test.second.size() << "): " << test.second << endl;
+			cout << "Result (" << result.size() << "): " << (result.size() > 0 ? result : "-") << endl;
+			cout << endl;
 		}
 		cout << endl;
 	}
