@@ -64,32 +64,40 @@ int _tmain(int argc, _TCHAR* argv[])
 		cout << "Sum to match: " << sum << endl;
 		vector<deque<pair<unsigned, int>>> matches;
 		Combinatorics::Lssa(vi1, sum, matches);
-		cout << "Sequences: " << (matches.size() != 0 ? to_string(matches.size()) : "not found") << endl;
-		for (auto mi = matches.begin(); mi != matches.end(); ++mi)
+		cout << "Sequences" << (matches.size() != 0 ? " ("+ to_string(matches.size()) + "): " : ": not found") << endl;
+		deque<pair<unsigned, int>> result;
+		if (!matches.empty())
 		{
-			cout << "[";
-			for (auto it = mi->cbegin(); it != mi->cend(); ++it)
+			for (auto mi = matches.begin(); mi != matches.end(); ++mi)
 			{
-				cout << it->first << (it != mi->end() - 1 ? "," : "]: ");
-			}
-			for (auto it = mi->cbegin(); it != mi->cend(); ++it)
-			{
-				cout << it->second << (it != mi->end() - 1 ? " " : "");
-			}
-			cout << (mi != matches.end() - 1 ? ", " : "");
-		}
-		cout << endl << endl;
+				cout << "[";
+				for (auto it = mi->cbegin(); it != mi->cend(); ++it)
+				{
+					cout << it->first << (it != mi->end() - 1 ? "," : "]: ");
+				}
+				for (auto it = mi->cbegin(); it != mi->cend(); ++it)
+				{
+					cout << it->second << (it != mi->end() - 1 ? " " : "");
+				}
+				cout << (mi != matches.end() - 1 ? ", " : "");
 
-		vector<int> vi2 = { -2, 2, 0, 0, 5, -5, 0, 1, -4, -1, 0, -7 };
-		cout << "Input array: ";
-		for (auto it = vi2.cbegin(); it != vi2.cend(); ++it)
-		{
-			cout << *it << (it != vi2.end() - 1 ? ", " : "");
+				if (mi->size() > result.size())
+				{
+					result = *mi;
+				}
+			}
+			cout << endl;
+
+			cout << "Result: [";
+			for (auto it = result.cbegin(); it != result.cend(); ++it)
+			{
+				cout << it->first << (it != result.end() - 1 ? "," : "]: ");
+			}
+			for (auto it = result.cbegin(); it != result.cend(); ++it)
+			{
+				cout << it->second << (it != result.end() - 1 ? " " : "");
+			}
 		}
-		cout << endl;
-		auto kadane = Combinatorics::Mssa(vi2);
-		cout << "Max sum subarray (Kadane's): " << kadane.first << ", [" <<
-			kadane.second.first << ", " << kadane.second.second << "]";
 		cout << endl;
 	}
 	cout << endl;
