@@ -13,6 +13,7 @@ class Combinatorics
 public:
 	/// EPI 6.10. Permuting the elements of an array
 	/// Generates all permutations P(n) recursively.
+	/// Time: O(n!), space: O(1) - in-place swap
 	template<typename T>
 	static void PermutationsR(T* input, unsigned size, unsigned length, std::vector<std::vector<T>>& results)
 	{
@@ -161,9 +162,10 @@ public:
 		}
 	}
 
-	/// Yandex. Longest Common Subsequence (LCSS).
+	/// EPI 15.5.3. Longest Common Subsequence (LCSS).
 	/// Returns LCSS of two strings with lengths m and n.
 	/// Classical DP algorithm based on tabular memoization, where we build the matrix of matches.
+	/// If there is no match, the maximum of the previous-top and previous-left elements is used.
 	/// Time: O(m*n), space: O(n) for matrix
 	static std::string Lcss(std::string s1, std::string s2)
 	{
