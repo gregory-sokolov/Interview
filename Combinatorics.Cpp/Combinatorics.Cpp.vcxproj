@@ -23,7 +23,7 @@
     <ProjectGuid>{A8812BF4-784C-4DD7-96C4-1D6721E863C7}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Combinatorics.CPP</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
     <ProjectName>Combinatorics.Cpp</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

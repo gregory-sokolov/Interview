@@ -23,7 +23,7 @@
     <ProjectGuid>{C36BC0A4-957B-40AD-82EF-BFA0654D4106}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Strings.CPP</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
     <ProjectName>Strings.Cpp</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
