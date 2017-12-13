@@ -1,8 +1,10 @@
 #pragma once
 
+#include <iostream>
 #include <limits>
 #include <queue>
 #include <deque>
+#include <algorithm>
 
 // Tree node
 template<typename T>
@@ -98,7 +100,7 @@ public:
 		return tn ? true : false;
 	}
 
-	/// Depth-first traversal (DFT)
+	/// Depth-first search/traversal (DFS)
 	template<typename V>
 	T* Dfs(V& visit) const
 	{
@@ -123,9 +125,10 @@ public:
 		postorder_r<V>(root, visit);
 	}
 
-	/// Breadth-first traversal (BFT)
+	/// Breadth-first search/traversal (BFS).
+	/// Classical BFS with single node visiting.
 	template<typename V>
-	void Bft(V& visit) const
+	void Bfs(V& visit) const
 	{
 		TreeNode<T>* tn = root;
 		std::queue<TreeNode<T>*> qtn;
@@ -136,12 +139,42 @@ public:
 			tn = qtn.front();
 			qtn.pop();
 
-			if (tn != NULL)
+			if (tn != nullptr)
 			{
 				visit(tn->data);
-
 				qtn.push(tn->left);
 				qtn.push(tn->right);
+			}
+		}
+	}
+
+	/// Breadth-first traversal with by-level visiting (BFSL)
+	template<typename V>
+	void Bfsl(V& visit) const
+	{
+		std::queue<TreeNode<T>*> qtn({ root });
+		std::vector<TreeNode<T>*> vlv = { root };
+		visit(vlv);
+		vlv.clear();
+
+		while (!qtn.empty())
+		{
+			TreeNode<T>* tn = qtn.front();
+			qtn.pop();
+			if (tn != nullptr)
+			{
+				vlv.push_back(tn->left);
+				vlv.push_back(tn->right);
+			}
+
+			if (qtn.empty() && !vlv.empty())
+			{
+				visit(vlv);
+				for (auto&& vi : vlv)
+				{
+					qtn.push(vi);
+				}
+				vlv.clear();
 			}
 		}
 	}
@@ -291,6 +324,7 @@ private:
 		return result;
 	}
 
+	/// Builds all paths in-place into deque in DFS style
 	template<typename V>
 	void allPaths_r(TreeNode<T>* node, std::deque<T>& dtn, V& visit) const
 	{

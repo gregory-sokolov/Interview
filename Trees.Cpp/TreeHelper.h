@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Trees.h"
+
 // Tree node printer
 template<typename T>
 class NodePrinter
@@ -13,7 +15,7 @@ public:
 
 	void print()
 	{
-		for (std::vector<T>::const_iterator it = _vn.begin(); it != _vn.end(); ++it)
+		for (auto it = _vn.cbegin(); it != _vn.cend(); ++it)
 		{
 			std::cout << *it << (it != _vn.end() - 1 ? "-" : "");
 		}
@@ -22,6 +24,28 @@ public:
 
 private:
 	std::vector<T> _vn;
+};
+
+// Tree level printer
+template<typename T>
+class LevelPrinter
+{
+public:
+	void operator()(const std::vector<TreeNode<T>*>& vtn)
+	{
+		std::string level;
+		bool nonEmpty = false;
+		for (auto it = vtn.cbegin(); it != vtn.cend(); ++it)
+		{
+			level += *it != nullptr ? std::to_string((*it)->data) : " ";
+			level += it != vtn.cend() - 1 ? "-" : "";
+			nonEmpty = nonEmpty || *it != nullptr;
+		}
+		if (nonEmpty)
+		{
+			std::cout << level << std::endl;
+		}
+	}
 };
 
 // Tree path holder 
