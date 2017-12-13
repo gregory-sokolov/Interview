@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <deque>
+#include <unordered_set>
 #include <algorithm>
 
 ///
@@ -106,7 +107,31 @@ public:
 		}
 	}
 
-	/// Returns true if an input vector contains any 3 elements that sums to given value.
+	/// Yandex. 2-sum problem
+	/// Returns true if an input vector contains any 2 elements that sum up to the given value.
+	/// Places all the vector to the hash table for fast further searches.
+	/// Iterates through the array, calculates the diff beetween sum and a[i] and finds it in the hash.
+	/// If such diff exists, we have found the target pair of numbers.
+	/// Time: O(n), space: O(n)
+	static bool HasTwoSum(const std::vector<int>& a, const int sum)
+	{
+		bool result = false;
+		std::unordered_set<int> hash(a.cbegin(), a.cend());
+		for (unsigned i = 0; i < a.size(); ++i)
+		{
+			int d = sum - a[i];
+			auto found = hash.find(d);
+			if (found != hash.cend())
+			{
+				result = true;
+				break;
+			}
+		}
+
+		return result;
+	}
+
+	/// Returns true if an input vector contains any 3 elements that sum up to the given value.
 	/// Based on "greedy" algorithm from EPI, that uses solution of fast 2-sum search in O(n).
 	/// Time: O(n*log(n)) + O(n^2) = O(n^2), space: O(1)
 	static bool HasThreeSum(std::vector<int>& input, const int sum)

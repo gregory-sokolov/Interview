@@ -102,7 +102,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	}
 	cout << endl;
 
-	cout << "- Custom LSSA: three-sum -" << endl;
+	cout << "- Custom LSSA: two- and three-sum -" << endl;
 	{
 		vector<int> vi3 = { 1, 2, 2, 5, -5, 8, 8, 1, 7, -3 };
 		vector<int> vi4(vi3);
@@ -112,8 +112,10 @@ int _tmain(int argc, _TCHAR* argv[])
 		for (auto&& sum : { 10, 23 })
 		{
 			cout << "Sum to match: " << sum << endl;
-			auto found = Combinatorics::HasThreeSum(vi4, sum);
-			cout << "Any combination found: " << (found ? "true" : "false") << endl;
+			auto found2 = Combinatorics::HasTwoSum(vi4, sum);
+			auto found3 = Combinatorics::HasThreeSum(vi4, sum);
+			cout << "Any 2-combination found: " << (found2 ? "true" : "false") << endl;
+			cout << "Any 3-combination found: " << (found3 ? "true" : "false") << endl;
 			vector<vector<int>> matches;
 			Combinatorics::ThreeSumCombinations(vi3, sum, matches);
 			cout << "All combinations: " << matches.size() << endl;
