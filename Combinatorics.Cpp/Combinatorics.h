@@ -1,5 +1,6 @@
 #pragma once
 
+#include <iostream>
 #include <string>
 #include <vector>
 #include <deque>
@@ -38,35 +39,228 @@ public:
 		}
 	}
 
-	/// EPI 15.5.1. Max sum subarray problem (MSSA).
-	/// Finds max sum subarray using modified Kadane's algorithm (dynamic programming).
-	/// Handles positive and negative numbers.
-	static std::pair<long long, std::pair<unsigned, unsigned>> Mssa(const std::vector<int>& input)
+	/// EPI 15.5.1. Max sum subarray (MSSA).
+	/// Returns subarray with maximum sum using Kadane's algorithm (Dynamic Programming (DP)).
+	/// Kadane's algorithm is based on the fact: max_sum(i + 1) = max(max_sum(i), a[i]).
+	/// We can start from trivial case with max_sum=a[0](0,0) and infer further sums using memoization in DP.
+	/// Variables: tracking max sum (ts), overall max sum (ms) and related subarray indexes (mi, mj).
+	/// Time: O(n), space: O(1)
+	static std::pair<int, std::pair<int, int>> Mssa(const std::vector<int>& a)
 	{
-		long long max = input[0], current = input[0];
-		unsigned start = 0, end = 0, max_start = 0, max_end = 0;
-		for (unsigned i = 0; i < input.size(); ++i)
+		if (a.size() == 0)
 		{
-			if (input[i] > current + input[i])
+			return std::make_pair(-1, std::make_pair(-1, -1));
+		}
+
+		int ts = a[0], ms = a[0];
+		int ti = 0, mi = 0, mj = 0;
+		for (unsigned i = 1; i < a.size(); ++i)
+		{
+			int sum = ts + a[i];
+			if (a[i] > sum)
 			{
-				start = end = i;
-				current = input[i];
+				ts = a[i];
+				ti = i;
 			}
 			else
 			{
-				end = i;
-				current = current + input[i];
+				ts = sum;
 			}
 
-			if (current > max)
+			if (ts > ms)
 			{
-				max = current;
-				max_start = start;
-				max_end = end;
+				ms = ts;
+				mi = ti;
+				mj = i;
 			}
 		}
 
-		return std::make_pair(max, std::make_pair(max_start, max_end));
+		return std::make_pair(ms, std::make_pair(mi, mj));
+	}
+
+	/// EPI 15.5.2. Max product subarray (MPSA).
+	/// Finds the subarray with maximum product in an array of positive, negative and zero values.
+	/// The main idea is similar to MSSA: track and store maximums in DP style when interating.
+	/// Both maximum and minimum products are tracked to handle transitions between positive and negative numbers.
+	/// Swap them on negative number, since after the multiplication to a negative the extremums will change their places.
+	/// Given in 2 versions: the original one for a better understanding and the full one with subarray index range.
+	/// Range search is based on rolling back each maximum candidate by dividing it consequently by previous array items.
+	/// Time: O(n), space: O(1)
+	static int MpsaOriginal(const std::vector<int>& a)
+	{
+		int pmax = a[0], pmin = a[0], result = a[0];
+		for (unsigned i = 1; i < a.size(); ++i)
+		{
+			if (a[i] < 0)
+			{
+				std::swap(pmax, pmin);
+			}
+
+			pmax = std::max(a[i], pmax * a[i]);
+			pmin = std::min(a[i], pmin * a[i]);
+
+			result = std::max(result, pmax);
+		}
+
+		return result;
+	}
+	/// Version with subarray range
+	static std::pair<int, std::pair<int, int>> Mpsa(const std::vector<int>& a)
+	{
+		if (a.size() == 0)
+		{
+			return std::make_pair(-1, std::make_pair(-1, -1));
+		}
+
+		int pmax = a[0], pmin = a[0], result = a[0];
+		int left = 0, right = 0;
+		for (unsigned i = 1; i < a.size(); ++i)
+		{
+			if (a[i] < 0)
+			{
+				std::swap(pmax, pmin);
+			}
+
+			pmax = std::max(a[i], pmax * a[i]);
+			pmin = std::min(a[i], pmin * a[i]);
+
+			if (pmax >= result)
+			{
+				result = pmax;
+
+				right = i;
+				left = right;
+				for (int div = pmax; div != 1 && left >= 0 && a[left] != 0; --left)
+				{
+					div /= a[left];
+				}
+				++left;
+			}
+		}
+
+		return std::make_pair(result, std::make_pair(left, right));
+	}
+
+	/// EPI 15.5.3. Longest Common Subsequence (LCSS).
+	/// Returns LCSS of two strings with lengths m and n.
+	/// Classical DP algorithm based on tabular memoization, where we build the matrix of matches.
+	/// If there is no match, the maximum of the previous-top and previous-left elements is used.
+	/// Time: O(m*n), space: O(n) for matrix
+	static std::string Lcss(std::string s1, std::string s2)
+	{
+		if (s1.size() == 0 || s2.size() == 0)
+		{
+			return std::string();
+		}
+
+		std::vector<std::vector<int>> mx(s1.size() + 1, std::vector<int>(s2.size() + 1));
+		for (unsigned i = 1; i <= s1.size(); ++i)
+		{
+			for (unsigned j = 1; j <= s2.size(); ++j)
+			{
+				if (s1[i - 1] == s2[j - 1])
+				{
+					mx[i][j] = 1 + mx[i - 1][j - 1];
+				}
+				else
+				{
+					mx[i][j] = std::max(mx[i - 1][j], mx[i][j - 1]);
+				}
+			}
+		}
+
+		std::string result;
+		for (int i = s1.size(), j = s2.size(); i > 0 && j > 0;)
+		{
+			if (s1[i - 1] == s2[j - 1])
+			{
+				result = s1[i - 1] + result;
+				--i; --j;
+			}
+			else if (mx[i - 1][j] > mx[i][j - 1])
+			{
+				--i;
+			}
+			else
+			{
+				--j;
+			}
+		}
+
+		return result;
+	}
+
+	/// EPI 15.6. Longest nondecreasing subsequence (LNDSS).
+	/// Finds longest nondecreasing subsequence in an array of integers.
+	/// The resulting sequence should not necessarily be a subarray.
+	/// Builds active lists with possible sequences, using binary search to find the best ending candidate.
+	/// Cases: 
+	/// - [New] Smaller than all known endings. Start a new list with the single element a[i].
+	/// - [Clone + Extend] Greater than all known endings. Clone the largest list and extend it by a[i].
+	/// - [Find + Replace] In between of known endings.
+	///   Find a larger list with the ending greater than a[i] using binary search. Locate the previous list, clone and extend it by a[i].
+	///   Replace the larger list with the previous list. It discards all less perpective lists.
+	/// To find the resulting sequence, O(n) space is required to store all intermediate sequences (mapped to endings).
+	/// To find the length only, it's enough just to keep the array of endings.
+	/// Time: O(n*log(n)), space: O(n)
+	static const std::vector<int> Lndss(const std::vector<int>& a)
+	{
+		if (a.size() == 0)
+		{
+			return std::vector<int>();
+		}
+
+		std::deque<int> endings = { a[0] };
+		std::deque<std::deque<int>> lists = { { a[0] } };
+		Combinatorics::LogLists(0, a[0], lists);
+
+		for (unsigned i = 1; i < a.size(); ++i)
+		{
+			std::deque<int> first = lists[0], last = lists[lists.size() - 1];
+			if (a[i] < first[first.size() - 1])
+			{
+				endings.push_front(a[i]);
+				std::deque<int> next = { a[i] };
+				lists.push_front(next);
+			}
+			else if (a[i] >= last[last.size() - 1])
+			{
+				endings.push_back(a[i]);
+				std::deque<int> clone(last.cbegin(), last.cend());
+				clone.push_back(a[i]);
+				lists.push_back(clone);
+			}
+			else
+			{
+				auto found = std::upper_bound(endings.cbegin(), endings.cend(), a[i]);
+				unsigned index = found - endings.cbegin();
+				endings[index] = a[i];
+
+				std::deque<int> previous(lists[index - 1].cbegin(), lists[index - 1].cend());
+				previous.push_back(a[i]);
+				lists[index] = previous;
+			}
+
+			LogLists(i, a[i], lists);
+		}
+
+		std::vector<int> result((lists.cend() - 1)->cbegin(), (lists.cend() - 1)->cend());
+		return result;
+	}
+
+	/// LNDSS log helper
+	static void LogLists(const int i, const int ai, const std::deque<std::deque<int>>& lists)
+	{
+		cout << setiosflags(ios::right) << setw(2) << setfill('0') << i << ": " << ai << endl;
+		for (auto lit = lists.cbegin(); lit != lists.end(); ++lit)
+		{
+			std::cout << "  ";
+			for (auto it = lit->cbegin(); it != lit->end(); ++it)
+			{
+				std::cout << *it << (it != lit->end() - 1 ? "-" : "");
+			}
+			std::cout << endl;
+		}
 	}
 
 	/// EPI 15.7. Longest sum subarray problem (LSSA)
@@ -131,6 +325,7 @@ public:
 		return result;
 	}
 
+	/// Facebook. 3-sum problem
 	/// Returns true if an input vector contains any 3 elements that sum up to the given value.
 	/// Based on "greedy" algorithm from EPI, that uses solution of fast 2-sum search in O(n).
 	/// Time: O(n*log(n)) + O(n^2) = O(n^2), space: O(1)
@@ -185,55 +380,6 @@ public:
 				}
 			}
 		}
-	}
-
-	/// EPI 15.5.3. Longest Common Subsequence (LCSS).
-	/// Returns LCSS of two strings with lengths m and n.
-	/// Classical DP algorithm based on tabular memoization, where we build the matrix of matches.
-	/// If there is no match, the maximum of the previous-top and previous-left elements is used.
-	/// Time: O(m*n), space: O(n) for matrix
-	static std::string Lcss(std::string s1, std::string s2)
-	{
-		if (s1.size() == 0 || s2.size() == 0)
-		{
-			return "";
-		}
-
-		vector<vector<unsigned>> M(s1.size() + 1, vector<unsigned>(s2.size() + 1));
-		for (unsigned i = 1; i <= s1.size(); ++i)
-		{
-			for (unsigned j = 1; j <= s2.size(); ++j)
-			{
-				if (s1[i - 1] == s2[j - 1])
-				{
-					M[i][j] = 1 + M[i - 1][j - 1];
-				}
-				else
-				{
-					M[i][j] = std::max(M[i - 1][j], M[i][j - 1]);
-				}
-			}
-		}
-
-		std::string result;
-		for (unsigned i = s1.size(), j = s2.size(); i > 0 && j > 0;)
-		{
-			if (s1[i - 1] == s2[j - 1])
-			{
-				result = s1[i - 1] + result;
-				--i; --j;
-			}
-			else if (M[i - 1][j] > M[i][j - 1])
-			{
-				--i;
-			}
-			else
-			{
-				--j;
-			}
-		}
-
-		return result;
 	}
 };
 

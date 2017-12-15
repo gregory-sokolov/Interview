@@ -49,6 +49,97 @@ int _tmain(int argc, _TCHAR* argv[])
 	}
 	cout << endl;
 
+	/*Console.WriteLine("== Max Sum Subarray (MSSA) ==");
+	var testMss = new List<IList<int>>
+	{
+		new List<int>(),
+		new List<int>{ 2 },
+		new List<int>{ -1, -5, -2 },
+		new List<int>{ 0, 0, 0 },
+		new List<int>{ 5, 1, 2 },
+		new List<int>{ 2, 5, -1, -7, 0, 9, -3, -4 },
+		new List<int>{ 2, 5, -1, -7, 0, 2, 4, 3, -3, -4 },
+		new List<int>{ 2, 5, -3, -2, 2, 3, 0, -2, 2, 4, 3, -1, -2 }
+	};
+	var count = 1;
+	foreach(var test in testMss)
+	{
+		Console.WriteLine((count++).ToString().PadLeft(2, '0') + ": [" + string.Join(", ", test) + "]");
+		var result = solutions.Mssa(test);
+		Console.WriteLine("    {0} [{1}, {2}]", result.Key, result.Value.Key, result.Value.Value);
+	}
+	Console.WriteLine();
+
+	Console.WriteLine("== Max Product Subarray (MPSA) ==");
+	var testMps = new List<IList<int>>
+	{
+		new List<int>(),
+		new List<int>{ 2 },
+		new List<int>{ 2, -2 },
+		new List<int>{ 2, 3, 5, 4, 3, 1 },
+		new List<int>{ -2, -3, -5, -4, -3, -1 },
+		new List<int>{ 2, 3, 5, 0, 7, 5, 1 },
+		new List<int>{ -1, -2, -3, 4, 0, -5, 2 },
+		new List<int>{ -10, 0, -20, 0, -30, 0, 0, -40 }
+	};
+	count = 1;
+	foreach(var test in testMps)
+	{
+		Console.WriteLine((count++).ToString().PadLeft(2, '0') + ": [" + string.Join(", ", test) + "]");
+		var result = solutions.Mpsa(test);
+		Console.WriteLine("    {0} [{1}, {2}]", result.Key, result.Value.Key, result.Value.Value);
+	}
+	Console.WriteLine();
+
+	Console.WriteLine("== Longest Nondecreasing Subsequence (LNDSS) ==");
+	var testLnds = new List<IList<int>>
+	{
+		new List<int>(),
+		new List<int>{ 0 },
+		new List<int>{ 0, 2 },
+		new List<int>{ 2, 0 },
+		new List<int>{ 2, 0, 5 },
+		new List<int>{ 0, 2, 5 },
+		new List<int>{ 5, 2, 0 },
+		new List<int>{ 2, 0, 9, 3, 9, 1, 9, 5, 7, 7, 8 },
+		new List<int>{ 0, 8, 4, 12, 2, 10, 6, 14, 1, 9, 5, 13, 3, 11, 7, 15 }
+	};
+	count = 1;
+	foreach(var test in testLnds)
+	{
+		Console.WriteLine("Test " + (count++).ToString().PadLeft(2, '0') + ": [" + string.Join(", ", test) + "]");
+		var result = solutions.Lndss(test);
+		Console.WriteLine("Result: {0}", result.Count > 0 ? "[" + string.Join(", ", result) + "]" : "-");
+		Console.WriteLine();
+	}
+	Console.WriteLine();*/
+
+	cout << "- Longest common subsequence (LCSS) -" << endl;
+	{
+		vector<pair<string, string>> testLcss =
+		{
+			{ "", "" },
+		{ "ABC", "" },
+		{ "", "abc" },
+		{ "AGGTAB", "GXTXAYB" },
+		{ "hello world", "hlwrld" },
+		{ "abcdefghijklmn", "oprstuvwxyz" },
+		{ "JATAXGPDMYLDXUKDNFTPRRUMBMEMLROWRHWOQNTCLGHLCRORZHGSBAECPLPCCDYVNXMDMFHAOPLQ", "IZKHIQBJTIMITDKXIKSXJECWMKWABHSL" }
+
+		};
+		unsigned i = 0;
+		for (auto&& test : testLcss)
+		{
+			auto result = Combinatorics::Lcss(test.first, test.second);
+
+			cout << "Test " << setiosflags(ios::right) << setw(2) << setfill('0') << ++i << ":" << endl;
+			cout << "  (" << test.first.size() << "): " << test.first << endl;
+			cout << "  (" << test.second.size() << "): " << test.second << endl;
+			cout << "  Result (" << result.size() << "): " << (result.size() > 0 ? result : "-") << endl;
+		}
+	}
+	cout << endl;
+
 	cout << "- Longest sum subarray (LSSA) -" << endl;
 	{
 		vector<int> vi1 = { 7, 3, 5, 2, 10, 5, 0, 15, 0, 0, 12, 3 };
@@ -135,34 +226,6 @@ int _tmain(int argc, _TCHAR* argv[])
 			{
 				cout << sum << (sum < high - 1 ? ", " : "");
 			}
-		}
-		cout << endl;
-	}
-	cout << endl;
-
-	cout << "- Longest common subsequence (LCSS) -" << endl;
-	{
-		vector<pair<string, string>> testLcss = 
-		{ 
-			{ "", "" },
-			{ "ABC", "" },
-			{ "", "abc" },
-			{ "AGGTAB", "GXTXAYB" },
-			{ "hello world", "hlwrld" },
-			{ "abcdefghijklmn", "oprstuvwxyz" },
-			{ "JATAXGPDMYLDXUKDNFTPRRUMBMEMLROWRHWOQNTCLGHLCRORZHGSBAECPLPCCDYVNXMDMFHAOPLQ", "IZKHIQBJTIMITDKXIKSXJECWMKWABHSL" }
-
-		};
-		unsigned i = 0;
-		for (auto&& test : testLcss)
-		{
-			auto result = Combinatorics::Lcss(test.first, test.second);
-
-			cout << "Test " << setiosflags(ios::right) << setw(2) << setfill('0') << ++i << ":" << endl;
-			cout << "(" << test.first.size() << "): " << test.first << endl;
-			cout << "(" << test.second.size() << "): " << test.second << endl;
-			cout << "Result (" << result.size() << "): " << (result.size() > 0 ? result : "-") << endl;
-			cout << endl;
 		}
 		cout << endl;
 	}
