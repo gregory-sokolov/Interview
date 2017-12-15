@@ -84,7 +84,7 @@ public:
 	/// Both maximum and minimum products are tracked to handle transitions between positive and negative numbers.
 	/// Swap them on negative number, since after the multiplication to a negative the extremums will change their places.
 	/// Given in 2 versions: the original one for a better understanding and the full one with subarray index range.
-	/// Range search is based on rolling back each maximum candidate by dividing it consequently by previous array items.
+	/// Range searching is based on rolling back each maximum candidate by dividing it consequently by previous array items.
 	/// Time: O(n), space: O(1)
 	static int MpsaOriginal(const std::vector<int>& a)
 	{

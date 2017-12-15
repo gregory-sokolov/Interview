@@ -49,28 +49,34 @@ int _tmain(int argc, _TCHAR* argv[])
 	}
 	cout << endl;
 
-	/*Console.WriteLine("== Max Sum Subarray (MSSA) ==");
-	var testMss = new List<IList<int>>
+	cout << "- Max Sum Subarray (MSSA) -" << endl;
 	{
-		new List<int>(),
-		new List<int>{ 2 },
-		new List<int>{ -1, -5, -2 },
-		new List<int>{ 0, 0, 0 },
-		new List<int>{ 5, 1, 2 },
-		new List<int>{ 2, 5, -1, -7, 0, 9, -3, -4 },
-		new List<int>{ 2, 5, -1, -7, 0, 2, 4, 3, -3, -4 },
-		new List<int>{ 2, 5, -3, -2, 2, 3, 0, -2, 2, 4, 3, -1, -2 }
-	};
-	var count = 1;
-	foreach(var test in testMss)
-	{
-		Console.WriteLine((count++).ToString().PadLeft(2, '0') + ": [" + string.Join(", ", test) + "]");
-		var result = solutions.Mssa(test);
-		Console.WriteLine("    {0} [{1}, {2}]", result.Key, result.Value.Key, result.Value.Value);
+		vector<vector<int>> testMssa = 
+		{
+			{},
+			{ 2 },
+			{ -1, -5, -2 },
+			{ 0, 0, 0 },
+			{ 5, 1, 2 },
+			{ 2, 5, -1, -7, 0, 9, -3, -4 },
+			{ 2, 5, -1, -7, 0, 2, 4, 3, -3, -4 },
+			{ 2, 5, -3, -2, 2, 3, 0, -2, 2, 4, 3, -1, -2 }
+		};
+		for (unsigned i = 0; i < testMssa.size(); ++i)
+		{
+			string input;
+			for (auto it = testMssa[i].cbegin(); it != testMssa[i].cend(); ++it)
+			{
+				input += to_string(*it) + (it != testMssa[i].end() - 1 ? ", " : "");
+			}
+			cout << setiosflags(ios::right) << setw(2) << setfill('0') << i << ": [" << input << "]" << endl;
+			auto result = Combinatorics::Mssa(testMssa[i]);
+			cout << "    " << result.first << " [" << result.second.first << ", " << result.second.second << "]" << endl;
+		}
 	}
-	Console.WriteLine();
+	cout << endl;
 
-	Console.WriteLine("== Max Product Subarray (MPSA) ==");
+	/*Console.WriteLine("== Max Product Subarray (MPSA) ==");
 	var testMps = new List<IList<int>>
 	{
 		new List<int>(),
