@@ -62,7 +62,7 @@ public:
 	{
 		auto result = std::make_pair(-1, -1);
 
-		int row = 0, col = a[0].size() - 1;
+		unsigned row = 0, col = a[0].size() - 1;
 		while (row < a.size() && col >= 0)
 		{
 			if (a[row][col] == x)

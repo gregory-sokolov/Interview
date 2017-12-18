@@ -6,6 +6,7 @@
 #include <iostream>
 #include <sstream>
 #include <iterator>
+#include <algorithm>
 
 ///
 /// EPI. Chapter 13. Sorting Problems
@@ -276,6 +277,53 @@ public:
 		std::cout << tab.c_str();
 		std::copy(&a[l], &a[r + 1], std::ostream_iterator<int>(std::cout));
 		std::cout << ", after Rec-R" << std::endl;
+	}
+
+
+	/// Yandex. Merge two sorted vectors.
+	/// Merges two sorted vectors of sizes m and n into the third destination vector.
+	/// Implements std::merge algorithm.
+	/// Time: O(max(m, n)), space: O(m) + O(n)
+	static std::vector<int> MergeSorted(const std::vector<int>& v1, const std::vector<int>& v2)
+	{
+		std::vector<int> dest;
+		if (v1.empty())
+		{
+			std::copy(v2.cbegin(), v2.cend(), std::back_inserter(dest));
+			return dest;
+		}
+		if (v2.empty())
+		{
+			std::copy(v1.cbegin(), v1.cend(), std::back_inserter(dest));
+			return dest;
+		}
+
+		for (auto it1 = v1.cbegin(), it2 = v2.cbegin(); it1 != v1.cend() || it2 != v2.cend();)
+		{
+			if (it1 == v1.cend())
+			{
+				std::copy(it2, v2.cend(), std::back_inserter(dest));
+				break;
+			}
+			if (it2 == v2.cend())
+			{
+				std::copy(it1, v1.cend(), std::back_inserter(dest));
+				break;
+			}
+
+			if (*it2 <= *it1)
+			{
+				dest.push_back(*it2);
+				++it2;
+			}
+			if (*it1 <= *it2)
+			{
+				dest.push_back(*it1);
+				++it1;
+			}
+		}
+
+		return dest;
 	}
 };
 

@@ -145,6 +145,7 @@ public:
 	/// Returns LCSS of two strings with lengths m and n.
 	/// Classical DP algorithm based on tabular memoization, where we build the matrix of matches.
 	/// If there is no match, the maximum of the previous-top and previous-left elements is used.
+	/// The second loop build the resulting string by traversing the matrix.
 	/// Time: O(m*n), space: O(n) for matrix
 	static std::string Lcss(std::string s1, std::string s2)
 	{
@@ -188,6 +189,22 @@ public:
 		}
 
 		return result;
+	}
+
+	/// Yandex. Common Subset/Set Intersection (CSS).
+	/// Similar to LCSS algorithm but with slightly different results.
+	/// Actually, LCSS is very like to an intersection of two sets.
+	/// To use STL set operations, both sequences must be initially sorted.
+	/// Time: O(n*log(n)) + O(m*log(m)) + O(n + m) =  O(MN*log(MN)), where MN = max(m, n)
+	/// Space: O(n) or O(m) for intersection
+	static std::string LcssStl(std::string s1, std::string s2)
+	{
+		std::string check;
+		std::sort(s1.begin(), s1.end());
+		std::sort(s2.begin(), s2.end());
+		std::set_intersection(s1.cbegin(), s1.cend(), s2.cbegin(), s2.cend(), std::back_inserter(check));
+
+		return check;
 	}
 
 	/// EPI 15.6. Longest nondecreasing subsequence (LNDSS).
@@ -266,7 +283,7 @@ public:
 	/// EPI 15.7. Longest sum subarray problem (LSSA)
 	/// Finds all subarrays whose sum equals or less than the target number.
 	/// Moves the "window" with the sum through the entire array, removing only leading items if sum exceeds target.
-	/// When encountering zeroes, runs a sort of "greedy" search to generate all required subsequences.
+	/// When encounters zeroes, runs a sort of "greedy" search to generate all required subsequences.
 	/// Time: O(n)
 	static void Lssa(const std::vector<int>& input, long long target,
 		std::vector<std::deque<std::pair<unsigned, int>>>& results)
@@ -329,19 +346,19 @@ public:
 	/// Returns true if an input vector contains any 3 elements that sum up to the given value.
 	/// Based on "greedy" algorithm from EPI, that uses solution of fast 2-sum search in O(n).
 	/// Time: O(n*log(n)) + O(n^2) = O(n^2), space: O(1)
-	static bool HasThreeSum(std::vector<int>& input, const int sum)
+	static bool HasThreeSum(std::vector<int>& a, const int sum)
 	{
-		std::sort(input.begin(), input.end());
-		for (unsigned i = 0; i < input.size(); ++i)
+		std::sort(a.begin(), a.end());
+		for (unsigned i = 0; i < a.size(); ++i)
 		{
-			int sum2 = sum - input[i];
-			for (unsigned j = 0, k = input.size() - 1; j < k;)
+			int d = sum - a[i];
+			for (unsigned j = 0, k = a.size() - 1; j < k;)
 			{
-				if (j == i || input[j] + input[k] < sum2)
+				if (j == i || a[j] + a[k] < d)
 				{
 					++j;
 				}
-				else if (k == i || input[j] + input[k] > sum2)
+				else if (k == i || a[j] + a[k] > d)
 				{
 					--k;
 				}
@@ -381,5 +398,31 @@ public:
 			}
 		}
 	}
+
+
+	/// Yandex. Subset Sum (SSS)
+	/// Brute-force recursive implementation.
+	/// Time: O(2^n), space: O(1)
+	static bool HasSubsetSumR(std::vector<int>& a, int n, int sum)
+	{
+		if (sum == 0)
+		{
+			return true;
+		}
+		else if (n == 0 && sum != 0)
+		{
+			return false;
+		}
+
+		if (a[n - 1] > sum)
+		{
+			return Combinatorics::HasSubsetSumR(a, n - 1, sum);
+		}
+		else
+		{
+			return Combinatorics::HasSubsetSumR(a, n - 1, sum) || Combinatorics::HasSubsetSumR(a, n - 1, sum - a[n - 1]);
+		}
+	}
+
 };
 

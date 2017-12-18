@@ -10,6 +10,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <algorithm>
 
 using namespace std;
 
@@ -125,23 +126,24 @@ int _tmain(int argc, _TCHAR* argv[])
 		vector<pair<string, string>> testLcss =
 		{
 			{ "", "" },
-		{ "ABC", "" },
-		{ "", "abc" },
-		{ "AGGTAB", "GXTXAYB" },
-		{ "hello world", "hlwrld" },
-		{ "abcdefghijklmn", "oprstuvwxyz" },
-		{ "JATAXGPDMYLDXUKDNFTPRRUMBMEMLROWRHWOQNTCLGHLCRORZHGSBAECPLPCCDYVNXMDMFHAOPLQ", "IZKHIQBJTIMITDKXIKSXJECWMKWABHSL" }
-
+			{ "ABC", "" },
+			{ "", "abc" },
+			{ "AGGTAB", "GXTXAYB" },
+			{ "hello world", "hlwrld" },
+			{ "abcdefghijklmn", "oprstuvwxyz" },
+			{ "JATAXGPDMYLDXUKDNFTPRRUMBMEMLROWRHWOQNTCLGHLCRORZHGSBAECPLPCCDYVNXMDMFHAOPLQ", "IZKHIQBJTIMITDKXIKSXJECWMKWABHSL" }
 		};
 		unsigned i = 0;
 		for (auto&& test : testLcss)
 		{
-			auto result = Combinatorics::Lcss(test.first, test.second);
+			auto lcss = Combinatorics::Lcss(test.first, test.second);
+			auto intersection = Combinatorics::LcssStl(test.first, test.second);
 
 			cout << "Test " << setiosflags(ios::right) << setw(2) << setfill('0') << ++i << ":" << endl;
 			cout << "  (" << test.first.size() << "): " << test.first << endl;
 			cout << "  (" << test.second.size() << "): " << test.second << endl;
-			cout << "  Result (" << result.size() << "): " << (result.size() > 0 ? result : "-") << endl;
+			cout << "  LCSS  (" << lcss.size() << "): " << (lcss.size() > 0 ? lcss : "-") << endl;
+			cout << "  Set X (" << intersection.size() << "): " << (intersection.size() > 0 ? intersection : "-") << endl;
 		}
 	}
 	cout << endl;
@@ -199,7 +201,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	}
 	cout << endl;
 
-	cout << "- Custom LSSA: two- and three-sum -" << endl;
+	cout << "- Custom SSS: two- and three-sum -" << endl;
 	{
 		vector<int> vi3 = { 1, 2, 2, 5, -5, 8, 8, 1, 7, -3 };
 		vector<int> vi4(vi3);
@@ -224,7 +226,7 @@ int _tmain(int argc, _TCHAR* argv[])
 			cout << endl;
 		}
 		int low = 0, high = 20;
-		cout << "Non-matching sums in range [" << low << "; " << high << "]: ";
+		cout << "No match in range [" << low << "; " << high << "]: ";
 		for (int sum = low; sum < high; ++sum)
 		{
 			auto found = Combinatorics::HasThreeSum(vi4, sum);
@@ -234,6 +236,36 @@ int _tmain(int argc, _TCHAR* argv[])
 			}
 		}
 		cout << endl;
+	}
+	cout << endl;
+
+	cout << "- Subset Sum (SSS) -" << endl;
+	{
+		vector<vector<int>> testSss =
+		{
+			{ 1, 2, 5, 7, 13 }
+		};
+		for (auto&& test : testSss)
+		{
+			cout << "Input: ";
+			for (auto it = test.cbegin(); it != test.cend(); ++it)
+			{
+				cout << *it << (it != test.cend() - 1 ? ", " : "");
+			}
+			cout << endl;
+
+			int low = 0, high = 30;
+			cout << "No match in range [" << low << "; " << high << "]: ";
+			for (int sum = low; sum < high; ++sum)
+			{
+				auto found = Combinatorics::HasSubsetSumR(test, test.size(), sum);
+				if (!found)
+				{
+					cout << sum << (sum < high - 1 ? ", " : "");
+				}
+			}
+			cout << endl;
+		}
 	}
 	cout << endl;
 

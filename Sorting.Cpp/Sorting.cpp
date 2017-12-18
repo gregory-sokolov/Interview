@@ -16,7 +16,7 @@ int _tmain(int argc, _TCHAR* argv[])
 {
 	cout << "== Sorting ==" << endl << endl;
 
-	cout << "- Quick sort -" << endl;
+	cout << "-- Quick sort --" << endl;
 	{
 		unsigned cnt = 1;
 		vector<vector<int>> vvi = 
@@ -52,7 +52,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	}
 	cout << endl;
 
-	cout << "- Dutch national flag -" << endl;
+	cout << "-- Dutch national flag --" << endl;
 	{
 		vector<int> numbers = { 7, 5, 0, 6, 2, 2, 5, 8, 0, 2, 5, 8, 7, 1, 3 };
 		vector<int> vi = { 1, 5, 7, 8 };
@@ -80,6 +80,57 @@ int _tmain(int argc, _TCHAR* argv[])
 				cout << *it << (it != vn2.cend() - 1 ? ", " : "");
 			}
 			cout << endl << "--" << endl;
+		}
+	}
+	cout << endl;
+
+	cout << "-- Merge sort --" << endl;
+	{
+		vector<pair<vector<int>, vector<int>>> mergeTests =
+		{
+			make_pair(vector<int>({ 4, 7, 11, 13, 15 }), vector<int>()),
+			make_pair(vector<int>(), vector<int>({ 2, 9, 17, 20 })),
+			make_pair(vector<int>({ 4, 7, 11, 13, 15, 25 }), vector<int>({ 2, 9, 11, 17, 20, 25 }))
+		};
+		for (auto&& test : mergeTests)
+		{
+			cout << "Vector 1: [";
+			for (auto it = test.first.cbegin(); it != test.first.cend(); ++it)
+			{
+				cout << *it << (it != test.first.cend() - 1 ? ", " : "");
+			}
+			cout << "]" << endl;
+			cout << "Vector 2: [";
+			for (auto it = test.second.cbegin(); it != test.second.cend(); ++it)
+			{
+				cout << *it << (it != test.second.cend() - 1 ? ", " : "");
+			}
+			cout << "]" << endl;
+
+			auto result = Sorting::MergeSorted(test.first, test.second);
+			cout << "Result: [";
+			for (auto it = result.cbegin(); it != result.cend(); ++it)
+			{
+				cout << *it << (it != result.cend() - 1 ? ", " : "");
+			}
+			cout << "]" << endl;
+			vector<int> check;
+			merge(test.first.cbegin(), test.first.cend(), test.second.cbegin(), test.second.cend(), back_inserter(check));
+			cout << "Merged: [";
+			for (auto it = check.cbegin(); it != check.cend(); ++it)
+			{
+				cout << *it << (it != check.cend() - 1 ? ", " : "");
+			}
+			cout << "]" << endl;
+			vector<int> common;
+			set_intersection(test.first.cbegin(), test.first.cend(), test.second.cbegin(), test.second.cend(), back_inserter(common));
+			cout << "Common: [";
+			for (auto it = common.cbegin(); it != common.cend(); ++it)
+			{
+				cout << *it << (it != common.cend() - 1 ? ", " : "");
+			}
+			cout << "]" << endl;
+			cout << "--" << endl;
 		}
 	}
 	cout << endl;
