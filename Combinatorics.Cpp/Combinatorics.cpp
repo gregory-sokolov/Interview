@@ -11,6 +11,7 @@
 #include <vector>
 #include <map>
 #include <algorithm>
+#include <functional>
 
 using namespace std;
 
@@ -137,18 +138,18 @@ int _tmain(int argc, _TCHAR* argv[])
 		for (auto&& test : testLcss)
 		{
 			auto lcss = Combinatorics::Lcss(test.first, test.second);
-			auto intersection = Combinatorics::LcssStl(test.first, test.second);
+			auto css = Combinatorics::Css(test.first, test.second);
 
 			cout << "Test " << setiosflags(ios::right) << setw(2) << setfill('0') << ++i << ":" << endl;
 			cout << "  (" << test.first.size() << "): " << test.first << endl;
 			cout << "  (" << test.second.size() << "): " << test.second << endl;
 			cout << "  LCSS  (" << lcss.size() << "): " << (lcss.size() > 0 ? lcss : "-") << endl;
-			cout << "  Set X (" << intersection.size() << "): " << (intersection.size() > 0 ? intersection : "-") << endl;
+			cout << "  Set X (" << css.size() << "): " << (css.size() > 0 ? css : "-") << endl;
 		}
 	}
 	cout << endl;
 
-	cout << "- Longest sum subarray (LSSA) -" << endl;
+	cout << "- Subarray Sum (SSA) -" << endl;
 	{
 		vector<int> vi1 = { 7, 3, 5, 2, 10, 5, 0, 15, 0, 0, 12, 3 };
 		//vector<int> vi2 = { 1, 2, 2, 0, 5, -5, 0, 8, -8, 1, 7, -3 };
@@ -162,7 +163,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		// long long sum = 0;
 		cout << "Sum to match: " << sum << endl;
 		vector<deque<pair<unsigned, int>>> matches;
-		Combinatorics::Lssa(vi1, sum, matches);
+		Combinatorics::Ssa(vi1, sum, matches);
 		cout << "Sequences" << (matches.size() != 0 ? " ("+ to_string(matches.size()) + "): " : ": not found") << endl;
 		deque<pair<unsigned, int>> result;
 		if (!matches.empty())
@@ -241,10 +242,14 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	cout << "- Subset Sum (SSS) -" << endl;
 	{
-		vector<vector<int>> testSss =
+		vector<vector<unsigned>> testSss =
 		{
-			{ 1, 2, 5, 7, 13 }
+			{ 1, 2, 5, 7, 13 },
+			{ 13, 0, 2, 1, 0, 7, 5 },
+			//{ 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97 }
 		};
+		int count = 0, low = 0, high = 30;
+
 		for (auto&& test : testSss)
 		{
 			cout << "Input: ";
@@ -253,18 +258,54 @@ int _tmain(int argc, _TCHAR* argv[])
 				cout << *it << (it != test.cend() - 1 ? ", " : "");
 			}
 			cout << endl;
-
-			int low = 0, high = 30;
-			cout << "No match in range [" << low << "; " << high << "]: ";
+			
+			cout << "Non-matching SSS in range: [" << low << "; " << high << "]" << endl;
+			count = 0;
+			cout << "BF: ";
 			for (int sum = low; sum < high; ++sum)
 			{
 				auto found = Combinatorics::HasSubsetSumR(test, test.size(), sum);
 				if (!found)
 				{
-					cout << sum << (sum < high - 1 ? ", " : "");
+					cout << (count++ > 0 ? ", " : "") << sum;
 				}
 			}
 			cout << endl;
+			count = 0;
+			cout << "DP: ";
+			for (int sum = low; sum < high; ++sum)
+			{
+				auto found = Combinatorics::HasSubsetSum(test, sum);
+				if (!found)
+				{
+					cout << (count++ > 0 ? ", " : "") << sum;
+				}
+			}
+			cout << endl;
+
+			cout << "All SSS in range: [" << low << "; " << high << "]" << endl;
+			cout << "DP: ";
+			for (int sum = low; sum < high; ++sum)
+			{
+				auto sss = Combinatorics::Sss(test, sum);
+				cout << sum << ": ";
+				if (!sss.empty())
+				{
+					cout << "[";
+					for (auto it = sss.cbegin(); it != sss.cend(); ++it)
+					{
+						cout << *it << (it != sss.cend() - 1 ? ", " : "");
+					}
+					cout << "]";
+				}
+				else
+				{
+					cout << "-";
+				}
+				cout << (sum < high - 1 ? ", " : "");
+				
+			}
+			cout << endl << "--" << endl;
 		}
 	}
 	cout << endl;

@@ -197,7 +197,7 @@ public:
 	/// To use STL set operations, both sequences must be initially sorted.
 	/// Time: O(n*log(n)) + O(m*log(m)) + O(n + m) =  O(MN*log(MN)), where MN = max(m, n)
 	/// Space: O(n) or O(m) for intersection
-	static std::string LcssStl(std::string s1, std::string s2)
+	static std::string Css(std::string s1, std::string s2)
 	{
 		std::string check;
 		std::sort(s1.begin(), s1.end());
@@ -280,12 +280,12 @@ public:
 		}
 	}
 
-	/// EPI 15.7. Longest sum subarray problem (LSSA)
+	/// EPI 15.7. Subarray sum (SSA)
 	/// Finds all subarrays whose sum equals or less than the target number.
 	/// Moves the "window" with the sum through the entire array, removing only leading items if sum exceeds target.
 	/// When encounters zeroes, runs a sort of "greedy" search to generate all required subsequences.
 	/// Time: O(n)
-	static void Lssa(const std::vector<int>& input, long long target,
+	static void Ssa(const std::vector<int>& input, long long target,
 		std::vector<std::deque<std::pair<unsigned, int>>>& results)
 	{
 		std::deque<std::pair<unsigned, int>> dq;
@@ -330,8 +330,8 @@ public:
 		std::unordered_set<int> hash(a.cbegin(), a.cend());
 		for (unsigned i = 0; i < a.size(); ++i)
 		{
-			int d = sum - a[i];
-			auto found = hash.find(d);
+			int diff = sum - a[i];
+			auto found = hash.find(diff);
 			if (found != hash.cend())
 			{
 				result = true;
@@ -351,14 +351,14 @@ public:
 		std::sort(a.begin(), a.end());
 		for (unsigned i = 0; i < a.size(); ++i)
 		{
-			int d = sum - a[i];
+			int diff = sum - a[i];
 			for (unsigned j = 0, k = a.size() - 1; j < k;)
 			{
-				if (j == i || a[j] + a[k] < d)
+				if (j == i || a[j] + a[k] < diff)
 				{
 					++j;
 				}
-				else if (k == i || a[j] + a[k] > d)
+				else if (k == i || a[j] + a[k] > diff)
 				{
 					--k;
 				}
@@ -399,11 +399,11 @@ public:
 		}
 	}
 
-
-	/// Yandex. Subset Sum (SSS)
-	/// Brute-force recursive implementation.
+	/// EPI 17.0.1. Subset Sum (SSS)
+	/// This is well-known NP-problem, could be solved with brute-force recursive implementation.
+	/// The solution handles only positive numbers in the array.
 	/// Time: O(2^n), space: O(1)
-	static bool HasSubsetSumR(std::vector<int>& a, int n, int sum)
+	static bool HasSubsetSumR(std::vector<unsigned>& a, unsigned n, unsigned sum)
 	{
 		if (sum == 0)
 		{
@@ -424,5 +424,88 @@ public:
 		}
 	}
 
+	/// EPI 17.0.2. Subset Sum (SSS)
+	/// Returns true if there is any subset of the given array with the sum equal to the given number.
+	/// This is well-known NP-problem, could be solved with DP and tabular memoization.
+	/// The solution handles only positive numbers in the array.
+	/// We build the boolean matrix of sum matches with a[i] as lines and sum[j] as columns, where each mx[i][j]:
+	/// - copied from the cell in the previous row if sum[j] < a[i],
+	/// - taken from the cell a[i]-steps backward in the previous row if sum[j] >= a[i] and mx value from previous row is false.
+	/// The result is in mx[n][sum].
+	/// Time: O(n*sum), space: O(n*sum)
+	static bool HasSubsetSum(const std::vector<unsigned>& a, const unsigned sum)
+	{
+		std::vector<std::vector<bool>> mx(a.size() + 1, std::vector<bool>(sum + 1));
+		for (unsigned i = 0; i < mx.size(); ++i)
+		{
+			mx[i][0] = true;
+		}
+
+		for (unsigned i = 1; i < mx.size(); ++i)
+		{
+			for (unsigned j = 1; j < mx[0].size(); ++j)
+			{
+				if (j < a[i - 1])
+				{
+					mx[i][j] = mx[i - 1][j];
+				}
+				else
+				{
+					mx[i][j] = mx[i - 1][j] || mx[i - 1][j - a[i - 1]];
+				}
+			}
+		}
+
+		return mx[mx.size() - 1][mx[0].size() - 1];
+	}
+
+	/// EPI 17.0.3. Subset Sum (SSS)
+	/// Returns one existing subset that are equal to the target number.
+	/// Uses the same DP solution with building matrix of matches.
+	/// Handles only positive numbers in the array.
+	/// Backtracks the resulting subset by unwinding the matrix:
+	/// - if upper element m[i - 1][j] is 1, moves one row up (array item not included),
+	/// - if upper element m[i - 1][j] is 0, copies a[i - 1] to the result and rolls back a[i - 1]-steps.
+	/// Time: O(n*sum), space: O(n*sum)
+	static std::vector<unsigned> Sss(const std::vector<unsigned>& a, const unsigned sum)
+	{
+		std::vector<std::vector<bool>> mx(a.size() + 1, std::vector<bool>(sum + 1));
+		for (unsigned i = 0; i < mx.size(); ++i)
+		{
+			mx[i][0] = true;
+		}
+
+		for (unsigned i = 1; i < mx.size(); ++i)
+		{
+			for (unsigned j = 1; j < mx[0].size(); ++j)
+			{
+				if (j < a[i - 1])
+				{
+					mx[i][j] = mx[i - 1][j];
+				}
+				else
+				{
+					mx[i][j] = mx[i - 1][j] || mx[i - 1][j - a[i - 1]];
+				}
+			}
+		}
+
+		std::vector<unsigned> result;
+		if (mx[mx.size() - 1][mx[0].size() - 1])
+		{
+			for (unsigned j = mx[0].size() - 1; j > 0; )
+			{
+				for (unsigned i = mx.size() - 1; i > 0; --i)
+				{
+					if (mx[i - 1][j] == 0)
+					{
+						result.push_back(a[i - 1]);
+						j -= a[i - 1];
+					}
+				}
+			}
+		}
+		return result;
+	}
 };
 
