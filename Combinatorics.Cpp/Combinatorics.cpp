@@ -151,54 +151,68 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	cout << "- Subarray Sum (SSA) -" << endl;
 	{
-		vector<int> vi1 = { 7, 3, 5, 2, 10, 5, 0, 15, 0, 0, 12, 3 };
-		//vector<int> vi2 = { 1, 2, 2, 0, 5, -5, 0, 8, -8, 1, 7, -3 };
-		cout << "Input array: ";
-		for (auto it = vi1.cbegin(); it != vi1.cend(); ++it)
+		vector<vector<int>> testSsa =
 		{
-			cout << *it << (it != vi1.end() - 1 ? ", " : "");
-		}
-		cout << endl;
-		long long sum = 15;
-		// long long sum = 0;
-		cout << "Sum to match: " << sum << endl;
-		vector<deque<pair<unsigned, int>>> matches;
-		Combinatorics::Ssa(vi1, sum, matches);
-		cout << "Sequences" << (matches.size() != 0 ? " ("+ to_string(matches.size()) + "): " : ": not found") << endl;
-		deque<pair<unsigned, int>> result;
-		if (!matches.empty())
+			{ 7, 3, 5, 2, 10, 5, 0, 15, 0, 0, 12, 3 },
+			{ 1, 2, 2, 0, 5, -5, 0, 8, -8, 1, 7, -3 }
+		};
+		for (auto&& test : testSsa)
 		{
-			for (auto mi = matches.begin(); mi != matches.end(); ++mi)
+			cout << "Input: ";
+			for (auto it = test.cbegin(); it != test.cend(); ++it)
 			{
-				cout << "[";
-				for (auto it = mi->cbegin(); it != mi->cend(); ++it)
-				{
-					cout << it->first << (it != mi->end() - 1 ? "," : "]: ");
-				}
-				for (auto it = mi->cbegin(); it != mi->cend(); ++it)
-				{
-					cout << it->second << (it != mi->end() - 1 ? " " : "");
-				}
-				cout << (mi != matches.end() - 1 ? ", " : "");
+				cout << *it << (it != test.cend() - 1 ? ", " : "");
+			}
+			cout << endl << endl;
 
-				if (mi->size() > result.size())
-				{
-					result = *mi;
-				}
-			}
-			cout << endl;
+			vector<long long> sums = { 8, 15, 17, 25 };
+			for (unsigned i = 0; i < sums.size(); ++i)
+			{
+				long long sum = sums[i];
+				cout << "Test " << setiosflags(ios::right) << setw(2) << setfill('0') << i + 1 << ": sum = " << sum << endl;
+				auto found = Combinatorics::HasSsa(test, sum);
+				cout << "  Any subarray: [" << found.first << ", " << found.second << "]" << endl;
+				auto matches = Combinatorics::Ssa(test, sum);
+				cout << "  All subarrays" << (!matches.empty() ? " (" + to_string(matches.size()) + "): " : ": not found");
 
-			cout << "Result: [";
-			for (auto it = result.cbegin(); it != result.cend(); ++it)
-			{
-				cout << it->first << (it != result.end() - 1 ? "," : "]: ");
+				deque<pair<unsigned, int>> result;
+				if (!matches.empty())
+				{
+					for (auto mi = matches.begin(); mi != matches.end(); ++mi)
+					{
+						cout << "[";
+						for (auto it = mi->cbegin(); it != mi->cend(); ++it)
+						{
+							cout << it->first << (it != mi->end() - 1 ? "," : "]: ");
+						}
+						for (auto it = mi->cbegin(); it != mi->cend(); ++it)
+						{
+							cout << it->second << (it != mi->end() - 1 ? " " : "");
+						}
+						cout << (mi != matches.end() - 1 ? ", " : "");
+
+						if (mi->size() > result.size())
+						{
+							result = *mi;
+						}
+					}
+					cout << endl;
+
+					cout << "  Longest: [";
+					for (auto it = result.cbegin(); it != result.cend(); ++it)
+					{
+						cout << it->first << (it != result.end() - 1 ? "," : "]: ");
+					}
+					for (auto it = result.cbegin(); it != result.cend(); ++it)
+					{
+						cout << it->second << (it != result.end() - 1 ? " " : "");
+					}
+				}
+				cout << endl;
 			}
-			for (auto it = result.cbegin(); it != result.cend(); ++it)
-			{
-				cout << it->second << (it != result.end() - 1 ? " " : "");
-			}
+			cout << "--" << endl;
 		}
-		cout << endl;
+		
 	}
 	cout << endl;
 
@@ -214,11 +228,11 @@ int _tmain(int argc, _TCHAR* argv[])
 			cout << "Sum to match: " << sum << endl;
 			auto found2 = Combinatorics::HasTwoSum(vi4, sum);
 			auto found3 = Combinatorics::HasThreeSum(vi4, sum);
-			cout << "Any 2-combination found: " << (found2 ? "true" : "false") << endl;
-			cout << "Any 3-combination found: " << (found3 ? "true" : "false") << endl;
+			cout << "  Any 2-combination found: " << (found2 ? "true" : "false") << endl;
+			cout << "  Any 3-combination found: " << (found3 ? "true" : "false") << endl;
 			vector<vector<int>> matches;
 			Combinatorics::ThreeSumCombinations(vi3, sum, matches);
-			cout << "All combinations: " << matches.size() << endl;
+			cout << "  All combinations (" << matches.size() << "): ";
 			for (auto mi = matches.begin(); mi != matches.end(); ++mi)
 			{
 				cout << "[" << mi->at(0) << "," << mi->at(2) << "," << mi->at(4) << "]: " <<
@@ -227,7 +241,7 @@ int _tmain(int argc, _TCHAR* argv[])
 			cout << endl;
 		}
 		int low = 0, high = 20;
-		cout << "No match in range [" << low << "; " << high << "]: ";
+		cout << "No 3-match in range [" << low << "; " << high << "]: ";
 		for (int sum = low; sum < high; ++sum)
 		{
 			auto found = Combinatorics::HasThreeSum(vi4, sum);

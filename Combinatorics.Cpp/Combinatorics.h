@@ -5,6 +5,7 @@
 #include <vector>
 #include <deque>
 #include <unordered_set>
+#include <unordered_map>
 #include <algorithm>
 
 ///
@@ -280,22 +281,53 @@ public:
 		}
 	}
 
-	/// EPI 15.7. Subarray sum (SSA)
+	/// EPI 15.7.1. Subarray sum (SSA)
+	/// Finds any subarray whose sum equals to the target number.
+	/// Time: O(n), space: O(n)
+	static std::pair<int, int> HasSsa(const std::vector<int>& a, const long long sum)
+	{
+		std::pair<int, int> result = std::make_pair(-1, -1);
+		
+		long long ts = 0;
+		std::unordered_map<long long, unsigned> ht;
+		for (unsigned i = 0; i < a.size(); ++i)
+		{
+			ts += a[i];
+			if (ts == sum)
+			{
+				result = std::make_pair(0, i);
+				break;
+			}
+
+			auto found = ht.find(ts - sum);
+			if (found != ht.cend())
+			{
+				result = std::make_pair(found->second, i);
+				break;
+			}
+			ht[ts] = i;
+		}
+
+		return result;
+	}
+
+	/// EPI 15.7.2. Subarray sum (SSA)
 	/// Finds all subarrays whose sum equals or less than the target number.
+	/// Handles both positive and negative numbers, array could be unsorted.
 	/// Moves the "window" with the sum through the entire array, removing only leading items if sum exceeds target.
 	/// When encounters zeroes, runs a sort of "greedy" search to generate all required subsequences.
-	/// Time: O(n)
-	static void Ssa(const std::vector<int>& input, long long target,
-		std::vector<std::deque<std::pair<unsigned, int>>>& results)
+	/// Time: O(n), space: O(n)
+	static std::vector<std::deque<std::pair<unsigned, int>>> Ssa(const std::vector<int>& a, const long long target)
 	{
+		std::vector<std::deque<std::pair<unsigned, int>>> results;
 		std::deque<std::pair<unsigned, int>> dq;
 		long long sum = LLONG_MIN;
-		for (unsigned i = 0; i < input.size() || sum >= target;)
+		for (unsigned i = 0; i < a.size() || sum >= target; )
 		{
 			if (sum < target)
 			{
-				sum = sum == LLONG_MIN ? input[i] : sum + input[i];
-				dq.push_back(std::make_pair(i, input[i]));
+				sum = sum == LLONG_MIN ? a[i] : sum + a[i];
+				dq.push_back(std::make_pair(i, a[i]));
 				++i;
 			}
 			else
@@ -303,10 +335,10 @@ public:
 				if (sum == target)
 				{
 					results.push_back(dq);
-					for (unsigned j = i; j < input.size() && input[j] == 0; ++j)
+					for (unsigned j = i; j < a.size() && a[j] == 0; ++j)
 					{
 						auto dq0 = results.back();
-						dq0.push_back(std::make_pair(j, input[j]));
+						dq0.push_back(std::make_pair(j, a[j]));
 						results.push_back(dq0);
 					}
 				}
@@ -316,6 +348,8 @@ public:
 				sum = !dq.empty() ? sum - front : LLONG_MIN;
 			}
 		}
+
+		return results;
 	}
 
 	/// Yandex. 2-sum problem
@@ -327,12 +361,12 @@ public:
 	static bool HasTwoSum(const std::vector<int>& a, const int sum)
 	{
 		bool result = false;
-		std::unordered_set<int> hash(a.cbegin(), a.cend());
+		std::unordered_set<int> ht(a.cbegin(), a.cend());
 		for (unsigned i = 0; i < a.size(); ++i)
 		{
 			int diff = sum - a[i];
-			auto found = hash.find(diff);
-			if (found != hash.cend())
+			auto found = ht.find(diff);
+			if (found != ht.cend())
 			{
 				result = true;
 				break;
