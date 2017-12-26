@@ -69,58 +69,41 @@ int _tmain(int argc, _TCHAR* argv[])
 			string input;
 			for (auto it = testMssa[i].cbegin(); it != testMssa[i].cend(); ++it)
 			{
-				input += to_string(*it) + (it != testMssa[i].end() - 1 ? ", " : "");
+				input += to_string(*it) + (it != testMssa[i].cend() - 1 ? ", " : "");
 			}
-			cout << setiosflags(ios::right) << setw(2) << setfill('0') << i << ": [" << input << "]" << endl;
+			cout << "Test " << setiosflags(ios::right) << setw(2) << setfill('0') << i << ": [" << input << "]" << endl;
 			auto result = Combinatorics::Mssa(testMssa[i]);
 			cout << "    " << result.first << " [" << result.second.first << ", " << result.second.second << "]" << endl;
 		}
 	}
 	cout << endl;
 
-	/*Console.WriteLine("== Max Product Subarray (MPSA) ==");
-	var testMps = new List<IList<int>>
+	cout << "- Max Product Subarray (MPSA) -" << endl;
 	{
-		new List<int>(),
-		new List<int>{ 2 },
-		new List<int>{ 2, -2 },
-		new List<int>{ 2, 3, 5, 4, 3, 1 },
-		new List<int>{ -2, -3, -5, -4, -3, -1 },
-		new List<int>{ 2, 3, 5, 0, 7, 5, 1 },
-		new List<int>{ -1, -2, -3, 4, 0, -5, 2 },
-		new List<int>{ -10, 0, -20, 0, -30, 0, 0, -40 }
-	};
-	count = 1;
-	foreach(var test in testMps)
-	{
-		Console.WriteLine((count++).ToString().PadLeft(2, '0') + ": [" + string.Join(", ", test) + "]");
-		var result = solutions.Mpsa(test);
-		Console.WriteLine("    {0} [{1}, {2}]", result.Key, result.Value.Key, result.Value.Value);
+		vector<vector<int>> testMpsa =
+		{
+			{},
+			{ 2 },
+			{ 2, -2 },
+			{ 2, 3, 5, 4, 3, 1 },
+			{ -2, -3, -5, -4, -3, -1 },
+			{ 2, 3, 5, 0, 7, 5, 1 },
+			{ -1, -2, -3, 4, 0, -5, 2 },
+			{ -10, 0, -20, 0, -30, 0, 0, -40 }
+		};
+		for (unsigned i = 0; i < testMpsa.size(); ++i)
+		{
+			string input;
+			for (auto it = testMpsa[i].cbegin(); it != testMpsa[i].cend(); ++it)
+			{
+				input += to_string(*it) + (it != testMpsa[i].cend() - 1 ? ", " : "");
+			}
+			cout << "Test " << setiosflags(ios::right) << setw(2) << setfill('0') << i << ": [" << input << "]" << endl;
+			auto result = Combinatorics::Mpsa(testMpsa[i]);
+			cout << "    " << result.first << " [" << result.second.first << ", " << result.second.second << "]" << endl;
+		}
 	}
-	Console.WriteLine();
-
-	Console.WriteLine("== Longest Nondecreasing Subsequence (LNDSS) ==");
-	var testLnds = new List<IList<int>>
-	{
-		new List<int>(),
-		new List<int>{ 0 },
-		new List<int>{ 0, 2 },
-		new List<int>{ 2, 0 },
-		new List<int>{ 2, 0, 5 },
-		new List<int>{ 0, 2, 5 },
-		new List<int>{ 5, 2, 0 },
-		new List<int>{ 2, 0, 9, 3, 9, 1, 9, 5, 7, 7, 8 },
-		new List<int>{ 0, 8, 4, 12, 2, 10, 6, 14, 1, 9, 5, 13, 3, 11, 7, 15 }
-	};
-	count = 1;
-	foreach(var test in testLnds)
-	{
-		Console.WriteLine("Test " + (count++).ToString().PadLeft(2, '0') + ": [" + string.Join(", ", test) + "]");
-		var result = solutions.Lndss(test);
-		Console.WriteLine("Result: {0}", result.Count > 0 ? "[" + string.Join(", ", result) + "]" : "-");
-		Console.WriteLine();
-	}
-	Console.WriteLine();*/
+	cout << endl;
 
 	cout << "- Longest common subsequence (LCSS) -" << endl;
 	{
@@ -145,6 +128,39 @@ int _tmain(int argc, _TCHAR* argv[])
 			cout << "  (" << test.second.size() << "): " << test.second << endl;
 			cout << "  LCSS  (" << lcss.size() << "): " << (lcss.size() > 0 ? lcss : "-") << endl;
 			cout << "  Set X (" << css.size() << "): " << (css.size() > 0 ? css : "-") << endl;
+		}
+	}
+	cout << endl;
+
+	cout << "- Longest Nondecreasing Subsequence (LNDSS) -" << endl;
+	{
+		vector<vector<int>> testLndss =
+		{
+			{},
+			{ 0 },
+			{ 0, 2 },
+			{ 2, 0 },
+			{ 2, 0, 5 },
+			{ 0, 2, 5 },
+			{ 5, 2, 0 },
+			{ 2, 0, 9, 3, 9, 1, 9, 5, 7, 7, 8 },
+			{ 0, 8, 4, 12, 2, 10, 6, 14, 1, 9, 5, 13, 3, 11, 7, 15 }
+		};
+		for (unsigned i = 0; i < testLndss.size(); ++i)
+		{
+			string input;
+			for (auto it = testLndss[i].cbegin(); it != testLndss[i].cend(); ++it)
+			{
+				input += to_string(*it) + (it != testLndss[i].end() - 1 ? ", " : "");
+			}
+			cout << "Test " << setiosflags(ios::right) << setw(2) << setfill('0') << i << ": [" << input << "]" << endl;
+			auto result = Combinatorics::Lndss(testLndss[i]);
+			string output;
+			for (auto it = result.cbegin(); it != result.cend(); ++it)
+			{
+				output += to_string(*it) + (it != result.cend() - 1 ? ", " : "");
+			}
+			cout << "    " << (!output.empty() ? "(" + to_string(result.size()) + "): " + output : "-") << endl;
 		}
 	}
 	cout << endl;

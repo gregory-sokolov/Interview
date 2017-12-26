@@ -192,7 +192,7 @@ public:
 		return result;
 	}
 
-	/// Yandex. Common Subset/Set Intersection (CSS).
+	/// Common Subset/Set Intersection (CSS).
 	/// Similar to LCSS algorithm but with slightly different results.
 	/// Actually, LCSS is very like to an intersection of two sets.
 	/// To use STL set operations, both sequences must be initially sorted.
@@ -230,7 +230,7 @@ public:
 
 		std::deque<int> endings = { a[0] };
 		std::deque<std::deque<int>> lists = { { a[0] } };
-		Combinatorics::LogLists(0, a[0], lists);
+		//Combinatorics::LogLists(0, a[0], lists);
 
 		for (unsigned i = 1; i < a.size(); ++i)
 		{
@@ -259,7 +259,7 @@ public:
 				lists[index] = previous;
 			}
 
-			LogLists(i, a[i], lists);
+			//Combinatorics::LogLists(i, a[i], lists);
 		}
 
 		std::vector<int> result((lists.cend() - 1)->cbegin(), (lists.cend() - 1)->cend());
