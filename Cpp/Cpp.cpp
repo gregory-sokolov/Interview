@@ -23,11 +23,24 @@
 
 using namespace std;
 
+class Impl
+{
+public:
+	void DoSomething() { std::cout << "Done" << std::endl; }
+};
+Class::Class() : m_impl(std::make_unique<Impl>())
+{
+}
+void Class::DoSomething()
+{
+	m_impl->DoSomething();
+}
+
 int _tmain(int argc, _TCHAR* argv[])
 {
     cout << "Program has started" << endl;
 
-    cout << "== Classes ==" << endl;
+    cout << "== C++ ==" << endl;
     {
         cout << "Slice-effect started" << endl;
         AAA* a = new AAA(10);
@@ -81,6 +94,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		cout << endl;
 
 		// STL: std::transform one vector to another
+		cout << "Transform started" << endl;
 		vector<pair<int, int>> vpii = { make_pair(1, 2), make_pair(3, 1), make_pair(5, 4), make_pair(7, 8) };
 		vector<int> vt;
 		transform(vpii.cbegin(), vpii.cend(), back_inserter(vt), [](const pair<int, int>& p) { return p.first; });
@@ -95,9 +109,10 @@ int _tmain(int argc, _TCHAR* argv[])
 		{
 			cout << *it << (it != vt.cend() - 1 ? ", " : "");
 		}
-		cout << endl << endl;
+		cout << endl << "Transform completed" << endl << endl;
 
 		// STL: binary search
+		cout << "Upper-lower bound started" << endl;
 		vector<int> vi01 = { 1, 1, 2, 3, 5, 7, 7, 9, 10, 12, 15, 17 };
 		auto bs1 = lower_bound(vi01.cbegin(), vi01.cend(), 7);
 		auto bs2 = lower_bound(vi01.cbegin(), vi01.cend(), 12);
@@ -121,6 +136,31 @@ int _tmain(int argc, _TCHAR* argv[])
 		cout << "Value: 21, lower_bound: [" << bs6 - vi01.cbegin() << "]" << endl;
 		cout << "Value: 4, upper_bound: [" << bs7 - vi01.cbegin() << "]" << endl;
 		cout << "Value: 21, upper_bound: [" << bs8 - vi01.cbegin() << "]" << endl;
+		cout << "Upper-lower bound completed" << endl << endl;
+
+		cout << "Move-ctor started" << endl;
+		ItemEx item("123", "456");
+		cout << item.GetContent() << endl;
+		ItemEx newItem = move(item);
+		cout << newItem.GetContent() << endl;
+		cout << (item.GetContent() != "" ? item.GetContent() : "-") << endl;
+		cout << "Move-ctor completed" << endl << endl;
+
+		cout << "Auto-type started" << endl;
+		const string s = "1234";
+		auto v32 = BuildFromString<vector<uint32_t>>(s)[0];
+		cout << v32;
+		auto v16 = BuildFromString<vector<uint16_t>>(s)[1];
+		cout << " " << v16;
+		// auto vbb = BuildFromString<vector<bool>>(s)[2]; // program crash here, casting char to bit in vector<bool>
+		auto vbb = BuildFromString<vector<char>>(s)[2];
+		cout << " " << vbb << endl;
+		cout << "Auto-type completed" << endl << endl;
+
+		cout << "Make-unique started" << endl;
+		Class cl1;
+		cl1.DoSomething();
+		cout << "Make-unique completed" << endl << endl;
     }
     cout << endl;
 
