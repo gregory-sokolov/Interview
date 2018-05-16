@@ -23,19 +23,6 @@
 
 using namespace std;
 
-class Impl
-{
-public:
-	void DoSomething() { std::cout << "Done" << std::endl; }
-};
-Class::Class() : m_impl(std::make_unique<Impl>())
-{
-}
-void Class::DoSomething()
-{
-	m_impl->DoSomething();
-}
-
 int _tmain(int argc, _TCHAR* argv[])
 {
     cout << "Program has started" << endl;
@@ -141,7 +128,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		cout << "Move-ctor started" << endl;
 		ItemEx item("123", "456");
 		cout << item.GetContent() << endl;
-		ItemEx newItem = move(item);
+		ItemEx newItem = std::move(item);
 		cout << newItem.GetContent() << endl;
 		cout << (item.GetContent() != "" ? item.GetContent() : "-") << endl;
 		cout << "Move-ctor completed" << endl << endl;
@@ -156,11 +143,6 @@ int _tmain(int argc, _TCHAR* argv[])
 		auto vbb = BuildFromString<vector<char>>(s)[2];
 		cout << " " << vbb << endl;
 		cout << "Auto-type completed" << endl << endl;
-
-		cout << "Make-unique started" << endl;
-		Class cl1;
-		cl1.DoSomething();
-		cout << "Make-unique completed" << endl << endl;
     }
     cout << endl;
 

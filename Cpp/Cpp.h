@@ -106,13 +106,3 @@ T BuildFromString(const std::string& s)
 	}
 	return data;
 }
-
-class Impl;
-class Class
-{
-public:
-	Class();
-	void DoSomething();
-private:
-	std::unique_ptr<Impl> m_impl;
-};
