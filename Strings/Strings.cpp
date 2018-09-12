@@ -4,9 +4,11 @@
 #include "stdafx.h"
 
 #include <iostream>
+#include <iomanip>
 #include <string>
 #include <vector>
 #include <map>
+#include <set>
 
 #include "Strings.h"
 
@@ -112,6 +114,35 @@ int _tmain(int argc, _TCHAR* argv[])
 		{
 			auto result = Strings::CalculateExpression(si->c_str());
 			cout << *si << " = " << result << (si != vs5.end() - 1 ? ", " : "");
+		}
+		cout << endl;
+	}
+	cout << endl;
+
+	cout << "- Word breaking -" << endl;
+	{
+		set<string> dictionary =
+		{
+			"no", "in", "is", "it", "ack", "now", "led", "eve", "owl", "win",
+			"know", "even", "lack", "edge", "here", "tick",
+			"event", "noise", "ledge", "seven", "turel", "where",
+			"venture", "heretic", "acknowledge"
+		};
+		vector<string> testWB =
+		{
+			"noiseventurelacknowledge", "nowhereticknowin",
+			"abcdefghijk", ""
+		};
+		for (auto si = testWB.begin(); si != testWB.end(); ++si)
+		{
+			cout << "Input: " << si->c_str() << endl;
+			auto result = Strings::SplitByWords(si->c_str(), dictionary);
+			cout << "Resut: [";
+			for (auto it = result.cbegin(); it != result.cend(); ++it)
+			{
+				cout << *it << (it != result.cend() - 1 ? ", " : "");
+			}
+			cout << "]" << endl;
 		}
 		cout << endl;
 	}

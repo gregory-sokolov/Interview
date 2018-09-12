@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+#include <deque>
 #include <map>
 #include <unordered_map>
 #include <algorithm>
@@ -93,7 +94,7 @@ public:
 	}
 
 	/// 
-	// Performs full-string primitive regex matching (with only '.' and '*')
+	/// Performs full-string primitive regex matching (with only '.' and '*')
 	/// 
 	static bool IsMatch(const char* s, const char* p)
 	{
@@ -153,11 +154,9 @@ public:
 		return number == "" ? product : (product == LLONG_MAX ? std::stol(number) : product*std::stol(number));
 	}
 
-	/// 
 	/// Returns all anagrams from the list of strings.
 	/// Hash table unordered_map provides lookup operation in O(1).
 	/// Time: O(n), space: O(n)
-	/// 
 	static void FindAnagrams(const std::vector<std::string>& text, std::vector<std::vector<std::string>>& results)
 	{
 		std::unordered_map<std::string, std::vector<std::string>> filter;
@@ -189,42 +188,47 @@ public:
 	/// EPI 15.12. Word breaking (bedbathandbeyond problem).
 	/// Checks if the text is a consequent concatenation of words and returns that sequence.
 	/// Time: O(n^2), space: O(n)
-	/*public IList<string> SplitByWords(string source, ISet<string> dictionary)
+	static std::vector<std::string> SplitByWords(const std::string& s, const std::set<std::string>& d)
 	{
-		var results = new Stack<KeyValuePair<string, int>>();
-		var word = string.Empty;
-		for (var i = 0; i < source.Length; ++i)
+		std::deque<std::pair<std::string, unsigned>> words;
+		std::string token;
+		for (unsigned i = 0; i < s.size(); ++i)
 		{
-			word += source[i];
-			if (dictionary.Contains(word))
+			token += s[i];
+			if (d.find(token) != d.cend())
 			{
-				results.Push(new KeyValuePair<string, int>(word, i));
-				word = string.Empty;
-
-				LogResults(results);
+				words.push_back(std::make_pair(token, i));
+				token.clear();
 			}
 
-			if (i == source.Length - 1 &&
-				word != string.Empty &&
-				results.Count > 0)
+			if (i == s.size() - 1 && !token.empty() && !words.empty())
 			{
-				var last = results.Pop();
-				word = last.Key;
-				i = last.Value;
+				token = words.back().first;
+				i = words.back().second;
+				words.pop_back();
+			}
 
-				LogResults(results);
+			// TODO: debug tracing
+			if (token.empty())
+			{
+				LogResults(words, i + 1);
 			}
 		}
 
-		return results.Select(x = > x.Key).Reverse().ToList();
-	}*/
+		std::vector<std::string> results;
+		std::transform(words.cbegin(), words.cend(), back_inserter(results),
+			[](const std::pair<std::string, unsigned>& x) { return x.first; });
+		return results;
+	}
 
-	/// <summary>
 	/// Log helper
-	/// </summary>
-	/*static void LogResults(Stack<KeyValuePair<string, int>> results)
+	static void LogResults(std::deque<std::pair<std::string, unsigned>> words, unsigned i)
 	{
-		var words = results.Select(x = > x.Key + ":" + x.Value).Reverse();
-		Console.WriteLine("[ " + string.Join(", ", words) + " ]");
-	}*/
+		std::cout << std::setiosflags(std::ios::right) << std::setw(2) << std::setfill('0') << i << ": [ ";
+		for (auto it = words.cbegin(); it != words.cend(); ++it)
+		{
+			std::cout << it->first << (it->first != words.crbegin()->first ? ", " : "");
+		}
+		std::cout << " ]" << std::endl;
+	}
 };
