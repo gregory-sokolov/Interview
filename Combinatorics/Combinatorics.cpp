@@ -340,6 +340,28 @@ int _tmain(int argc, _TCHAR* argv[])
 	}
 	cout << endl;
 
+	cout << "- Knapsack 0-1 (KS01) -" << endl;
+	{
+		vector<pair<vector<pair<unsigned, unsigned>>, unsigned>> testKs01 =
+		{
+			make_pair(vector<pair<unsigned, unsigned>>(
+				{ make_pair(4, 3), make_pair(2, 1), make_pair(5, 7), make_pair(3, 3), make_pair(7, 9) }), 11)
+		};
+
+		for (auto&& test : testKs01)
+		{
+			cout << "Input: w = " << test.second << ", ";
+			for (auto it = test.first.cbegin(); it != test.first.cend(); ++it)
+			{
+				cout << "{" << it->first << "," << it->second << "}" << (it != test.first.cend() - 1 ? ", " : "");
+			}
+			cout << endl;
+			auto result = Combinatorics::Knapsack01(test.first, test.second);
+			cout << "Result: v(max) = " << result << endl;
+		}
+	}
+	cout << endl;
+
 	cout << "== Completed ==" << endl;
 	system("PAUSE");
 	return 0;
