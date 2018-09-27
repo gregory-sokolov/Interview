@@ -548,21 +548,28 @@ public:
 	/// Classical DP problem, it is solved by tabular memoization.
 	/// We build the matrix of values, where lines are asc-sorted item weights w[i]
 	/// and columns are the discretized knapsack weigth w[j].
-	/// On each step we make decision of either to take the item or not, and select the one with the max value:
-	/// - if no, then we inherit the previous value mx[i - 1][j]
+	/// On each step we make the decision of either to take the item or not, and select the one with the max value:
+	/// - if no, then we inherit the value from the previous line, mx[i - 1][j]
 	/// - if yes, then we take the current value v[i] plus the value of the knapsack with 'not-selected' item, mx[i - 1][j - w[j]]
-	/// This 'not-selected' value has been previously calculated and is reused, that is the essence of the DP memoization.
+	/// This 'not-selected' value has been previously calculated and is now reused, that is the essence of the DP memoization.
 	/// The formula for each cell: 
 	/// i == j == 0: mx[i][j] = 0 (zero line/column)
 	/// w[j] < w[i]: mx[i][j] = mx[i - 1][j] (if less, then previous),
-	/// w[i] >= w[j]: mx[i][j] = max(mx[i - 1][j], mx[i - 1][j - w[j]] + v[i]) (if !less, then max(previous, not-selected+current)),
+	/// w[i] >= w[j]: mx[i][j] = max(mx[i - 1][j], mx[i - 1][j - w[j]] + v[i]) (if greater, then max(previous, not-selected+current))
+	/// Backtracks the resulting items by unwinding the matrix from the end.
+	/// If the value comes from the upper line, the current item is skipped and we move one line up.
+	/// Otherwise, it is taken, we move one line up and backtrace back the line by the item weight.
 	/// Time: O(n*weight), space: O(n*weight)
-	static int Knapsack01(std::vector<std::pair<unsigned, unsigned>>& items, unsigned weight)
+	static std::vector<std::pair<unsigned, unsigned>> Knapsack01(std::vector<std::pair<unsigned, unsigned>>& items, unsigned weight)
 	{
+		if (items.size() == 0 || weight == 0)
+		{
+			return std::vector<std::pair<unsigned, unsigned>>();
+		}
+
 		std::sort(items.begin(), items.end(),
 			[](std::pair<unsigned, unsigned>& p1, std::pair<unsigned, unsigned>& p2)
 			{ return p1.first < p2.first; });
-
 		std::vector<std::vector<unsigned>> mx(items.size() + 1, std::vector<unsigned>(weight + 1, 0));
 		for (unsigned i = 1; i < mx.size(); ++i)
 		{
@@ -579,7 +586,19 @@ public:
 			}
 		}
 
-		return mx[mx.size() - 1][mx[0].size() - 1];
+		std::vector<std::pair<unsigned, unsigned>> results;
+		unsigned w = mx[0].size() - 1;
+		for (unsigned i = mx.size() - 1; i > 0; --i)
+		{
+			if (mx[i][w] > 0 && mx[i][w] != mx[i - 1][w])
+			{
+				results.push_back(items[i - 1]);
+				w -= items[i - 1].first;
+			}
+		}
+		std::reverse(results.begin(), results.end());
+
+		return results;
 	}
 };
 
