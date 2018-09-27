@@ -341,14 +341,14 @@ int _tmain(int argc, _TCHAR* argv[])
 	}
 	cout << endl;
 
-	cout << "- Knapsack 0-1 (KS01) -" << endl;
+	cout << "- Knapsack Problem (KS) -" << endl;
 	{
 		vector<pair<vector<pair<unsigned, unsigned>>, unsigned>> testKs01 =
 		{
 			make_pair(vector<pair<unsigned, unsigned>>(), 0),
 			make_pair(vector<pair<unsigned, unsigned>>(), 10),
 			make_pair(vector<pair<unsigned, unsigned>>({ make_pair(4, 3) }), 0),
-			make_pair(vector<pair<unsigned, unsigned>>({ make_pair(4, 3) }), 10),
+			make_pair(vector<pair<unsigned, unsigned>>({ make_pair(3, 4) }), 10),
 			make_pair(vector<pair<unsigned, unsigned>>(
 			{ 
 				make_pair(4, 3), make_pair(2, 1), make_pair(5, 7), make_pair(3, 3), make_pair(7, 9), make_pair(10, 12), make_pair(6, 5)
@@ -367,28 +367,38 @@ int _tmain(int argc, _TCHAR* argv[])
 			}), 72)
 		};
 
-		for (unsigned i = 0; i < testKs01.size(); ++i)
+		vector<pair<string, function<std::vector<std::pair<unsigned, unsigned>>(std::vector<std::pair<unsigned, unsigned>>&, unsigned)>>> algKs(
+		{ 
+			{ "-- Knapsack 0-1 (KS01) --", Combinatorics::Knapsack01 },
+			{ "-- Knapsack Unbounded (KSU) --", Combinatorics::KnapsackU } 
+		});
+		for (const auto& alg : algKs)
 		{
-			auto test = testKs01[i];
-			cout << "Input " << setiosflags(ios::right) << setw(2) << setfill('0') << i + 1 <<
-				": w = " << test.second << ", [" << test.first.size() << "]: " << (test.first.size() > 0 ? "" : "{}");
-			for (auto it = test.first.cbegin(); it != test.first.cend(); ++it)
+			cout << alg.first << endl;
+			for (unsigned i = 0; i < testKs01.size(); ++i)
 			{
-				cout << "{" << it->first << "," << it->second << "}" << (it != test.first.cend() - 1 ? ", " : "");
-			}
-			cout << endl;
-			auto results = Combinatorics::Knapsack01(test.first, test.second);
-			unsigned weight = std::accumulate(results.cbegin(), results.cend(), 0,
+				auto test = testKs01[i];
+				cout << "Input " << setiosflags(ios::right) << setw(2) << setfill('0') << i + 1 <<
+					": w = " << test.second << ", [" << test.first.size() << "]: " << (test.first.size() > 0 ? "" : "{}");
+				for (auto it = test.first.cbegin(); it != test.first.cend(); ++it)
+				{
+					cout << "{" << it->first << "," << it->second << "}" << (it != test.first.cend() - 1 ? ", " : "");
+				}
+				cout << endl;
+				auto results = alg.second(test.first, test.second);
+				unsigned weight = std::accumulate(results.cbegin(), results.cend(), 0,
 					[](unsigned s, const pair<unsigned, unsigned> p) { return s + p.first; }),
-				value = std::accumulate(results.cbegin(), results.cend(), 0,
-					[](unsigned s, const pair<unsigned, unsigned> p) { return s + p.second; });
-			cout << "Result: w = " << weight << ", v = " << value << (results.size() > 0 ? ", [" + to_string(results.size()) + "] : " : "");
-			for (auto it = results.cbegin(); it != results.cend(); ++it)
-			{
-				cout << "{" << it->first << "," << it->second << "}" << (it != results.cend() - 1 ? ", " : "");
+					value = std::accumulate(results.cbegin(), results.cend(), 0,
+						[](unsigned s, const pair<unsigned, unsigned> p) { return s + p.second; });
+				cout << "Result: w = " << weight << ", v = " << value << (results.size() > 0 ? ", [" + to_string(results.size()) + "] : " : "");
+				for (auto it = results.cbegin(); it != results.cend(); ++it)
+				{
+					cout << "{" << it->first << "," << it->second << "}" << (it != results.cend() - 1 ? ", " : "");
+				}
+				cout << endl;
 			}
-			cout << endl;
 		}
+		
 	}
 	cout << endl;
 

@@ -543,7 +543,7 @@ public:
 		return result;
 	}
 
-	/// EPI 17.2. 0-1 knapsack problem (KS01)
+	/// EPI 17.2.1. 0-1 knapsack problem (KS01)
 	/// Returns the maximum value of items that is possible to put into the knapsack.
 	/// Classical DP problem, it is solved by tabular memoization.
 	/// We build the matrix of values, where lines are asc-sorted item weights w[i]
@@ -568,8 +568,7 @@ public:
 		}
 
 		std::sort(items.begin(), items.end(),
-			[](std::pair<unsigned, unsigned>& p1, std::pair<unsigned, unsigned>& p2)
-			{ return p1.first < p2.first; });
+			[](std::pair<unsigned, unsigned>& p1, std::pair<unsigned, unsigned>& p2) { return p1.first < p2.first; });
 		std::vector<std::vector<unsigned>> mx(items.size() + 1, std::vector<unsigned>(weight + 1, 0));
 		for (unsigned i = 1; i < mx.size(); ++i)
 		{
@@ -597,6 +596,51 @@ public:
 			}
 		}
 		std::reverse(results.begin(), results.end());
+
+		return results;
+	}
+
+	/// EPI 17.2.2. Unbounded knapsack problem (KSU)
+	/// Returns the maximum value of items that is possible to put into the knapsack, item repetitions are allowed.
+	/// Time: O(n*weight), space: O(n*weight)
+	static std::vector<std::pair<unsigned, unsigned>> KnapsackU(std::vector<std::pair<unsigned, unsigned>>& items, unsigned weight)
+	{
+		if (items.size() == 0 || weight == 0)
+		{
+			return std::vector<std::pair<unsigned, unsigned>>();
+		}
+
+		std::sort(items.begin(), items.end(),
+			[](std::pair<unsigned, unsigned>& p1, std::pair<unsigned, unsigned>& p2) { return p1.first < p2.first; });
+		std::vector<std::vector<unsigned>> mx(items.size() + 1, std::vector<unsigned>(weight + 1, 0));
+		for (unsigned i = 1; i < mx[0].size(); ++i)
+		{
+			for (unsigned j = 1; j < mx.size(); ++j)
+			{
+				if (i >= items[j - 1].first)
+				{
+					mx[j][i] = std::max(mx[j - 1][i], mx[mx.size() - 1][i - items[j - 1].first] + items[j - 1].second);
+				}
+				else
+				{
+					mx[j][i] = mx[j - 1][i];
+				}
+			}
+		}
+
+		std::vector<std::pair<unsigned, unsigned>> results;
+		for (unsigned i = mx[0].size() - 1; i > 0; --i)
+		{
+			for (unsigned j = mx.size() - 1; j > 0; --j)
+			{
+				if (mx[j][i] > 0 && mx[j][i] != mx[j - 1][i])
+				{
+					results.push_back(items[j - 1]);
+					i -= items[j - 1].first - 1;
+					break;
+				}
+			}
+		}
 
 		return results;
 	}
