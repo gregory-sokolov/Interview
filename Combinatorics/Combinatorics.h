@@ -407,7 +407,7 @@ public:
 		return false;
 	}
 
-	/// Return all combinations of any 3 elements of an array that sum to given value.
+	/// Returns all combinations of any 3 elements of an array that sum to given value.
 	/// Brute-force generation of all combinations, C(n/k) - binomial coefficients.
 	/// Time: O(n^3), space: O(1)
 	static void ThreeSumCombinations(const std::vector<int>& input, const int sum,
@@ -605,11 +605,11 @@ public:
 	/// The difference between KS01 is that for each discretized value w[i] we evaluate all available item weights/values,
 	/// so the maximum i-th value ends up in the last matrix line. Thus we handle repetitions.
 	/// In KS01, we iterated line by line; here, we iterate column by column, so the matrix indexation in loops is the opposite.
-	/// The formula per each cell:
+	/// The formula for each cell:
 	/// - i == j == 0, mx[i][j] = 0
 	/// - i < w[j]: mx[j][i] = mx[j - 1][i] (if less, then previous)
 	/// - i >= w[j]: mx[j][i] = max(mx[j][i], mx[n - 1][i - w[j]] + v[j]) (if greater, then max(previous, not-selected+current))
-	/// Result backtracking is similar to KS01, but after each selection we reset the search back to the last line and move up from the very bottom.
+	/// Result backtracking is similar to KS01, but after each selection we reset the search back to the last line and move up from the bottom.
 	/// Time: O(n*weight), space: O(n*weight)
 	static std::vector<std::pair<unsigned, unsigned>> KnapsackU(std::vector<std::pair<unsigned, unsigned>>& items, unsigned weight)
 	{
