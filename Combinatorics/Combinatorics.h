@@ -147,7 +147,7 @@ public:
 	/// Returns LCSS of two strings with lengths m and n.
 	/// Classical DP algorithm based on tabular memoization, where we build the matrix of matches.
 	/// If there is no match, the maximum of the previous-top and previous-left elements is used.
-	/// The second loop build the resulting string by traversing the matrix.
+	/// The second loop builds the resulting string by traversing the matrix.
 	/// Time: O(m*n), space: O(n) for matrix
 	static std::string Lcss(std::string s1, std::string s2)
 	{
@@ -553,9 +553,9 @@ public:
 	/// - if yes, then we take the current value v[i] plus the value of the knapsack with 'not-selected' item, mx[i - 1][j - w[j]]
 	/// This 'not-selected' value has been previously calculated and is now reused, that is the essence of the DP memoization.
 	/// The formula for each cell: 
-	/// i == j == 0: mx[i][j] = 0 (zero line/column)
-	/// w[j] < w[i]: mx[i][j] = mx[i - 1][j] (if less, then previous),
-	/// w[i] >= w[j]: mx[i][j] = max(mx[i - 1][j], mx[i - 1][j - w[j]] + v[i]) (if greater, then max(previous, not-selected+current))
+	/// - i == j == 0: mx[i][j] = 0 (zero line/column)
+	/// - i < w[j]: mx[i][j] = mx[i - 1][j] (if less, then previous),
+	/// - i >= w[j]: mx[i][j] = max(mx[i - 1][j], mx[i - 1][j - w[j]] + v[i]) (if greater, then max(previous, not-selected+current))
 	/// Backtracks the resulting items by unwinding the matrix from the end.
 	/// If the value comes from the upper line, the current item is skipped and we move one line up.
 	/// Otherwise, it is taken, we move one line up and backtrace back the line by the item weight.
@@ -602,6 +602,14 @@ public:
 
 	/// EPI 17.2.2. Unbounded knapsack problem (KSU)
 	/// Returns the maximum value of items that is possible to put into the knapsack, item repetitions are allowed.
+	/// The difference between KS01 is that for each discretized value w[i] we evaluate all available item weights/values,
+	/// so the maximum i-th value ends up in the last matrix line. Thus we handle repetitions.
+	/// In KS01, we iterated line by line; here, we iterate column by column, so the matrix indexation in loops is the opposite.
+	/// The formula per each cell:
+	/// - i == j == 0, mx[i][j] = 0
+	/// - i < w[j]: mx[j][i] = mx[j - 1][i] (if less, then previous)
+	/// - i >= w[j]: mx[j][i] = max(mx[j][i], mx[n - 1][i - w[j]] + v[j]) (if greater, then max(previous, not-selected+current))
+	/// Result backtracking is similar to KS01, but after each selection we reset the search back to the last line and move up from the very bottom.
 	/// Time: O(n*weight), space: O(n*weight)
 	static std::vector<std::pair<unsigned, unsigned>> KnapsackU(std::vector<std::pair<unsigned, unsigned>>& items, unsigned weight)
 	{
