@@ -1,11 +1,13 @@
 #pragma once
 
+#include <iostream>
 #include <string>
 #include <vector>
 #include <deque>
 #include <map>
 #include <unordered_map>
 #include <algorithm>
+#include <numeric>
 
 /// 
 /// EPI. Chapter 6. String Problems
@@ -183,6 +185,82 @@ public:
 				results.push_back(it->second);
 			}
 		}
+	}
+
+	/// EPI 15.11.1. Levenstein distance (edit distance). 
+	/// Returns the number of edit operations required to transform one string s1 to another s2.
+	/// Types of standard operations: 
+	/// I - insert, D - delete, R - replace, M - match
+	/// Time: O(m*n), space: O(m*n)
+	static int LevensteinDistance(const std::string& s1, const std::string& s2)
+	{
+		// Input checks
+		if (s1.empty() && s2.empty() || s1 == s2)
+		{
+			return 0;
+		}
+		else if (s1.empty() && !s2.empty())
+		{
+			return s2.size();
+		}
+		else if (!s1.empty() && s2.empty())
+		{
+			return s1.size();
+		}
+
+		// Initialization
+		unsigned m = s1.size(), n = s2.size();
+		std::vector<std::vector<unsigned>> mx(m + 1, std::vector<unsigned>(n + 1));
+		for (unsigned i = 0; i <= m; ++i)
+		{
+			mx[i][0] = i;
+		}
+		for (unsigned i = 0; i <= n; ++i)
+		{
+			mx[0][i] = i;
+		}
+
+		// The DP algorithm
+		for (unsigned i = 1; i <= m; ++i)
+		{
+			for (unsigned j = 1; j <= n; ++j)
+			{
+				if (s1[i - 1] == s2[j - 1])
+				{
+					mx[i][j] = mx[i - 1][j - 1];
+				}
+				else
+				{
+					mx[i][j] = 1 + std::min(std::min(mx[i][j - 1], mx[i - 1][j]), mx[i - 1][j - 1]);
+				}
+			}
+		}
+
+		// TODO: debug tracing
+		std::cout << std::endl;
+		for (unsigned i = 0; i < m + 1; ++i)
+		{
+			for (unsigned j = 0; j < n + 1; ++j)
+			{
+				std::cout << std::setiosflags(std::ios::right) << std::setw(3) << mx[i][j];
+			}
+			std::cout << std::endl;
+		}
+
+		// Editorial prescription
+		/*for (unsigned i = m; i >= 0; --i)
+		{
+			for (unsigned j = n; j >= 0; --j)
+			{
+				if (mx[i][j] == mx[i - 1][j - 1])
+				{
+
+				}
+				else if (mx[i][j])
+			}
+		}*/
+
+		return mx[m][n];
 	}
 
 	/// EPI 15.12. Word breaking (bedbathandbeyond problem).

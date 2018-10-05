@@ -5,7 +5,6 @@
 #include "stdafx.h"
 
 #include <iostream>
-
 #include <iterator>
 #include <string>
 #include <vector>

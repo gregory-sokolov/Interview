@@ -119,6 +119,31 @@ int _tmain(int argc, _TCHAR* argv[])
 	}
 	cout << endl;
 
+	cout << "- Levenstein distance -" << endl;
+	{
+		vector<pair<string, string>> testLD =
+		{
+			{ "", "" },
+			{ "", "a" },
+			{ "a", "" },
+			{ "aaa", "aaa" },
+			{ "aabaa", "aacaa" },
+			{ "abc", "defgh" },
+			{ "intention", "execution" },
+			{ "democrat", "republican" },
+		    { "exponential", "polynomial" },
+			{ "subexponential", "subpolynomial" }
+		};
+		for (auto pi = testLD.begin(); pi != testLD.end(); ++pi)
+		{
+			cout << pi->first << " -> " << pi->second << ": ";
+			auto result = Strings::LevensteinDistance(pi->first, pi->second);
+			cout << "ld = " << result << endl;
+		}
+		cout << endl;
+	}
+	cout << endl;
+
 	cout << "- Word breaking -" << endl;
 	{
 		set<string> dictionary =
