@@ -119,7 +119,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	}
 	cout << endl;
 
-	cout << "- Levenstein distance -" << endl;
+	cout << "- Levenshtein distance (LD) -" << endl;
 	{
 		vector<pair<string, string>> testLD =
 		{
@@ -134,11 +134,31 @@ int _tmain(int argc, _TCHAR* argv[])
 		    { "exponential", "polynomial" },
 			{ "subexponential", "subpolynomial" }
 		};
-		for (auto pi = testLD.begin(); pi != testLD.end(); ++pi)
+		for (unsigned i = 0; i < testLD.size(); ++i)
 		{
-			cout << pi->first << " -> " << pi->second << ": ";
-			auto result = Strings::LevensteinDistance(pi->first, pi->second);
-			cout << "ld = " << result << endl;
+			auto input = testLD[i];
+			cout << "Test " << setiosflags(ios::right) << setw(2) << setfill('0') << i + 1 << ": " << setfill('\0') <<
+				input.first << " -> " << input.second << ": ";
+			auto result = Strings::LevenshteinDistance(input.first, input.second);
+			cout << "ld = " << result.first << endl;
+			if (result.second.size() > 0)
+			{
+				string src, dst, edit;
+				std::transform(result.second.cbegin(), result.second.cend(), back_inserter(src),
+					[](const std::pair<char, char> x) { return !x.first && x.second ? ' ' : x.first; });
+				std::transform(result.second.cbegin(), result.second.cend(), back_inserter(dst),
+					[](const std::pair<char, char> x) { return x.first && !x.second ? ' ' : x.second; });
+				std::transform(result.second.cbegin(), result.second.cend(), back_inserter(edit),
+					[](const std::pair<char, char> x)
+				{
+					return x.first && !x.second ? 'D' : (!x.first && x.second ? 'I' : (x.first != x.second ? 'R' : 'M'));
+				});
+				!edit.empty() ? edit.erase(edit.cend() - 1) : edit.cend();
+				cout << src << endl;
+				cout << dst << endl;
+				cout << edit << endl;
+			}
+			cout << "--" << endl;
 		}
 		cout << endl;
 	}

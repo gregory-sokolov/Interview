@@ -8,6 +8,7 @@
 #include <unordered_map>
 #include <algorithm>
 #include <numeric>
+#include <limits>
 
 /// 
 /// EPI. Chapter 6. String Problems
@@ -187,25 +188,31 @@ public:
 		}
 	}
 
-	/// EPI 15.11.1. Levenstein distance (edit distance). 
+	/// EPI 15.11. Levenshtein distance (edit distance). 
 	/// Returns the number of edit operations required to transform one string s1 to another s2.
 	/// Types of standard operations: 
 	/// I - insert, D - delete, R - replace, M - match
+	/// Based on standard DP algorithm with tabular memoization (similar to EPI 15.5.3 LCSS).
+	/// Edit prescription (IDRM transformation sequence) is inferred by traversing the matrix bottom up,
+	/// for each cell we find the minimum from the diagonal/left/top elements,
+	/// where diagonal - R or M, left - insert from s2, top - delete from s1 (Wagner-Fisher algorithm).
 	/// Time: O(m*n), space: O(m*n)
-	static int LevensteinDistance(const std::string& s1, const std::string& s2)
+	/// Returns: the distance and the edit prescription
+	static std::pair<unsigned, std::vector<std::pair<char, char>>> 
+		LevenshteinDistance(const std::string& s1, const std::string& s2)
 	{
 		// Input checks
 		if (s1.empty() && s2.empty() || s1 == s2)
 		{
-			return 0;
+			return std::make_pair(0, std::vector<std::pair<char, char>>());
 		}
 		else if (s1.empty() && !s2.empty())
 		{
-			return s2.size();
+			return std::make_pair(s2.size(), std::vector<std::pair<char, char>>());
 		}
 		else if (!s1.empty() && s2.empty())
 		{
-			return s1.size();
+			return std::make_pair(s1.size(), std::vector<std::pair<char, char>>());
 		}
 
 		// Initialization
@@ -237,30 +244,53 @@ public:
 		}
 
 		// TODO: debug tracing
-		std::cout << std::endl;
-		for (unsigned i = 0; i < m + 1; ++i)
+		LogResults(mx);
+
+		// Edit prescription: Wagner-Fisher algorithm
+		std::vector<std::pair<char, char>> result;
+		for (int i = m, j = n; i >= 0 || j >= 0;)
 		{
-			for (unsigned j = 0; j < n + 1; ++j)
+			unsigned current = mx[i][j],
+				diag = i > 0 && j > 0 ? mx[i - 1][j - 1] : std::numeric_limits<unsigned>::max(),
+				left = j > 0 ? mx[i][j - 1] : std::numeric_limits<unsigned>::max(),
+				top = i > 0 ? mx[i - 1][j] : std::numeric_limits<unsigned>::max(),
+				min = std::min(diag, std::min(left, top));
+			if (min == diag)
 			{
-				std::cout << std::setiosflags(std::ios::right) << std::setw(3) << mx[i][j];
+				result.push_back(std::make_pair(s1[i], s2[j]));
+				--i; --j;
 			}
-			std::cout << std::endl;
+			else if	(min == left)
+			{
+				result.push_back(std::make_pair('\0', s2[j]));
+				--j;
+			}
+			else //if (min == top)
+			{
+				result.push_back(std::make_pair(s1[i], '\0'));
+				--i;
+			}
 		}
+		std::reverse(result.begin(), result.end());
 
-		// Editorial prescription
-		/*for (unsigned i = m; i >= 0; --i)
+		return std::make_pair(mx[m][n], result);
+	}
+
+	/// Log helper
+	static void LogResults(const std::vector<std::vector<unsigned>>& mx)
+	{
+		if (mx.size() > 0 && mx[0].size() > 0)
 		{
-			for (unsigned j = n; j >= 0; --j)
+			std::cout << std::endl;
+			for (unsigned i = 0; i < mx.size(); ++i)
 			{
-				if (mx[i][j] == mx[i - 1][j - 1])
+				for (unsigned j = 0; j < mx[0].size(); ++j)
 				{
-
+					std::cout << std::setiosflags(std::ios::right) << std::setw(3) << mx[i][j];
 				}
-				else if (mx[i][j])
+				std::cout << std::endl;
 			}
-		}*/
-
-		return mx[m][n];
+		}
 	}
 
 	/// EPI 15.12. Word breaking (bedbathandbeyond problem).
