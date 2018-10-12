@@ -270,7 +270,7 @@ public:
 	/// LNDSS log helper
 	static void LogLists(const int i, const int ai, const std::deque<std::deque<int>>& lists)
 	{
-		cout << setiosflags(ios::right) << setw(2) << setfill('0') << i << ": " << ai << endl;
+		std::cout << std::setiosflags(std::ios::right) << std::setw(2) << std::setfill('0') << i << ": " << ai << std::endl;
 		for (auto lit = lists.cbegin(); lit != lists.end(); ++lit)
 		{
 			std::cout << "  ";
@@ -278,7 +278,7 @@ public:
 			{
 				std::cout << *it << (it != lit->end() - 1 ? "-" : "");
 			}
-			std::cout << endl;
+			std::cout << std::endl;
 		}
 	}
 
