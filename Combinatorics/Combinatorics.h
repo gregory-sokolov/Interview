@@ -434,6 +434,43 @@ public:
 		}
 	}
 
+	/// EPI 15.22.1. Scheduling tutors
+	/// This is a variation of classic interval scheduling problem, solved by greedy algorithms.
+	struct Tutor
+	{
+		double eor; // End of request
+		double eod; // End of duty
+	};
+	static std::list<Tutor> ScheduleTutors(std::vector<std::pair<double, double>>& requests, const double capacity)
+	{
+		bool result = false;
+
+		std::sort(requests.begin(), requests.end(),
+			[](std::pair<double, double>& p1, std::pair<double, double>& p2) { return p1.second < p2.second; });
+
+		std::list<Tutor> tutorPool = { { requests.cbegin()->second, requests.cbegin()->first + capacity } };
+		for (auto ri = requests.cbegin() + 1; ri < requests.cend(); ++ri)
+		{
+			bool found = false;
+			for (auto& tp : tutorPool)
+			{
+				if (ri->first >= tp.eor && ri->second <= tp.eod)
+				{
+					tp.eor = ri->second;
+					found = true;
+					break;
+				}
+			}
+
+			if (!found)
+			{
+				tutorPool.push_back({ ri->second, ri->first + capacity });
+			}
+		}
+
+		return tutorPool;
+	}
+
 	/// EPI 17.0.1. Subset Sum (SSS)
 	/// This is well-known NP-problem, could be solved with brute-force recursive implementation.
 	/// The solution handles only positive numbers in the array.

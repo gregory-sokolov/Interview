@@ -401,6 +401,18 @@ int _tmain(int argc, _TCHAR* argv[])
 	}
 	cout << endl;
 
+	cout << "- Scheduling Tutors (GISMP) -" << endl;
+	{
+		vector<pair<double, double>> schedule =
+		{
+			{ 9, 9.5 }, { 9.3, 9.8 }, { 9.5, 10.0 }, { 9.8, 10.3 }, { 9.9, 10.4 }, { 10.0, 10.5 }, { 10.2, 10.7 }, { 10.5, 11.0 },
+			{ 10.5, 11.0 }, { 10.8, 11.3 },  { 11.5, 12.0 }
+		};
+		auto tutors = Combinatorics::ScheduleTutors(schedule, 2.0);
+		cout << "Max tutors: " << tutors.size() << endl;
+	}
+	cout << endl;
+
 	cout << "== Completed ==" << endl;
 	system("PAUSE");
 	return 0;
