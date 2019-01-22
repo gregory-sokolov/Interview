@@ -436,11 +436,11 @@ public:
 	}
 
 	/// EPI 15.22.1. Scheduling tutors
-	/// This is a variation of classic interval scheduling problem, solved by greedy algorithm.
+	/// This is a variation of classic interval scheduling problem, solved by greedy method.
 	/// We build a pool of tutors "greedily", either reusing existing free tutors within their capacity time, 
 	/// or adding a new tutor when no free/unexpired ones are available. Expired tutors are not removed from the pool
-	/// because tracking of their avalability is performed by end of duty time. As a result, pool size 
-	/// at the end of the processing is the least number of tutors required to serve the requests.
+	/// as they are safely excluded from selection by the end of duty time. As a result, total pool size 
+	/// after the processing is the least number of tutors required to serve the requests.
 	/// Time: O(n log(n)) + O(n) = O(n log(n)), space: O(1)
 	struct Tutor
 	{
