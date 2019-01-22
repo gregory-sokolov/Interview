@@ -413,6 +413,25 @@ int _tmain(int argc, _TCHAR* argv[])
 	}
 	cout << endl;
 
+	cout << "- Coin Change -" << endl;
+	{
+		vector<unsigned> coinage = { 1, 2, 5, 10, 25, 50 };
+		vector<unsigned> sums = { 0, 1, 2, 3, 5, 79, 100, 122, 243, 1399 };
+		for (const auto& sum : sums)
+		{
+			auto results = Combinatorics::CoinChangeGreedy(coinage, sum);
+			auto coins = accumulate(results.cbegin(), results.cend(), (unsigned)0,
+				[](const unsigned& s, const pair<unsigned, unsigned>& ci) { return s + ci.second; });
+			cout << "Sum: " << sum << ", coins (" << coins << "): { ";
+			for (auto it = results.cbegin(); it != results.cend(); ++it)
+			{
+				cout << it->first << ":" << it->second << (it != results.cend() - 1 ? ", " : "");
+			}
+			cout << " }" << endl;
+		}
+	}
+	cout << endl;
+
 	cout << "== Completed ==" << endl;
 	system("PAUSE");
 	return 0;

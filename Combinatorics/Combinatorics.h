@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include <deque>
+#include <map>
 #include <unordered_set>
 #include <unordered_map>
 #include <algorithm>
@@ -435,7 +436,12 @@ public:
 	}
 
 	/// EPI 15.22.1. Scheduling tutors
-	/// This is a variation of classic interval scheduling problem, solved by greedy algorithms.
+	/// This is a variation of classic interval scheduling problem, solved by greedy algorithm.
+	/// We build a pool of tutors "greedily", either reusing existing free tutors within their capacity time, 
+	/// or adding a new tutor when no free/unexpired ones are available. Expired tutors are not removed from the pool
+	/// because tracking of their avalability is performed by end of duty time. As a result, pool size 
+	/// at the end of the processing is the least number of tutors required to serve the requests.
+	/// Time: O(n log(n)) + O(n) = O(n log(n)), space: O(1)
 	struct Tutor
 	{
 		double eor; // End of request
@@ -469,6 +475,23 @@ public:
 		}
 
 		return tutorPool;
+	}
+
+	/// EPI 15.22.2. Coin change
+	/// Solving change-making problem by greedy method.
+	static std::vector<std::pair<unsigned, unsigned>> CoinChangeGreedy(std::vector<unsigned>& coinage, const unsigned amount)
+	{
+		std::vector<std::pair<unsigned, unsigned>> result = {};
+		std::sort(coinage.begin(), coinage.end(), std::greater<unsigned>());
+		for (unsigned i = 0, remainder = amount; i < coinage.size(); ++i)
+		{
+			unsigned count = 0;
+			for (unsigned subsum = coinage[i]; subsum <= remainder; subsum += coinage[i], ++count) {}
+			result.push_back(std::make_pair(coinage[i], count));
+			remainder -= count*coinage[i];
+		}
+
+		return result;
 	}
 
 	/// EPI 17.0.1. Subset Sum (SSS)
