@@ -401,7 +401,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	}
 	cout << endl;
 
-	cout << "- Scheduling Tutors (GISMP) -" << endl;
+	cout << "- Greedy Method. Scheduling Tutors (GISMP) -" << endl;
 	{
 		vector<pair<double, double>> schedule =
 		{
@@ -413,7 +413,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	}
 	cout << endl;
 
-	cout << "- Coin Change -" << endl;
+	cout << "- Greedy Method. Coin Change -" << endl;
 	{
 		vector<unsigned> coinage = { 1, 2, 5, 10, 25, 50 };
 		vector<unsigned> sums = { 0, 1, 2, 3, 5, 79, 100, 122, 243, 1399 };
@@ -428,6 +428,27 @@ int _tmain(int argc, _TCHAR* argv[])
 				cout << it->first << ":" << it->second << (it != results.cend() - 1 ? ", " : "");
 			}
 			cout << " }" << endl;
+		}
+	}
+	cout << endl;
+
+	cout << "- Greedy Method. Huffman Coding -" << endl;
+	{
+		vector<vector<pair<char, double>>> freqs =
+		{
+			{ { } },
+			{ { 'e', 12.98 } },
+			{ { 'e', 12.98 }, { 'h', 5.79 } },
+			{ { 'e', 12.98 }, { 't', 8.4 }, { 'i', 6.5 }, { 'h', 5.79 } }
+		};
+		for (const auto& freq : freqs)
+		{
+			auto results = Combinatorics::HuffmanCoding(freq);
+			for (auto it = freq.cbegin(); it != freq.cend(); ++it)
+			{
+				cout << it->first << ":" << it->second << ":" << results[it->first] << (it != freq.cend() - 1 ? ", " : "");
+			}
+			cout << endl;
 		}
 	}
 	cout << endl;

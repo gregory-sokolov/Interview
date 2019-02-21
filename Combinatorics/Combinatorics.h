@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include <deque>
+#include <queue>
 #include <map>
 #include <unordered_set>
 #include <unordered_map>
@@ -492,6 +493,51 @@ public:
 		}
 
 		return result;
+	}
+
+	/// EPI 15.26. Huffman Coding
+	/// Returns Huffman codes for the provided alphabet with known character frequencies.
+	static std::map<char, std::string> HuffmanCoding(const std::vector<std::pair<char, double>>& char_freq)
+	{
+		std::map<char, std::string> results;
+
+		auto compare = [](const std::pair<std::string, double>& p1, const std::pair<std::string, double>& p2)
+		{ 
+			return p1.second > p2.second; 
+		};
+		std::priority_queue<std::pair<std::string, double>, vector<std::pair<std::string, double>>, decltype(compare)>
+			min_heap(compare);
+		for (const auto& cfi : char_freq)
+		{
+			min_heap.push(std::make_pair(std::string(1, cfi.first), cfi.second));
+			results[cfi.first] = "";
+		}
+
+		bool bit = false;
+		std::vector<std::pair<std::string, double>> mins;
+		while (!min_heap.empty())
+		{
+			mins.push_back(min_heap.top());
+			min_heap.pop();
+			if (!min_heap.empty() || mins.size() > 1 || char_freq.size() == 1)
+			{
+				for (const auto& ch : mins.back().first)
+				{
+					results[ch] = std::to_string((int)bit) + results[ch];
+				}
+			}
+
+			if (mins.size() > 1)
+			{
+				auto sum = std::make_pair(mins.front().first + mins.back().first, mins.front().second + mins.back().second);
+				min_heap.push(sum);
+				mins.clear();
+			}
+			
+			bit = !bit;
+		}
+
+		return results;
 	}
 
 	/// EPI 17.0.1. Subset Sum (SSS)
