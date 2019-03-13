@@ -4,6 +4,8 @@
 #include <iomanip>
 #include <string>
 #include <vector>
+#include <deque>
+#include <map>
 
 ///
 /// Combinatorial Problems
@@ -35,6 +37,44 @@ public:
 				}
 			}
 		}
+	}
+
+	/// EPI 6.22. Generating phone pad mnemonic combinations (Amazon Question)
+	/// Generates all possible combinations out of standard phone keyboard layout numbers.
+	/// Initializes the resulting output sequence with the letters from the first digit.
+	/// Then reuses already generated sequence to append one more letter to each already existing combination,
+	/// removing the head from the beginning and pushing new combinations to the end of the sequence.
+	/// Finally, the sequence contains all required combinations.
+	/// We use std::deque here as it is suitable for removing from the top and adding to the end of the collection. 
+	/// Time: O(n), space: O(k*n)
+	static std::deque<std::string> PhoneMnemonics(const std::vector<unsigned>& numbers, std::map<unsigned, std::string>& mapping)
+	{
+		if (numbers.empty() || mapping.empty())
+		{
+			return std::deque<std::string>();
+		}
+
+		std::deque<std::string> results;
+		for (const auto& ci : mapping[numbers[0]])
+		{
+			results.push_back(std::string(1, ci));
+		}
+		for (unsigned i = 1; i < numbers.size(); ++i)
+		{
+			std::string lts = mapping[numbers[i]];
+			unsigned size = results.size();
+			for (unsigned j = 0; j < size; ++j)
+			{
+				std::string head = results.front();
+				results.pop_front();
+				for (unsigned k = 0; k < lts.size(); ++k)
+				{
+					results.push_back(head + std::string(1, lts[k]));
+				}
+			}
+		}
+
+		return results;
 	}
 };
 
