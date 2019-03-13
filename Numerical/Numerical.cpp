@@ -172,34 +172,6 @@ int _tmain(int argc, _TCHAR* argv[])
 	}
 	cout << endl;
 
-	cout << "- Closest Points -" << endl;
-	{
-		unsigned k = 4;
-		pair<double, double> origin(0.0, 0.0);
-		vector<pair<double, double>> vdpi =
-		{
-			make_pair(2.7, 1.8), make_pair(2.0, 5.9), make_pair(3.7, 3.4), make_pair(9.2, 0.4), make_pair(7.2, 7.5),
-			make_pair(5.2, 2.6), make_pair(1.1, 1.3), make_pair(1.5, 2.7), make_pair(3.3, 8.1), make_pair(0.1, 9.9),
-			make_pair(0.0, 0.0), make_pair(10.0, 10.0), make_pair(-4.56, 7.89), make_pair(0.3579, -0.2468), make_pair(-5.5, -7.7)
-		};
-		vector<pair<double, double>> vdpr;
-		Numerical::GetClosestPoints(k, origin, vdpi, vdpr);
-		cout << "Origin: " << "(" << origin.first << ";" << origin.second << ")" << ", count: " << k << endl;
-		cout << "Points: ";
-		for (auto pi = vdpi.begin(); pi != vdpi.end(); ++pi)
-		{
-			cout << "(" << pi->first << ";" << pi->second << ")" << (pi != vdpi.end() - 1 ? ", " : "");
-		}
-		cout << endl;
-		cout << "Closest: ";
-		for (auto pi = vdpr.begin(); pi != vdpr.end(); ++pi)
-		{
-			cout << "(" << pi->first << ";" << pi->second << ")" << (pi != vdpr.end() - 1 ? ", " : "");
-		}
-		cout << endl;
-	}
-	cout << endl;
-
 	cout << "== Completed ==" << endl;
 	system("PAUSE");
 	return 0;
