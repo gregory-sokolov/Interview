@@ -4,6 +4,7 @@
 #include <vector>
 #include <algorithm>
 #include <cmath>
+#include <limits>
 
 ///
 /// Linear operations: array and matrix problems
@@ -11,6 +12,39 @@
 class Linear
 {
 public:
+	/// EPI 6.3. Max difference
+	/// Finds maximum difference between array elements a[i] and a[j], so that j > i.
+	/// Time: O(n), space: O(1)
+	static unsigned MaxDiff(const std::vector<unsigned>& a)
+	{
+		if (a.empty())
+		{
+			return 0;
+		}
+
+		unsigned max = 0, imax = 0;
+		for (unsigned i = 0; i < a.size(); ++i)
+		{
+			if (a[i] > max)
+			{
+				max = a[i];
+				imax = i;
+			}
+		}
+
+		unsigned min = a[0];
+		if (imax > 0)
+		{
+			min = std::numeric_limits<unsigned>::max();
+			for (int i = imax - 1; i >= 0; --i)
+			{
+				min = a[i] < min ? a[i] : min;
+			}
+		}
+
+		return max - min;
+	}
+
 	/// EPI 6.14.1. Sudoku checker
 	/// Checks that input board matrix is a valid Sudoku assignment.
 	/// Tedious duplicate checking problem in a matrix line by line.
