@@ -14,6 +14,7 @@ class Linear
 public:
 	/// EPI 6.3. Max difference
 	/// Finds maximum difference between array elements a[i] and a[j], so that j > i.
+	/// Search maximum value moving forward the array, then search the minimum going backward from that point.   
 	/// Time: O(n), space: O(1)
 	static unsigned MaxDiff(const std::vector<unsigned>& a)
 	{
