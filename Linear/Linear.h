@@ -121,7 +121,7 @@ public:
 		return result;
 	}
 
-	/// EPI 6.14.2 Sudoku checker
+	/// EPI 6.14.2. Sudoku checker
 	/// Does the same check with less space (bit vector, no matrix copying) but with code duplication.
 	/// Uses another method of section check.
 	/// Time: O(n), space: O(1)
@@ -193,9 +193,8 @@ public:
 	}
 
 	/// EPI 6.15. Printing the matrix in spiral order
-	/// Straightforward iterative solution, that output the matrix borders ([0][0,n-1], [1,n-1][n-1], [n-1][n-2,0], [n-2,1][0]),
-	/// collapsing the matrix level by level deep.
-	/// Careful index assignemnt is the only trick here.
+	/// Straightforward iterative solution, that outputs the matrix borders ([0][0,n-1], [1,n-1][n-1], [n-1][n-2,0], [n-2,1][0]),
+	/// collapsing the matrix level by level deep.Careful index assignemnt is the only trick here.
 	/// Time: O(n), space: O(n) - output vector
 	static std::vector<unsigned> SpiralizeMatrix(const std::vector<std::vector<unsigned>>& mx)
 	{
