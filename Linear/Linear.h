@@ -191,4 +191,45 @@ public:
 
 		return result;
 	}
+
+	/// EPI 6.15. Printing the matrix in spiral order
+	/// Straightforward iterative solution, that output the matrix borders ([0][0,n-1], [1,n-1][n-1], [n-1][n-2,0], [n-2,1][0]),
+	/// collapsing the matrix level by level deep.
+	/// Careful index assignemnt is the only trick here.
+	/// Time: O(n), space: O(n) - output vector
+	static std::vector<unsigned> SpiralizeMatrix(const std::vector<std::vector<unsigned>>& mx)
+	{
+		std::vector<unsigned> result;
+		if (mx.empty())
+		{
+			return result;
+		}
+		if (mx.size() == 1)
+		{
+			result = mx[0];
+			return result;
+		}
+		
+		for (int start = 0, rows = mx.size(), cols = mx[0].size(); rows > 0 && cols > 0; rows -= 2, cols -= 2, ++start)
+		{
+			for (int i = 0; i < cols; ++i)
+			{
+				result.push_back(mx[start][start + i]);
+			}
+			for (int i = 0; i < rows - 1; ++i)
+			{
+				result.push_back(mx[start + 1 + i][start + cols - 1]);
+			}
+			for (int i = 0; i < cols - 1 && rows > 1; ++i)
+			{
+				result.push_back(mx[start + rows - 1][start + cols - 2 - i]);
+			}
+			for (int i = 0; i < rows - 2 && cols > 1; ++i)
+			{
+				result.push_back(mx[start + rows - 2 - i][start]);
+			}
+		}
+
+		return result;
+	}
 };
