@@ -172,6 +172,36 @@ int _tmain(int argc, _TCHAR* argv[])
 	}
 	cout << endl;
 
+	cout << "- Big integer multiplication -" << endl;
+	{
+		vector<vector<pair<string, string>>> testIntMul =
+		{
+			{
+				{ "0", "0" }, { "0", "1" }, { "1", "0" }, { "1", "1" }
+			},
+			{
+				{ "12", "9" }, { "9", "12" }, { "-9", "12" }, { "9", "-12" }, { "-9", "-12" }
+			},
+			{
+				{ "11111", "222" }, { "222", "11111" }, { "11111", "-222" }, { "-11111", "222" }, { "-11111", "-222" },
+			},
+			{
+				{ "1234567890", "9876543210" }, { "-1234567890", "9876543210" }, { "1234567890", "-9876543210" }, { "-1234567890", "-9876543210" }
+			}
+		};
+		for (auto it = testIntMul.cbegin(); it != testIntMul.cend(); ++it)
+		{
+			auto testGroup = *it;
+			for (auto it = testGroup.cbegin(); it != testGroup.cend(); ++it)
+			{
+				auto result = Numerical::MultiplyIntegers(it->first, it->second);
+				cout << it->first << " * " << it->second << " = " << result << (it != testGroup.cend() - 1 ? ", " : "");
+			}
+			cout << endl;
+		}
+	}
+	cout << endl;
+
 	cout << "== Completed ==" << endl;
 	system("PAUSE");
 	return 0;

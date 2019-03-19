@@ -355,6 +355,62 @@ public:
 		return mid;
 	}
 
-	
+	/// EPI 6.9. Big integer multiplication
+	/// School way of long multiplication.
+	/// Careful string-integer conversions, reversions and sign handling.
+	static std::string MultiplyIntegers(std::string s1, std::string s2)
+	{
+		if (s1.empty() || s2.empty())
+		{
+			return std::string();
+		}
+		if (s1 == "0" || s2 == "0")
+		{
+			return std::string("0");
+		}
+
+		std::string sign = s1[0] == '-' && s2[0] != '-' || s1[0] != '-' && s2[0] == '-' ? "-" : "";
+		s1 = s1[0] == '-' ? s1.substr(1, s1.size() - 1) : s1;
+		s2 = s2[0] == '-' ? s2.substr(1, s2.size() - 1) : s2;
+		
+		std::reverse(s1.begin(), s1.end());
+		std::reverse(s2.begin(), s2.end());
+		std::vector<std::string> muls(s2.size(), std::string(s1.size() + s2.size(), '0'));
+		for (unsigned i = 0; i < s2.size(); ++i)
+		{
+			unsigned d2 = s2[i] - '0';
+			unsigned dec = 0;
+			for (unsigned j = 0; j < s1.size(); ++j)
+			{
+				unsigned d1 = s1[j] - '0';
+				unsigned mul = d2*d1 + dec;
+				unsigned rem = mul%10;
+				muls[i][i + j] = rem + '0';
+				dec = mul/10;
+			}
+			if (dec > 0)
+			{
+				muls[i][s1.size() + i] = dec + '0';
+			}
+		}
+
+		unsigned dec = 0;
+		std::string result(muls[0].size(), '0');
+		for (unsigned i = 0; i < muls[0].size(); ++i)
+		{
+			unsigned ri = dec;
+			for (unsigned j = 0; j < muls.size(); ++j)
+			{
+				ri += muls[j][i] - '0';
+			}
+			result[i] = (ri % 10) + '0';
+			dec = ri / 10;
+		}
+		std::reverse(result.begin(), result.end());
+		result = result[0] == '0' ? result.substr(1, result.size() - 1) : result;
+		result = sign + result;
+
+		return result;
+	}
 };
 
