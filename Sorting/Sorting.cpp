@@ -16,7 +16,7 @@ int _tmain(int argc, _TCHAR* argv[])
 {
 	cout << "== Sorting ==" << endl << endl;
 
-	cout << "-- Quick sort --" << endl;
+	cout << "- Quick sort -" << endl;
 	{
 		unsigned cnt = 1;
 		vector<vector<int>> vvi = 
@@ -52,7 +52,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	}
 	cout << endl;
 
-	cout << "-- Dutch national flag --" << endl;
+	cout << "- Dutch national flag -" << endl;
 	{
 		vector<int> numbers = { 7, 5, 0, 6, 2, 2, 5, 8, 0, 2, 5, 8, 7, 1, 3 };
 		vector<int> vi = { 1, 5, 7, 8 };
@@ -84,7 +84,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	}
 	cout << endl;
 
-	cout << "-- Merge sort --" << endl;
+	cout << "- Merge sort -" << endl;
 	{
 		vector<pair<vector<int>, vector<int>>> mergeTests =
 		{

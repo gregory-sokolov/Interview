@@ -280,7 +280,7 @@ public:
 	}
 
 
-	/// Yandex. Merge two sorted vectors.
+	/// Merge two sorted vectors (Yandex Question).
 	/// Merges two sorted vectors of sizes m and n into the third destination vector.
 	/// Implements std::merge algorithm.
 	/// Time: O(max(m, n)), space: O(m) + O(n)

@@ -134,6 +134,7 @@ private:
 		return vx;
 	}
 
+	/// Generalized search function for both DFS and BFS
 	template<typename V>
 	T* search(bool df, V& visit) const
 	{
@@ -154,6 +155,8 @@ private:
 		return result;
 	}
 
+	/// DFS: depth-first search.
+	/// Uses stack to move into depth.
 	template<typename V>
 	T* dfs(GraphVertex<T, C>* vx, C cost, std::unordered_set<char>& visited, V& visit) const
 	{
@@ -188,6 +191,8 @@ private:
 		return result;
 	}
 
+	/// BFS: breadth-first search.
+	/// Uses queue to scan in breadth.
 	template<typename V>
 	T* bfs(GraphVertex<T, C>* vx, C cost, std::unordered_set<char>& visited, V& visit) const
 	{
