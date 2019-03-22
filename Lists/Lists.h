@@ -6,8 +6,8 @@ struct ListNode
 	ListNode* next;
 	int data;
 
-	ListNode() : data(0), next(NULL) {}
-	ListNode(int value) : data(value), next(NULL) {}
+	ListNode() : data(0), next(nullptr) {}
+	ListNode(int value) : data(value), next(nullptr) {}
 	ListNode(int value, ListNode* node) : data(value), next(node) {}
 };
 
@@ -15,11 +15,15 @@ struct ListNode
 class SList
 {
 public:
-	SList() : head(NULL), size(0) {}
+	SList() : head(nullptr), size(0) {}
+	SList(ListNode* node) : head(node), size(node ? 1 : 0)
+	{
+		for (auto ni = node; ni->next; ni = ni->next) { ++size; }
+	}
 	~SList()
 	{
 		if (!head) return;
-		ListNode* n = head, *t = NULL;
+		ListNode* n = head, *t = nullptr;
 		while (n->next)
 		{
 			t = n;
@@ -30,7 +34,7 @@ public:
 	}
 
 	unsigned getSize() { return size; }
-	void clear() { head = NULL; size = 0; }
+	void clear() { head = nullptr; size = 0; }
 
 	int getHead() { return head ? head->data : 0; }
 	int getTail() { return head ? tail_i(head)->data : 0; }
@@ -86,7 +90,7 @@ public:
 		for (unsigned i = 0; i < size - 2; ++i, pt = pt->next);
 
 		ListNode* t = pt->next;
-		pt->next = NULL;
+		pt->next = nullptr;
 		--size;
 
 		int d = t->data;
@@ -97,7 +101,7 @@ public:
 	// MS Question
 	void reverse()
 	{
-		ListNode* n = head, *p = NULL, *t = NULL;
+		ListNode* n = head, *p = nullptr, *t = nullptr;
 		while (n)
 		{
 			t = n->next;
@@ -204,34 +208,46 @@ private:
 	}
 };
 
-// MS Question
-ListNode* getListTail(ListNode* n)
+/// Finds list tails
+ListNode* GetListTail(ListNode* n)
 {
 	if (n->next)
 	{
-		return getListTail(n->next);
+		return GetListTail(n->next);
 	}
 	return n;
 }
 
-void mergeLists(SList& l1, SList& l2)
+/// Merges two lists
+void MergeLists(SList& l1, SList& l2)
 {
-	getListTail(l1.getHeadNode())->next = l2.getHeadNode();
+	GetListTail(l1.getHeadNode())->next = l2.getHeadNode();
 	l2.clear();
 }
 
-// MS Question
-void bitwiseSum(SList& l1, SList& l2, SList& l3)
+/// EPI 7.0. Adds two integers represented as singly linked lists
+/// Adding digits one by one, moving the carry to the next partial sum.
+/// Time: O(n), space: O(n)
+ListNode* AddNumbers(ListNode* l1, ListNode* l2)
 {
-	l1.reverse(), l2.reverse(); // optional and conventional
+	ListNode* result = nullptr;
 
-	unsigned radix = 10, sum = 0, s = 0, c = 0;
-	for (ListNode* n1 = l1.getHeadNode(), *n2 = l2.getHeadNode(); n1 || n2;
-		n1 = n1 ? n1->next : NULL, n2 = n2 ? n2->next : NULL)
+	unsigned dec = 0;
+	for (ListNode* li = l1, *lj = l2, *ln = result; li || lj || dec > 0; li = li ? li->next : li, lj = lj ? lj->next : lj)
 	{
-		sum = (n1 ? n1->data : 0) + (n2 ? n2->data : 0) + c;
-		s = sum%radix, c = sum / radix;
-		l3.addHead(s);
+		auto sum = (li ? li->data : 0) + (lj ? lj->data : 0) + dec;
+		auto node = new ListNode(sum % 10);
+		if (ln == nullptr)
+		{
+			result = ln = node;
+		}
+		else
+		{
+			ln->next = node;
+			ln = ln->next;
+		}
+		dec = sum / 10;
 	}
-	if (c) l3.addHead(1);
+
+	return result;
 }
