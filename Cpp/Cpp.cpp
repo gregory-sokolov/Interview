@@ -106,8 +106,8 @@ int _tmain(int argc, _TCHAR* argv[])
 		auto bs3 = upper_bound(vi01.cbegin(), vi01.cend(), 7);
 		auto bs4 = upper_bound(vi01.cbegin(), vi01.cend(), 12);
 		auto bs5 = lower_bound(vi01.cbegin(), vi01.cend(), 4);
-		auto bs6 = lower_bound(vi01.cbegin(), vi01.cend(), 21);
-		auto bs7 = upper_bound(vi01.cbegin(), vi01.cend(), 4);
+		auto bs6= upper_bound(vi01.cbegin(), vi01.cend(), 4);
+		auto bs7 = lower_bound(vi01.cbegin(), vi01.cend(), 21);
 		auto bs8 = upper_bound(vi01.cbegin(), vi01.cend(), 21);
 		cout << "Source (" + to_string(vi01.size()) + "): ";
 		for (auto it = vi01.cbegin(); it != vi01.cend(); ++it)
@@ -120,8 +120,8 @@ int _tmain(int argc, _TCHAR* argv[])
 		cout << "Value: 7, upper_bound: [" << bs3 - vi01.cbegin() << "]" << endl;
 		cout << "Value: 12, upper_bound: [" << bs4 - vi01.cbegin() << "]" << endl;
 		cout << "Value: 4, lower_bound: [" << bs5 - vi01.cbegin() << "]" << endl;
-		cout << "Value: 21, lower_bound: [" << bs6 - vi01.cbegin() << "]" << endl;
-		cout << "Value: 4, upper_bound: [" << bs7 - vi01.cbegin() << "]" << endl;
+		cout << "Value: 4, upper_bound: [" << bs6 - vi01.cbegin() << "]" << endl;
+		cout << "Value: 21, lower_bound: [" << bs7 - vi01.cbegin() << "]" << endl;
 		cout << "Value: 21, upper_bound: [" << bs8 - vi01.cbegin() << "]" << endl;
 		cout << "Upper-lower bound completed" << endl << endl;
 

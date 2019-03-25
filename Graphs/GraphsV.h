@@ -19,7 +19,9 @@ struct GraphVertex
 	GraphVertex(const T& k) : key(k) {}
 };
 
-// Graph
+///
+/// Graph as vertex list
+///
 template<typename T, typename C>
 class Graph
 {
