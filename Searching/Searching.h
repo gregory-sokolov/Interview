@@ -86,7 +86,7 @@ public:
 		return result;
 	}
 
-	/// 2-sum problem (Yandex Question)
+	/// EPI 11.4.2. 2-sum problem (Yandex Question)
 	/// Returns true if an input vector contains any 2 elements that sum up to the given value.
 	/// Places all the vector to the hash table for fast further searches.
 	/// Iterates through the array, calculates the diff beetween sum and a[i] and finds it in the hash.
@@ -110,9 +110,17 @@ public:
 		return result;
 	}
 
-	/// 3-sum problem.
+	/// EPI 13.14. 3-sum problem
 	/// Returns true if an input vector contains any 3 elements that sum up to the given value.
-	/// Based on "greedy" algorithm from EPI, that uses solution of fast 2-sum search in O(n).
+	/// Firstly, sort the array.
+	/// Then iterate through the array, fixing a[i] element and searching 2-sum in the rest of the array a[i+1..n-1].
+	/// 2-sum could be used either with min-max elimination, or with hash table algorithm.
+	/// In MME, we move two indices i and j towards each other from start and end of the array.
+	/// If the sum is quite big and even bigger than max, remove the min element by decrementing i,
+	/// since all the pairs (min, a[i]) with that min will be anyway less than sum (too small).
+	/// If the sum is quite small and smaller than min, remove the max element by incrementing j,
+	/// since all the pairs (a[j], max) with that max will be anyway greater than sum (too big).
+	/// Eventually, we either find the exact 2-sum, or it's not found when both indices meet.
 	/// Time: O(n*log(n)) + O(n^2) = O(n^2), space: O(1)
 	static bool HasThreeSum(std::vector<int>& a, const int sum)
 	{
@@ -140,12 +148,49 @@ public:
 		return false;
 	}
 
+	/// Leetcode. Returns all unique 3-sum combinations
+	static std::vector<std::vector<int>> AllThreeSum(std::vector<int>& a, const int sum)
+	{
+		std::vector<std::vector<int>> results;
+
+		std::unordered_set<std::string> ht;
+		std::sort(a.begin(), a.end());
+		for (unsigned i = 0; i < a.size() - 2; ++i)
+		{
+			int diff = sum - a[i];
+			for (unsigned j = i + 1, k = a.size() - 1; j < k;)
+			{
+				if (a[j] + a[k] < diff)
+				{
+					++j;
+				}
+				else if (a[j] + a[k] > diff)
+				{
+					--k;
+				}
+				else
+				{
+					auto hash = std::to_string(a[i]) + std::to_string(a[j]) + std::to_string(a[k]);
+					if (ht.find(hash) == ht.cend())
+					{
+						ht.insert(hash);
+						results.push_back(std::vector<int>({ (int)i, a[i], (int)j, a[j], (int)k, a[k] }));
+					}
+					++j; --k;
+				}
+			}
+		}
+
+		return results;
+	}
+
 	/// Returns all combinations of any 3 elements of an array that sum to given value.
 	/// Brute-force generation of all combinations, C(n/k) - binomial coefficients.
 	/// Time: O(n^3), space: O(1)
-	static void ThreeSumCombinations(const std::vector<int>& input, const int sum,
-		std::vector<std::vector<int>>& results)
+	static std::vector<std::vector<int>> AllThreeSumCombinations(const std::vector<int>& input, const int sum)
 	{
+		std::vector<std::vector<int>> results;
+
 		std::vector<int> items(3);
 		unsigned n = input.size();
 		for (unsigned i = 0; i < n - 2; ++i)
@@ -165,5 +210,7 @@ public:
 				}
 			}
 		}
+
+		return results;
 	}
 };
