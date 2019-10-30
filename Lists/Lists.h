@@ -292,7 +292,7 @@ public:
 	/// We move along the first list and compare its node values with the destination head,
 	/// and whenever we encounter a greater value, we link the head into the source and then exchange src and dst.
 	/// Continuing until either of lists is empty and in the end appending the second list's remainder if it exists.
-	/// Time: O(n), space: O(1)
+	/// Time: O(n1 + n2), space: O(1)
 	static ListNode* MergeSortedLists(ListNode* l1, ListNode* l2)
 	{
 		// Validity checks
