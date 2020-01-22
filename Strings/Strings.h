@@ -75,6 +75,24 @@ public:
 		return -1;
 	}
 
+	/// 
+	/// Splits a string by delimiter
+	/// 
+	static std::vector<std::string> Split(std::string s, std::string delim)
+	{
+		std::vector<std::string> result;
+		size_t last = 0, dlen = delim.size();
+		for (size_t next = s.find(delim, last);
+			next != std::string::npos;
+			last = next + dlen, next = s.find(delim, last))
+		{
+			result.push_back(s.substr(last, next - last));
+		}
+		result.push_back(s.substr(last));
+
+		return result;
+	}
+
 	///
 	/// Returns true if an input string is a palindrome
 	///

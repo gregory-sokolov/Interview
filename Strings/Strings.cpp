@@ -47,6 +47,24 @@ int _tmain(int argc, _TCHAR* argv[])
 	}
 	cout << endl;
 
+	cout << "- Splitting -" << endl;
+	{
+		string str = "Splitting a string in C++ is not that easy";
+		cout << "Source: " << str << endl;
+		vector<string> delims = { " ", "t", "in" };
+		for (const auto& delim : delims)
+		{
+			auto result = Strings::Split(str, delim);
+			cout << "\"" << delim << "\": ";
+			for (auto it = result.cbegin(); it != result.cend(); ++it)
+			{
+				cout << *it << (it != result.cend() - 1 ? ", " : "");
+			}
+			cout << endl;
+		}
+	}
+	cout << endl;
+
 	cout << "- Palindromes -" << endl;
 	{
 		vector<string> vs3 = { "a", "aa", "ab", "aaa", "aba", "abb", "abba", "abaa", "abcba", "abccba" };
