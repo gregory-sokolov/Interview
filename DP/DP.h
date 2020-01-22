@@ -380,7 +380,7 @@ public:
 		}
 
 		std::vector<std::string> results;
-		std::transform(words.cbegin(), words.cend(), back_inserter(results),
+		std::transform(words.cbegin(), words.cend(), std::back_inserter(results),
 			[](const std::pair<std::string, unsigned>& x) { return x.first; });
 		return results;
 	}
@@ -573,6 +573,7 @@ public:
 				}
 			}
 		}
+
 		return result;
 	}
 

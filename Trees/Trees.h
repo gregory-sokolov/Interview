@@ -131,8 +131,7 @@ public:
 	void Bfs(V& visit) const
 	{
 		TreeNode<T>* tn = root;
-		std::queue<TreeNode<T>*> qtn;
-		qtn.push(tn);
+		std::queue<TreeNode<T>*> qtn({ tn });
 
 		while (!qtn.empty())
 		{
