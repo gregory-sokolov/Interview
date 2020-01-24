@@ -82,7 +82,7 @@ public:
 		return result;
 	}
 
-	/// EPI 16.10.1. Shortest Path (Dijkstra Algorithm)
+	/// EPI 16.0.3. Shortest Path (Dijkstra Algorithm)
 	/// Implements standard Dijkstra algorithm to find the shortest path from one specified graph vertex to all other vertices.
 	/// Starting from the initial node, we mark adjacent nodes down with their minimal weights (distances):
 	/// new_weight = min(old_weight, edge_cost + init_weight)
@@ -99,11 +99,12 @@ public:
 		bool visited = false;
 	};
 
-	static std::vector<unsigned> ShortestPath(const std::vector<std::vector<unsigned>>& mx)
+	static std::vector<unsigned> SptDijkstra(const std::vector<std::vector<unsigned>>& mx)
 	{
 		unsigned n = mx[0].size();
 		constexpr unsigned max = std::numeric_limits<unsigned>::max();
 		std::vector<unsigned> result(n, max);
+
 		std::priority_queue<std::pair<unsigned, unsigned>, std::vector<std::pair<unsigned, unsigned>>,
 			std::greater<std::pair<unsigned, unsigned>>> min_heap;
 		min_heap.push(std::make_pair(0, 0));
@@ -130,6 +131,42 @@ public:
 		{
 			result[i] = result[i] == max ? 0 : result[i];
 		}
+		return result;
+	}
+
+
+	/// EPI 16.10.4. Minimum Spannin Tree - MST (Prim's Algorithm)
+	/// Implements finding of MST in a graph using Prim's algorithm.
+	/// Time: O(E*log(V)), space: O(V^2)
+	static std::vector<std::pair<unsigned, unsigned>> MstPrim(const std::vector<std::vector<unsigned>>& mx)
+	{
+		unsigned n = mx[0].size();
+		constexpr unsigned max = std::numeric_limits<unsigned>::max();
+		std::vector<std::pair<unsigned, unsigned>> result(n, std::make_pair(0, max));
+
+		std::priority_queue<std::pair<unsigned, std::pair<unsigned, unsigned>>,
+			std::vector<std::pair<unsigned, std::pair<unsigned, unsigned>>>, 
+			std::greater<std::pair<unsigned, std::pair<unsigned, unsigned>>>> mh;
+		mh.push(std::make_pair(0, std::make_pair(0, 0)));
+
+		while (!mh.empty())
+		{
+			auto vx = mh.top();
+			mh.pop();
+			if (result[vx.second.first].second == max)
+			{
+				auto adj = mx[vx.second.first];
+				for (unsigned i = 0; i < n; ++i)
+				{
+					if (adj[i] > 0 && result[i].second == max)
+					{
+						mh.push(std::make_pair(adj[i], std::make_pair(i, vx.second.first)));
+					}
+				}
+				result[vx.second.first] = std::make_pair(vx.second.second, vx.first);
+			}
+		}
+
 		return result;
 	}
 };

@@ -157,43 +157,7 @@ private:
 		return result;
 	}
 
-	/// DFS: depth-first search.
-	/// Uses stack to move into depth.
-	template<typename V>
-	T* dfs(GraphVertex<T, C>* vx, C cost, std::unordered_set<char>& visited, V& visit) const
-	{
-		T* result = NULL;
-		std::stack<std::pair<GraphVertex<T, C>*, C>> sgv;
-		sgv.push(std::make_pair(vx, cost));
-
-		while (!sgv.empty())
-		{
-			auto vx = sgv.top();
-			sgv.pop();
-
-			if (visited.find(vx.first->key) == visited.end())
-			{
-				auto found = visit(vx.first->key, vx.second);
-				visited.insert(vx.first->key);
-				if (found)
-				{
-					result = &(vx.first->key);
-					break;
-				}
-				else
-				{
-					for (auto&& nb : vx.first->neighbors)
-					{
-						sgv.push(nb);
-					}
-				}
-			}
-		}
-
-		return result;
-	}
-
-	/// BFS: breadth-first search.
+	/// EPI 16.0.1. BFS: breadth-first search
 	/// Uses queue to scan in breadth.
 	template<typename V>
 	T* bfs(GraphVertex<T, C>* vx, C cost, std::unordered_set<char>& visited, V& visit) const
@@ -221,6 +185,42 @@ private:
 					for (auto&& nb : vx.first->neighbors)
 					{
 						qgv.push(nb);
+					}
+				}
+			}
+		}
+
+		return result;
+	}
+
+	/// EPI 16.0.2. DFS: depth-first search
+	/// Uses stack to move into depth.
+	template<typename V>
+	T* dfs(GraphVertex<T, C>* vx, C cost, std::unordered_set<char>& visited, V& visit) const
+	{
+		T* result = NULL;
+		std::stack<std::pair<GraphVertex<T, C>*, C>> sgv;
+		sgv.push(std::make_pair(vx, cost));
+
+		while (!sgv.empty())
+		{
+			auto vx = sgv.top();
+			sgv.pop();
+
+			if (visited.find(vx.first->key) == visited.end())
+			{
+				auto found = visit(vx.first->key, vx.second);
+				visited.insert(vx.first->key);
+				if (found)
+				{
+					result = &(vx.first->key);
+					break;
+				}
+				else
+				{
+					for (auto&& nb : vx.first->neighbors)
+					{
+						sgv.push(nb);
 					}
 				}
 			}
