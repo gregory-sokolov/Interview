@@ -48,33 +48,6 @@ public:
 	}
 };
 
-// Tree path holder 
-template<typename T>
-class PathFinder
-{
-public:
-	void operator()(std::deque<T> path)
-	{
-		_paths.push_back(path);
-	}
-
-	void print()
-	{
-		for (std::vector<std::deque<T>>::const_iterator pi = _paths.begin(); pi != _paths.end(); ++pi)
-		{
-			for (std::deque<T>::const_iterator ni = pi->begin(); ni != pi->end(); ++ni)
-			{
-				std::cout << *ni << (ni != pi->end() - 1 ? "-" : "");
-			}
-			std::cout << (pi != _paths.end() - 1 ? ", " : "");
-		}
-		cout << endl;
-	}
-
-private:
-	std::vector<std::deque<T>> _paths;
-};
-
 // Tree node pair checker 
 template<typename T>
 class PairChecker

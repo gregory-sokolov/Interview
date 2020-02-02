@@ -1,134 +1,160 @@
 #pragma once
 
-#include <iostream>
-#include <limits>
-#include <queue>
+#include <vector>
 #include <deque>
+#include <queue>
+#include <limits>
 #include <algorithm>
 
-// Tree node
-template<typename T>
-struct TreeNode
-{
-	TreeNode* left;
-	TreeNode* right;
-	T data;
+#include "TreeBst.h"
 
-	TreeNode() : left(NULL), right(NULL) {}
-	TreeNode(T value) : left(NULL), right(NULL), data(value) {}
-};
-
-// Binary search tree
-template<typename T>
-class BSTree
+///
+/// Tree Problems
+///
+class Trees
 {
 public:
-	BSTree() : root(NULL), size(0) {}
-
-	BSTree(const BSTree<T>& tree) : BSTree()
+	///
+	/// Depth-first search (DFS)
+	///
+	template<typename T, typename V>
+	static TreeNode<T>* DfsR(TreeNode<T>* node, V& visit)
 	{
-		tree.TraversePreOrder([this](T value) { Insert(value); });
-	}
-
-	~BSTree()
-	{
-		// @TODO:
-	}
-
-	TreeNode<T>* getRoot() const { return root; }
-	unsigned getSize() const { return size; }
-
-	void Insert(T value)
-	{
-		TreeNode<T>* node = new(std::nothrow) TreeNode<T>(value);
-		if (node)
+		TreeNode<T>* result = nullptr;
+		if (node != nullptr)
 		{
-			if (!root)
+			if (visit(node->data))
 			{
-				root = node;
+				result = node;
 			}
 			else
 			{
-				TreeNode<T>* tn = root;
-				while (tn)
+				result = DfsR(node->left, visit);
+				if (result == nullptr)
 				{
-					if (value <= tn->data)
-					{
-						if (!tn->left)
-						{
-							tn->left = node;
-							break;
-						}
-						tn = tn->left;
-					}
-					else
-					{
-						if (!tn->right)
-						{
-							tn->right = node;
-							break;
-						}
-						tn = tn->right;
-					}
+					result = DfsR(node->right, visit);
 				}
 			}
-			++size;
 		}
+
+		return result;
 	}
 
-	T GetMin() const
+	///
+	/// Depth-first search of a specific value
+	///
+	template<typename T>
+	static TreeNode<T>* DfsValueR(TreeNode<T>* tn, T& value)
 	{
-		TreeNode<T>* tn = root;
-		while (tn->left)
+		if (tn)
 		{
-			tn = tn->left;
+			if (value < tn->data) return DfsValueR(tn->left, value);
+			else if (value > tn->data) return DfsValueR(tn->right, value);
 		}
-		return tn->data;
+		return tn;
 	}
-	T GetMax() const
+
+	///
+	/// Mirrors a tree
+	///
+	template<typename T>
+	static void MirrorR(TreeNode<T>* tn)
 	{
-		TreeNode<T>* tn = root;
-		while (tn->right)
+		if (tn)
 		{
-			tn = tn->right;
+			if (tn->left || tn->right)
+			{
+				TreeNode<T>* t = tn->left;
+				tn->left = tn->right;
+				tn->right = t;
+			}
+
+			MirrorR(tn->left);
+			MirrorR(tn->right);
 		}
-		return tn->data;
-	}
-	bool HasValue(T& value) const
-	{
-		TreeNode<T>* tn = search_r(root, value);
-		return tn ? true : false;
 	}
 
-	/// Depth-first search/traversal (DFS)
-	template<typename V>
-	T* Dfs(V& visit) const
+	///
+	/// Checks if the tree is a BST
+	///
+	public: template<typename T>
+	static bool IsBst(TreeNode<T>* root)
 	{
-		auto result = dfs_r(root, visit);
-		return result != NULL ? &(result->data) : NULL;
+		return IsBstR(root, std::numeric_limits<int>::min(), std::numeric_limits<int>::max());
+	}
+	private: template<typename T>
+	static bool IsBstR(TreeNode<T>* tn, T min, T max)
+	{
+		bool result = true;
+		if (tn != nullptr)
+		{
+			result = tn->data > min&& tn->data <= max;
+			if (result && tn->left != nullptr)
+			{
+				result = tn->left->data <= tn->data ? IsBstR(tn->left, min, tn->data) : false;
+			}
+			if (result && tn->right != nullptr)
+			{
+				result = tn->right->data > tn->data ? IsBstR(tn->right, tn->data, max) : false;
+			}
+		}
+
+		return result;
 	}
 
-	/// Order traversal
-	template<typename V>
-	void TraversePreOrder(V& visit) const
+	
+
+	///
+	/// Constructs a vector with all tree paths using DFS
+	/// 
+	public: static std::vector<std::deque<int>> AllPaths(TreeNode<int>* root)
 	{
-		preorder_r<V>(root, visit);
+		std::vector<std::deque<int>> result;
+		std::deque<int> path;
+		AllPathsR(root, path, result);
+
+		return result;
 	}
-	template<typename V>
-	void TraverseInOrder(V& visit) const
+	private: static void AllPathsR(TreeNode<int>* tn, std::deque<int>& dq, std::vector<std::deque<int>>& result)
 	{
-		inorder_r<V>(root, visit);
-	}
-	template<typename V>
-	void TraversePostOrder(V& visit) const
-	{
-		postorder_r<V>(root, visit);
+		if (tn != nullptr)
+		{
+			dq.push_back(tn->data);
+			if (tn->left == nullptr && tn->right == nullptr)
+			{
+				result.push_back(dq);
+			}
+			else
+			{
+				AllPathsR(tn->left, dq, result);
+				AllPathsR(tn->right, dq, result);
+			}
+			dq.pop_back();
+		}
 	}
 
-	/// Breadth-first search/traversal (BFS).
-	/// Classical BFS with single node visiting.
-	template<typename V>
-	void Bfs(V& visit) const
+	///
+	/// Finds paths with max and min sum
+	///
+	public: static std::pair<int, int> minMaxPathR(TreeNode<int>* tn)
+	{
+		int min = 0, max = 0;
+		if (tn)
+		{
+			auto pl = minMaxPathR(tn->left);
+			auto pr = minMaxPathR(tn->right);
+			min = std::min(pl.first + tn->data, pr.first + tn->data);
+			max = std::max(pl.second + tn->data, pr.second + tn->data);
+		}
+
+		return std::make_pair(min, max);
+	}
+
+	///
+	/// Breadth-first search/traversal (BFS)
+	///
+	template<typename T, typename V>
+	static void Bfs(TreeNode<T>* root, V& visit)
 	{
 		TreeNode<T>* tn = root;
 		std::queue<TreeNode<T>*> qtn({ tn });
@@ -148,8 +174,8 @@ public:
 	}
 
 	/// Breadth-first traversal with by-level visiting (BFSL)
-	template<typename V>
-	void Bfsl(V& visit) const
+	template<typename T, typename V>
+	static void BfsByLevel(TreeNode<T>* root, V& visit)
 	{
 		std::queue<TreeNode<T>*> qtn({ root });
 		std::vector<TreeNode<T>*> vlv = { root };
@@ -178,183 +204,22 @@ public:
 		}
 	}
 
-	/// Mirrors the tree
-	void Mirror()
+	///
+	/// EPI 14.13. Lowest Common Ancestor on BST (LCA) 
+	///
+	public: template<typename T>
+	static TreeNode<T>* LcaBstR(TreeNode<T>* node, T& v1, T& v2)
 	{
-		mirror_r(root);
-	}
-
-	/// Checks if the tree is a BST
-	bool IsBsTree() const
-	{
-		return isBst_r(root, LONG_MIN, LONG_MAX);
-	}
-
-	/// Finds all paths in the tree
-	template<typename V>
-	void AllPaths(V& visit) const
-	{
-		std::deque<T> dtn;
-		allPaths_r(root, dtn, visit);
-	}
-
-	/// Lowest Common Ancestor (LCA)
-	T* SearchLca(T& value1, T& value2) const
-	{
-		auto lca = lca_r(root, value1, value2);
-		return lca != NULL ? &(lca->data) : NULL;
-	}
-
-	T* SearchLcaNbst1(T& value1, T& value2) const
-	{
-		auto lca = lca_nbst_1_r(root, value1, value2);
-		return lca != NULL ? &(lca->data) : NULL;
-	}
-
-	template<typename V>
-	T* SearchLcaNbst2(V& visit) const
-	{
-		auto lca = lca_nbst_2_r(root, visit);
-		return lca != NULL ? &(lca->data) : NULL;
-	}
-
-private:
-	TreeNode<T>* root;
-	unsigned size;
-
-	template<typename V>
-	void preorder_r(TreeNode<T>* node, V& visit) const
-	{
-		if (node)
-		{
-			visit(node->data);
-			preorder_r<V>(node->left, visit);
-			preorder_r<V>(node->right, visit);
-		}
-	}
-
-	template<typename V>
-	void inorder_r(TreeNode<T>* node, V& visit) const
-	{
-		if (node)
-		{
-			inorder_r<V>(node->left, visit);
-			visit(node->data);
-			inorder_r<V>(node->right, visit);
-		}
-	}
-
-	template<typename V>
-	void postorder_r(TreeNode<T>* node, V& visit) const
-	{
-		if (node)
-		{
-			inorder_r<V>(node->left, visit);
-			inorder_r<V>(node->right, visit);
-			visit(node->data);
-		}
-	}
-
-	template<typename V>
-	TreeNode<T>* dfs_r(TreeNode<T>* node, V& visit) const
-	{
-		TreeNode<T>* result = NULL;
-		if (node != NULL)
-		{
-			if (visit(node->data))
-			{
-				result = node;
-			}
-			else
-			{
-				result = dfs_r(node->left, visit);
-				if (result == NULL)
-				{
-					result = dfs_r(node->right, visit);
-				}
-			}
-		}
-
-		return result;
-	}
-
-	TreeNode<T>* search_r(TreeNode<T>* tn, T& value) const
-	{
-		if (tn)
-		{
-			if (value < tn->data) return search_r(tn->left, value);
-			else if (value > tn->data) return search_r(tn->right, value);
-		}
-		return tn;
-	}
-
-	void mirror_r(TreeNode<T>* tn)
-	{
-		if (tn)
-		{
-			if (tn->left || tn->right)
-			{
-				TreeNode<T>* t = tn->left;
-				tn->left = tn->right;
-				tn->right = t;
-			}
-
-			mirror_r(tn->left);
-			mirror_r(tn->right);
-		}
-	}
-
-	bool isBst_r(TreeNode<T>* tn, T min, T max) const
-	{
-		bool result = true;
-		if (tn != NULL)
-		{
-			result = tn->data > min && tn->data <= max;
-			if (result && tn->left != NULL)
-			{
-				result = tn->left->data <= tn->data ? isBst_r(tn->left, min, tn->data) : false;
-			}
-			if (result && tn->right != NULL)
-			{
-				result = tn->right->data > tn->data ? isBst_r(tn->right, tn->data, max) : false;
-			}
-		}
-
-		return result;
-	}
-
-	/// Builds all paths in-place into deque in DFS style
-	template<typename V>
-	void allPaths_r(TreeNode<T>* node, std::deque<T>& dtn, V& visit) const
-	{
-		if (node != NULL)
-		{
-			dtn.push_back(node->data);
-			if (node->left == NULL && node->right == NULL)
-			{
-				visit(dtn);
-			}
-			else
-			{
-				allPaths_r(node->left, dtn, visit);
-				allPaths_r(node->right, dtn, visit);
-			}
-			dtn.pop_back();
-		}
-	}
-
-	TreeNode<T>* lca_r(TreeNode<T>* node, T& v1, T& v2) const
-	{
-		TreeNode<T>* result = NULL;
-		if (node != NULL)
+		TreeNode<T>* result = nullptr;
+		if (node != nullptr)
 		{
 			if (std::max(v1, v2) < node->data)
 			{
-				result = lca_r(node->left, v1, v2);
+				result = LcaBstR(node->left, v1, v2);
 			}
 			else if (std::min(v1, v2) > node->data)
 			{
-				result = lca_r(node->right, v1, v2);
+				result = LcaBstR(node->right, v1, v2);
 			}
 			else
 			{
@@ -365,50 +230,55 @@ private:
 		return result;
 	}
 
-	// Algorithm from EPI.
-	// Time: O(n), space: O(1)
-	TreeNode<T>* lca_nbst_1_r(TreeNode<T>* node, T& v1, T& v2) const
+	///
+	/// EPI 9.11. Lowest Common Ancestor on non-BST (LCA) 
+	/// First simple algorithm. 
+	/// Time: O(n), space: O(1)
+	///
+	template<typename T>
+	static TreeNode<T>* LcaNbst1R(TreeNode<T>* node, T& v1, T& v2)
 	{
-		if (node == NULL)
+		if (node == nullptr)
 		{
-			return NULL;
+			return nullptr;
 		}
 		else if (node->data == v1 || node->data == v2)
 		{
 			return node;
 		}
 
-		TreeNode<T>* left = lca_nbst_1_r(node->left, v1, v2);
-		TreeNode<T>* right = lca_nbst_1_r(node->right, v1, v2);
+		TreeNode<T>* left = LcaNbst1R(node->left, v1, v2);
+		TreeNode<T>* right = LcaNbst1R(node->right, v1, v2);
 
-		if (left != NULL && right != NULL)
+		if (left != nullptr && right != nullptr)
 		{
 			return node;
 		}
 		else
 		{
-			return left != NULL ? left : right;
+			return left != nullptr ? left : right;
 		}
 	}
 
-	template<typename C>
-	TreeNode<T>* lca_nbst_2_r(TreeNode<T>* node, C& check) const
+	/// Second algorithm with pair checking.
+	template<typename T, typename C>
+	static TreeNode<T>* LcaNbst2R(TreeNode<T>* node, C& check)
 	{
 		TreeNode<T>* result = node;
-		if (node != NULL)
+		if (node != nullptr)
 		{
 			check.Reset();
 			check(node->data);
 			if (check.HasNone())
 			{
-				dfs_r(node->left, check);
+				DfsR(node->left, check);
 				if (check.HasAll())
 				{
-					result = lca_nbst_2_r(node->left, check);
+					result = LcaNbst2R(node->left, check);
 				}
 				else if (check.HasNone())
 				{
-					result = lca_nbst_2_r(node->right, check);
+					result = LcaNbst2R(node->right, check);
 				}
 				else
 				{
@@ -420,3 +290,6 @@ private:
 		return result;
 	}
 };
+
+
+
