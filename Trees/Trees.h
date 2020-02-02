@@ -102,7 +102,30 @@ public:
 		return result;
 	}
 
-	
+	///
+	/// Leetcode. Finds max tree depth
+	///
+	public: static unsigned MaxDepth(TreeNode<int>* tn)
+	{
+		return tn ? std::max(MaxDepth(tn->left), MaxDepth(tn->right)) + 1 : 0;
+	}
+
+	///
+	/// Finds paths with max and min sum
+	///
+	static std::pair<int, int> minMaxPathR(TreeNode<int>* tn)
+	{
+		int min = 0, max = 0;
+		if (tn)
+		{
+			auto pl = minMaxPathR(tn->left);
+			auto pr = minMaxPathR(tn->right);
+			min = std::min(pl.first + tn->data, pr.first + tn->data);
+			max = std::max(pl.second + tn->data, pr.second + tn->data);
+		}
+
+		return std::make_pair(min, max);
+	}
 
 	///
 	/// Constructs a vector with all tree paths using DFS
@@ -134,26 +157,9 @@ public:
 	}
 
 	///
-	/// Finds paths with max and min sum
-	///
-	public: static std::pair<int, int> minMaxPathR(TreeNode<int>* tn)
-	{
-		int min = 0, max = 0;
-		if (tn)
-		{
-			auto pl = minMaxPathR(tn->left);
-			auto pr = minMaxPathR(tn->right);
-			min = std::min(pl.first + tn->data, pr.first + tn->data);
-			max = std::max(pl.second + tn->data, pr.second + tn->data);
-		}
-
-		return std::make_pair(min, max);
-	}
-
-	///
 	/// Breadth-first search/traversal (BFS)
 	///
-	template<typename T, typename V>
+	public: template<typename T, typename V>
 	static void Bfs(TreeNode<T>* root, V& visit)
 	{
 		TreeNode<T>* tn = root;
