@@ -135,7 +135,7 @@ public:
 	}
 
 
-	/// EPI 16.10.4. Minimum Spannin Tree - MST (Prim's Algorithm)
+	/// EPI 16.10.4. Minimum Spanning Tree - MST (Prim's Algorithm)
 	/// Implements finding of MST in a graph using Prim's algorithm.
 	/// Time: O(E*log(V)), space: O(V^2)
 	static std::vector<std::pair<unsigned, unsigned>> MstPrim(const std::vector<std::vector<unsigned>>& mx)
