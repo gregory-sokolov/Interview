@@ -148,35 +148,52 @@ public:
 		return false;
 	}
 
-	/// Leetcode. Returns all unique 3-sum combinations
+	/// EPI 13.14.1, Leetcode 15. 3-sum problem
+	/// Returns all unique 3-sum combinations.
 	static std::vector<std::vector<int>> AllThreeSum(std::vector<int>& a, const int sum)
 	{
 		std::vector<std::vector<int>> results;
+		if (a.size() < 3)
+		{
+			return results;
+		}
+		if (a.size() == 3)
+		{
+			return a[0] + a[1] + a[2] == sum ? std::vector<std::vector<int>>(1, a) : results;
+		}
 
-		std::unordered_set<std::string> ht;
 		std::sort(a.begin(), a.end());
 		for (unsigned i = 0; i < a.size() - 2; ++i)
 		{
-			int diff = sum - a[i];
-			for (unsigned j = i + 1, k = a.size() - 1; j < k;)
+			if (i == 0 || a[i] != a[i - 1])
 			{
-				if (a[j] + a[k] < diff)
+				int diff = sum - a[i];
+				for (unsigned j = i + 1, k = a.size() - 1; j < k;)
 				{
-					++j;
-				}
-				else if (a[j] + a[k] > diff)
-				{
-					--k;
-				}
-				else
-				{
-					auto hash = std::to_string(a[i]) + std::to_string(a[j]) + std::to_string(a[k]);
-					if (ht.find(hash) == ht.cend())
+					if (a[j] + a[k] < diff)
 					{
-						ht.insert(hash);
-						results.push_back(std::vector<int>({ (int)i, a[i], (int)j, a[j], (int)k, a[k] }));
+						++j;
 					}
-					++j; --k;
+					else if (a[j] + a[k] > diff)
+					{
+						--k;
+					}
+					else
+					{
+						if (j + 1 < k && a[j] == a[j + 1])
+						{
+							++j;
+						}
+						else if (k - 1 > j && a[k] == a[k - 1])
+						{
+							--k;
+						}
+						else
+						{
+							results.push_back(std::vector<int>({ a[i], a[j], a[k] }));
+							++j; --k;
+						}
+					}
 				}
 			}
 		}
