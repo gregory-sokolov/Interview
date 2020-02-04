@@ -34,6 +34,41 @@ public:
 		return std::make_pair(max1, max2);
 	}
 
+	/// EPI 11.17, Leetcode 136. Unique Number Among Duplicates
+	/// Given a non-empty array of integers, every element appears twice except for one. Find that single one.
+	/// Do it with linear runtime complexity. Try to implement it without using extra memory.
+	/// Method 1: use hash table to store and check duplicates. Requires O(n) extra space.
+	/// Method 2: XOR all elements. Based on fact, that x ^ 0 = x, x ^ x = 0, hence a1 ^ a2 ^ ... ^ an ^ x ^ an ^ ... ^ a1 = x.
+	/// Time: O(n), space: O(1)
+	static int UniqueNumber(std::vector<int>& a) {
+		// Method 2: total XOR
+		int x = 0;
+		for (unsigned i = 0; i < a.size(); ++i)
+		{
+			x ^= a[i];
+		}
+
+		return x;
+
+		// Method 1: hash table
+		/*
+		unordered_set<int> ht;
+		for (unsigned i = 0; i < nums.size(); ++i)
+		{
+			if (ht.find(nums[i]) == ht.cend())
+			{
+				ht.insert(nums[i]);
+			}
+			else
+			{
+				ht.erase(nums[i]);
+			}
+		}
+
+		return !ht.empty() ? *(ht.cbegin()) : 0;
+		*/
+	}
+
 	/// Find a number in an ascendingly sorted matrix m*n (Yandex Question)
 	/// Binary Search. Scans all sorted rows with standard binary search.
 	/// Time: O(m*log(n)), space: O(1)
