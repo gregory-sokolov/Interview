@@ -280,13 +280,14 @@ public:
 
 
 	/// EPI 11.9. Computing square roots
-	/// Calculates closest integer number to the actual square root (using binary search)
+	/// Calculates closest integer number to the actual square root (using binary search).
+	/// Time: O(log(n))
 	static unsigned Sqrt(unsigned n)
 	{
 		unsigned min = n > 2 ? 2 : 0, max = n > 5 ? n/2 : n/2 + 1, med = (min + max)/2;
 		while (med > min && med < max)
 		{
-			unsigned square = med*med;
+			unsigned long long square = ((unsigned long long)med)*((unsigned long long)med);
 			if (square > n)
 			{
 				max = med;
