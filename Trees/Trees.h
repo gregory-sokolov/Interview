@@ -14,9 +14,7 @@
 class Trees
 {
 public:
-	///
 	/// Depth-first search (DFS)
-	///
 	template<typename T, typename V>
 	static TreeNode<T>* DfsR(TreeNode<T>* node, V& visit)
 	{
@@ -40,9 +38,7 @@ public:
 		return result;
 	}
 
-	///
 	/// Depth-first search of a specific value
-	///
 	template<typename T>
 	static TreeNode<T>* DfsValueR(TreeNode<T>* tn, T& value)
 	{
@@ -54,9 +50,7 @@ public:
 		return tn;
 	}
 
-	///
 	/// Mirrors a tree
-	///
 	template<typename T>
 	static void MirrorR(TreeNode<T>* tn)
 	{
@@ -74,9 +68,7 @@ public:
 		}
 	}
 
-	///
 	/// Checks if the tree is a BST
-	///
 	public: template<typename T>
 	static bool IsBst(TreeNode<T>* root)
 	{
@@ -102,17 +94,13 @@ public:
 		return result;
 	}
 
-	///
 	/// Leetcode. Finds max tree depth
-	///
 	public: static unsigned MaxDepth(TreeNode<int>* tn)
 	{
 		return tn ? std::max(MaxDepth(tn->left), MaxDepth(tn->right)) + 1 : 0;
 	}
 
-	///
 	/// Finds paths with max and min sum
-	///
 	static std::pair<int, int> minMaxPathR(TreeNode<int>* tn)
 	{
 		int min = 0, max = 0;
@@ -127,9 +115,7 @@ public:
 		return std::make_pair(min, max);
 	}
 
-	///
 	/// Constructs a vector with all tree paths using DFS
-	/// 
 	public: static std::vector<std::deque<int>> AllPaths(TreeNode<int>* root)
 	{
 		std::vector<std::deque<int>> result;
@@ -156,9 +142,7 @@ public:
 		}
 	}
 
-	///
 	/// Breadth-first search/traversal (BFS)
-	///
 	public: template<typename T, typename V>
 	static void Bfs(TreeNode<T>* root, V& visit)
 	{
@@ -210,9 +194,7 @@ public:
 		}
 	}
 
-	///
 	/// EPI 14.13. Lowest Common Ancestor on BST (LCA) 
-	///
 	public: template<typename T>
 	static TreeNode<T>* LcaBstR(TreeNode<T>* node, T& v1, T& v2)
 	{
@@ -236,11 +218,9 @@ public:
 		return result;
 	}
 
-	///
 	/// EPI 9.11. Lowest Common Ancestor on non-BST (LCA) 
 	/// First simple algorithm. 
 	/// Time: O(n), space: O(1)
-	///
 	template<typename T>
 	static TreeNode<T>* LcaNbst1R(TreeNode<T>* node, T& v1, T& v2)
 	{

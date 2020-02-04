@@ -309,9 +309,9 @@ public:
 	/// Time: O(log(n))
 	static double Sqrt(double n, double p)
 	{
-		if (n < 0) return NAN;
+		if (n < 0) return std::numeric_limits<double>::quiet_NaN();
 		if (n == 0.0 || n == 1.0) return n;
-		if (n < p) return NAN;
+		if (n < p) return std::numeric_limits<double>::quiet_NaN();
 
 		double low = n > 1 ? 1 : 0, high = n < 1 ? 1 : n;
 		while (high - low > p)
@@ -341,9 +341,9 @@ public:
 	/// It takes 8-9 iterations for 15-digit precision (quadratical convergence of the N-R method).
 	static double SqrtNewton(double n, double p)
 	{
-		if (n < 0) return NAN;
+		if (n < 0) return std::numeric_limits<double>::quiet_NaN();
 		if (n == 0.0 || n == 1.0) return n;
-		if (n < p) return NAN;
+		if (n < p) return std::numeric_limits<double>::quiet_NaN();
 
 		double prev = 0.0, mid = n;
 		while (std::abs(mid - prev) > p)

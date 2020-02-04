@@ -6,9 +6,7 @@
 #include <deque>
 #include <algorithm>
 
-///
 /// Binary tree node
-///
 template<typename T>
 struct TreeNode
 {
@@ -20,9 +18,7 @@ struct TreeNode
 	TreeNode(T value) : left(nullptr), right(nullptr), data(value) {}
 };
 
-///
 /// Binary search tree (BST)
-///
 template<typename T>
 class BSTree
 {
