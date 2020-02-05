@@ -13,28 +13,42 @@
 class Combinatorics
 {
 public:
-	/// EPI 6.10. Permuting the elements of an array
+	/// EPI 6.10, Leetcode 46. Generate all permutations of array's elements
 	/// Generates all permutations P(n) recursively.
+	/// Uses vector and start index in recursion instead of C-style array pointer.
 	/// Time: O(n!), space: O(1) - in-place swap
-	template<typename T>
-	static void PermutationsR(T* input, unsigned size, unsigned length, std::vector<std::vector<T>>& results)
+	static std::vector<std::vector<int>> Permutations(std::vector<int>& numbers)
 	{
-		if (input != NULL && size != 0)
+		std::vector<std::vector<int>> results;
+		if (numbers.size() == 1)
 		{
-			if (size == 1)
+			results.push_back(numbers);
+		}
+		else if (numbers.size() == 2)
+		{
+			results.push_back({ numbers[0], numbers[1] });
+			results.push_back({ numbers[1], numbers[0] });
+		}
+		else if (numbers.size() > 2)
+		{
+			PermuteR(numbers, 0, results);
+		}
+
+		return results;
+	}
+	private: static void PermuteR(std::vector<int>& a, unsigned from, std::vector<std::vector<int>>& results)
+	{
+		if (from == a.size())
+		{
+			results.push_back(std::vector<int>(a));
+		}
+		else
+		{
+			for (unsigned i = from; i < a.size(); ++i)
 			{
-				vector<T> perm;
-				std::copy(input - length + 1, input + 1, std::back_inserter<vector<T>>(perm));
-				results.push_back(perm);
-			}
-			else
-			{
-				for (unsigned i = 0; i < size; ++i)
-				{
-					std::swap(input[0], input[i]);
-					PermutationsR(input + 1, size - 1, length, results);
-					std::swap(input[i], input[0]);
-				}
+				std::swap(a[from], a[i]);
+				PermuteR(a, from + 1, results);
+				std::swap(a[i], a[from]);
 			}
 		}
 	}
@@ -47,7 +61,7 @@ public:
 	/// Finally, the sequence contains all required combinations.
 	/// We use std::deque here as it is suitable for removing from the top and adding to the end of the collection. 
 	/// Time: O(n), space: O(k*n)
-	static std::deque<std::string> PhoneMnemonics(const std::vector<unsigned>& numbers, std::map<unsigned, std::string>& mapping)
+	public: static std::deque<std::string> PhoneMnemonics(const std::vector<unsigned>& numbers, std::map<unsigned, std::string>& mapping)
 	{
 		if (numbers.empty() || mapping.empty())
 		{

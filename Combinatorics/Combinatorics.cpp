@@ -20,31 +20,34 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	cout << "- Permutations -" << endl;
 	{
-		vector<vector<unsigned>> results;
-		unsigned* pmt0 = NULL;
-		
-		cout << "Test 01: -" << endl;
-		Combinatorics::PermutationsR(pmt0, 0, 0, results);
-		cout << "Permutations (" << results.size() << "): ";
-		for (auto it = results.begin(); it < results.end(); ++it)
+		vector<vector<int>> testPerm =
 		{
-			copy(it->begin(), it->end(), ostream_iterator<unsigned>(cout));
-			cout << " ";
-		}
-		cout << endl;
+			{},
+			{ 0 },
+			{ 0, 1 },
+			{ 1, 0 },
+			{ 1, 2, 3 },
+			{ 1, 2, 3, 4 },
+			{ 1, 2, 3, 4, 5 }
+		};
+		for (unsigned i = 0; i < testPerm.size(); ++i)
+		{
+			string input;
+			for (auto it = testPerm[i].cbegin(); it != testPerm[i].cend(); ++it)
+			{
+				input += to_string(*it) + (it != testPerm[i].cend() - 1 ? ", " : "");
+			}
+			cout << "Test " << setiosflags(ios::right) << setw(2) << setfill('0') << i << ": [" << input << "]" << endl;
 
-		unsigned pmti[] = { 1, 2, 3, 4 };
-		cout << "Test 02: ";
-		copy(pmti, pmti + sizeof(pmti) / sizeof(int), ostream_iterator<unsigned>(cout));
-		cout << endl;
-		Combinatorics::PermutationsR(pmti, sizeof(pmti) / sizeof(unsigned), sizeof(pmti) / sizeof(unsigned), results);
-		cout << "Permutations (" << results.size() << "): ";
-		for (auto it = results.begin(); it < results.end(); ++it)
-		{
-			copy(it->begin(), it->end(), ostream_iterator<unsigned>(cout));
-			cout << " ";
+			auto results = Combinatorics::Permutations(testPerm[i]);
+			cout << "Results (" << results.size() << "): ";
+			for (auto it = results.begin(); it < results.end(); ++it)
+			{
+				copy(it->begin(), it->end(), ostream_iterator<int>(cout));
+				cout << (it != results.cend() - 1 ? ", " : "");
+			}
+			cout << endl << "--" << endl;
 		}
-		cout << endl;
 	}
 	cout << endl;
 
