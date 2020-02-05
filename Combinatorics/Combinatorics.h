@@ -13,7 +13,7 @@
 class Combinatorics
 {
 public:
-	/// EPI 6.10, Leetcode 46. Generate all permutations of array's elements
+	/// EPI 6.10, Leetcode 46. Generating all permutations of array's elements
 	/// Generates all permutations P(n) recursively.
 	/// Uses vector and start index in recursion instead of C-style array pointer.
 	/// Time: O(n!), space: O(1) - in-place swap
@@ -89,6 +89,42 @@ public:
 		}
 
 		return results;
+	}
+
+	/// Leetcode 22. Generating all valid parenthesis combinations
+	/// One of approaches is to use backtracking: add parenthesis '(' or ')' only when it remains a valid sequence.
+	/// We can do this by keeping track of the number of opening and closing brackets we have placed so far.
+	/// Each valid sequence has at most n steps during the backtracking procedure. 
+	/// Complexity turns out to be the n-th Catalan number (1/(n + 1))|(2^n, n).
+	/// Time: O(4^n/sqrt(n)), space: O(4^n/sqrt(n)) + O(n) (recursion + output)
+	public:	static std::vector<std::string> ParenthesisCombinations(unsigned n)
+	{
+		std::vector<std::string> result;
+		if (n > 0) 
+		{
+			std::string combin;
+			ParenthesisR(n, n, combin, result);
+		}
+
+		return result;
+	}
+	private: static void ParenthesisR(unsigned open, unsigned closed, std::string combin, std::vector<std::string>& result)
+	{
+		if (open == 0 && closed == 0)
+		{
+			result.push_back(combin);
+		}
+		else
+		{
+			if (open > 0)
+			{
+				ParenthesisR(open - 1, closed, combin + "(", result);
+			}
+			if (closed > open)
+			{
+				ParenthesisR(open, closed - 1, combin + ")", result);
+			}
+		}
 	}
 };
 

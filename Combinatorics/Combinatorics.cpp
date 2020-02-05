@@ -89,6 +89,21 @@ int _tmain(int argc, _TCHAR* argv[])
 	}
 	cout << endl;
 
+	cout << "- Parenthesis Combinations -" << endl;
+	{
+		for (const auto& n : { 0, 1, 2, 3, 4, 5 })
+		{
+			auto result = Combinatorics::ParenthesisCombinations(n);
+			cout << n << " (" << result.size() << "): ";
+			for (auto it = result.cbegin(); it != result.cend(); ++it)
+			{
+				cout << *it << (it != result.cend() - 1 ? ", " : "");
+			}
+			cout << endl;
+		}
+	}
+	cout << endl;
+
 	cout << "== Completed ==" << endl;
 	system("PAUSE");
 	return 0;
