@@ -325,5 +325,41 @@ public:
 
 		return dest;
 	}
+
+	/// Leetcode 26. Removing duplicates in a sorted array
+	/// Similar to std::unique.
+	/// Moves all unique values to the beginning of the vector in-place and returns the size of deduplicated subsequence (past-the-last iterator).
+	/// The inital vector is already sorted ascendingly. It doesn't matter what values and in what order are set beyond the returned size.
+	/// We iterate through the vector. In normal case, we search for start and end index of a subarray with duplicates.
+	/// When found, swap the first subarray element with the one of duplicates in the beginning (or with itself if it's single item in its place).
+	/// Handle the special case of last unique element, simply moving it to the end of the resulting sequence. 
+	/// Time: O(n), space: O(1)
+	static unsigned DeduplicateSorted(std::vector<int>& a)
+	{
+		if (a.size() == 0) { return 0; }
+		if (a.size() == 1) { return 1; }
+		
+		unsigned idd = 0, j = 0;
+		for (unsigned i = 0; i < a.size(); i = j)
+		{
+			for (j = i + 1; j < a.size(); ++j)
+			{
+				if (a[j] > a[i])
+				{
+					std::swap(a[i], a[idd]);
+					break;
+				}
+			}
+
+			if (j == a.size() && idd > 0 && a[j - 1] > a[idd - 1])
+			{
+				std::swap(a[j - 1], a[idd]);
+			}
+
+			++idd;
+		}
+
+		return idd;
+	}
 };
 

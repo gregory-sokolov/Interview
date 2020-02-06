@@ -5,6 +5,7 @@
 #include "stdafx.h"
 
 #include <iostream>
+#include <iomanip>
 #include <string>
 #include <vector>
 
@@ -130,6 +131,40 @@ int _tmain(int argc, _TCHAR* argv[])
 				cout << *it << (it != common.cend() - 1 ? ", " : "");
 			}
 			cout << "]" << endl;
+			cout << "--" << endl;
+		}
+	}
+	cout << endl;
+
+	cout << "- Deduplicate sorted array -" << endl;
+	{
+		vector<vector<int>> testDdsa =
+		{
+			{ },
+			{ 0 },
+			{ 0, 0 },
+			{ 0, 1 },
+			{ 0, 0, 0, 0, 0, 0, 0 },
+			{ 0, 0, 1, 1, 1, 2, 4, 4 },
+			{ 0, 1, 1, 2, 2, 2, 3, 4, 4, 5 },
+			{ 0, 0, 0, 1, 1, 2, 2, 2, 2, 3, 4, 4, 4, 5, 5, 7 }
+		};
+		for (auto vi = testDdsa.begin(); vi != testDdsa.end(); ++vi)
+		{
+			string input;
+			for (auto it = vi->cbegin(); it != vi->cend(); ++it)
+			{
+				input += to_string(*it) + (it != vi->cend() - 1 ? ", " : "");
+			}
+			cout << input << ": ";
+
+			string output;
+			auto result = Sorting::DeduplicateSorted(*vi);
+			for (auto it = vi->cbegin(); it != vi->cend(); ++it)
+			{
+				output += to_string(*it) + (it != vi->cend() - 1 ? ", " : "");
+			}
+			cout << "[" << result << "] " << output << endl;
 			cout << "--" << endl;
 		}
 	}
