@@ -94,7 +94,7 @@ public:
 		return result;
 	}
 
-	/// Leetcode. Finds max tree depth
+	/// Leetcode 104. Finds max tree depth
 	public: static unsigned MaxDepth(TreeNode<int>* tn)
 	{
 		return tn ? std::max(MaxDepth(tn->left), MaxDepth(tn->right)) + 1 : 0;

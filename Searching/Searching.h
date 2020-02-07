@@ -145,6 +145,26 @@ public:
 		return result;
 	}
 
+	/// Pramp. 2-difference
+	/// Returns all pairs from an array whose difference is equal to the specified number k.
+	/// Time: O(n), space: O(n)
+	static std::vector<std::pair<int, int>> AllTwoDiff(const std::vector<int>& a, const int k)
+	{
+		std::vector<std::pair<int, int>> results;
+		std::unordered_set<int> ht(a.cbegin(), a.cend());
+		for (unsigned i = 0; i < a.size(); ++i)
+		{
+			int sum = a[i] + k;
+			auto found = ht.find(sum);
+			if (found != ht.end())
+			{
+				results.push_back(std::make_pair(*found, a[i]));
+			}
+		}
+
+		return results;
+	}
+
 	/// EPI 13.14. 3-sum problem
 	/// Returns true if an input vector contains any 3 elements that sum up to the given value.
 	/// Firstly, sort the array.
