@@ -104,6 +104,34 @@ int _tmain(int argc, _TCHAR* argv[])
 	}
 	cout << endl;
 
+	cout << "- Stair Combinations -" << endl;
+	{
+		for (unsigned i = 0; i < 11; ++i)
+		{
+			auto countFb = Combinatorics::StairCombinationsFb(i);
+			auto countDP = Combinatorics::StairCombinationsDP(i);
+			auto countR = Combinatorics::StairCombinationsR(i);
+			auto combinations = Combinatorics::StairCombinations(i);
+			cout << "n = " << i << ", " << countFb << "/" << countDP << "/" << countR << "/" << combinations.size() << ": ";
+			for (auto it = combinations.cbegin(); i < 11 && it != combinations.cend(); ++it)
+			{
+				copy(it->cbegin(), it->cend(), ostream_iterator<int>(cout));
+				cout << (it != combinations.cend() - 1 ? ", " : "");
+			}
+			cout << endl;
+		}
+		cout << endl;
+
+		unsigned n = 101;
+		cout << "Combination count (N-th Fibonacci): " << endl;
+		for (unsigned i = 11; i < n; ++i)
+		{
+			cout << i << ":" << Combinatorics::StairCombinationsFb(i) << (i != n - 1 ? ", " : "");
+		}
+		cout << endl << endl;
+	}
+	cout << endl;
+
 	cout << "== Completed ==" << endl;
 	system("PAUSE");
 	return 0;

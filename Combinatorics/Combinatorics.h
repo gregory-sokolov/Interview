@@ -6,6 +6,7 @@
 #include <vector>
 #include <deque>
 #include <map>
+#include <algorithm>
 
 ///
 /// Combinatorial Problems
@@ -125,6 +126,97 @@ public:
 				ParenthesisR(open, closed - 1, combin + ")", result);
 			}
 		}
+	}
+
+	/// Leetcode 70. Ways of climbing a staircase
+	/// Generates all possible distinct combinations of 1- and 2-stair steps to get to the top of an n-stair staircase.
+	/// Uses recursive solution with trying as much as possible of 1-stair steps and only then adds 2-stair steps.
+	/// Time: O(2^n), space: O(2^n)
+	public:	static std::vector<std::deque<unsigned>> StairCombinations(unsigned n)
+	{
+		std::vector<std::deque<unsigned>> results;
+		std::deque<unsigned> current;
+		StairsR(0, n, current, results);
+
+		return results;
+	}
+	private: static void StairsR(unsigned i, unsigned n, std::deque<unsigned>& current, std::vector<std::deque<unsigned>>& results)
+	{
+		if (i < n)
+		{
+			current.push_back(1);
+			StairsR(i + 1, n, current, results);
+			current.pop_back();
+
+			current.push_back(2);
+			StairsR(i + 2, n, current, results);
+			current.pop_back();
+		}
+		else if (i == n)
+		{
+			results.push_back(current);
+		}
+	}
+
+	/// Combination count only, recursive solution. 
+	/// Time: O(2^n), space: O(2^n)
+	public:	static int StairCombinationsR(unsigned n)
+	{
+		return n > 0 ? StairsR(0, n) : 0;
+	}
+	private: static unsigned StairsR(unsigned i, unsigned n)
+	{
+		unsigned result = 0;
+		if (i < n)
+		{
+			result += StairsR(i + 1, n);
+			result += StairsR(i + 2, n);
+		}
+		else if (i == n)
+		{
+			result = 1;
+		}
+
+		return result;
+	}
+
+	/// Combination count: DP solution 
+	/// Time: O(n), space: O(n)
+	public:	static unsigned StairCombinationsDP(unsigned n)
+	{
+		if (n == 0) return 0;
+		if (n == 1) return 1;
+
+		vector<unsigned> dp(n + 1, 0);
+		dp[1] = 1;
+		dp[2] = 2;
+
+		for (unsigned i = 3; i <= n; ++i)
+		{
+			dp[i] = dp[i - 1] + dp[i - 2];
+		}
+
+		return dp[n];
+	}
+
+	/// Combination count: Fibonacci solution
+	/// It turns out that each step generates Fibonacci sequence.
+	/// The problem transforms to the generation of N-th Fibonacci number.
+	/// Time: O(n), space: O(1)
+	static unsigned long long StairCombinationsFb(unsigned n)
+	{
+		if (n == 0) return 0;
+		if (n == 1) return 1;
+
+		unsigned long long fb1 = 1, fb2 = 2, tmp = fb2;
+		for (unsigned i = 3; i <= n; ++i)
+		{
+			tmp = fb2;
+			fb2 += fb1;
+			fb1 = tmp;
+		}
+
+		return fb2;
 	}
 };
 
