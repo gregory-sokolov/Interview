@@ -218,5 +218,26 @@ public:
 
 		return fb2;
 	}
+
+	/// Leetcode 746. Min cost stair combination
+	/// The same 1-2-step staircase problem (#70), but now each step has its own cost.
+	/// Similar DP-Fibonacci solution is used to find the minimal cost of reaching the top of the staircase.
+	/// At the end we take minimum of last two values.
+	/// Time: O(n), space: O(1)
+	static unsigned MinCostStairCombination(const std::vector<unsigned>& cost)
+	{
+		if (cost.size() == 0) return 0;
+		if (cost.size() == 1) return 1;
+
+		unsigned fb1 = cost[0], fb2 = cost[1], current = 0;
+		for (unsigned i = 2; i < cost.size(); ++i)
+		{
+			current = cost[i] + std::min(fb1, fb2);
+			fb1 = fb2;
+			fb2 = current;
+		}
+
+		return min(fb1, fb2);
+	}
 };
 

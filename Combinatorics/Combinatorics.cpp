@@ -129,6 +129,30 @@ int _tmain(int argc, _TCHAR* argv[])
 			cout << i << ":" << Combinatorics::StairCombinationsFb(i) << (i != n - 1 ? ", " : "");
 		}
 		cout << endl << endl;
+
+		cout << "Min cost combination count: " << endl;
+		vector<vector<unsigned>> costs =
+		{
+			{},
+			{ 1 },
+			{ 0, 1 },
+			{ 0, 1, 2 },
+			{ 0, 2, 1, 2 },
+			{ 0, 1, 2, 2 },
+			{ 1, 100, 1, 1, 1, 100, 1, 1, 100, 1 },
+			{ 1, 100, 1, 1, 1, 100, 1, 1, 100, 1, 1 },
+		};
+		for (unsigned i = 0; i < costs.size(); ++i)
+		{
+			string input;
+			for (auto it = costs[i].cbegin(); it != costs[i].cend(); ++it)
+			{
+				input += to_string(*it) + (it != costs[i].cend() - 1 ? ", " : "");
+			}
+			cout << "[" << input << "]: ";
+			auto min = Combinatorics::MinCostStairCombination(costs[i]);
+			cout << min << endl;
+		}
 	}
 	cout << endl;
 
