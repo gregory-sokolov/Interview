@@ -4,6 +4,7 @@
 #include <vector>
 #include <queue>
 #include <unordered_set>
+#include <unordered_map>
 #include <algorithm>
 
 ///
@@ -145,24 +146,46 @@ public:
 		return result;
 	}
 
-	/// Pramp. 2-difference
-	/// Returns all pairs from an array whose difference is equal to the specified number k.
+	/// Leetcode 543, Pramp. Unique 2-difference pairs
+	/// Returns all unique pairs from an array whose difference is equal to the specified number diff.
+	/// The same approach as for 2-sum problem: place the vector to the hash for fast O(1) search of xi = yi + diff.
 	/// Time: O(n), space: O(n)
-	static std::vector<std::pair<int, int>> AllTwoDiff(const std::vector<int>& a, const int k)
+	private: struct PairHash
 	{
-		std::vector<std::pair<int, int>> results;
-		std::unordered_set<int> ht(a.cbegin(), a.cend());
-		for (unsigned i = 0; i < a.size(); ++i)
+		inline unsigned operator()(const std::pair<int, int> p) const
 		{
-			int sum = a[i] + k;
-			auto found = ht.find(sum);
-			if (found != ht.end())
+			std::hash<int> int_hasher;
+			return int_hasher(p.first) ^ int_hasher(p.second);
+		}
+	};
+	public: static std::vector<std::pair<int, int>> UniqueTwoDiff(const std::vector<int>& a, const int diff)
+	{
+		std::unordered_set<std::pair<int, int>, PairHash> results;
+		std::unordered_map<int, unsigned> ht;
+		for (const auto& ai : a)
+		{
+			auto found = ht.find(ai);
+			if (found != ht.cend())
 			{
-				results.push_back(std::make_pair(*found, a[i]));
+				++found->second;
+			}
+			else
+			{
+				ht[ai] = 1;
 			}
 		}
 
-		return results;
+		for (unsigned i = 0; i < a.size(); ++i)
+		{
+			int sum = a[i] + diff;
+			auto found = ht.find(sum);
+			if (found != ht.end() && (diff != 0 || (found->first == a[i] && found->second > 1)))
+			{
+				results.insert(std::make_pair(std::max<int>(found->first, a[i]), std::min<int>(found->first, a[i])));
+			}
+		}
+
+		return std::vector<std::pair<int, int>>(results.cbegin(), results.cend());
 	}
 
 	/// EPI 13.14. 3-sum problem
