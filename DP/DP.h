@@ -192,7 +192,7 @@ public:
 
 		std::deque<int> endings = { a[0] };
 		std::deque<std::deque<int>> lists = { { a[0] } };
-		//Combinatorics::LogLists(0, a[0], lists);
+		//DP::LogLists(0, a[0], lists);
 
 		for (unsigned i = 1; i < a.size(); ++i)
 		{
@@ -221,7 +221,7 @@ public:
 				lists[index] = previous;
 			}
 
-			//Combinatorics::LogLists(i, a[i], lists);
+			//DP::LogLists(i, a[i], lists);
 		}
 
 		std::vector<int> result((lists.cend() - 1)->cbegin(), (lists.cend() - 1)->cend());
