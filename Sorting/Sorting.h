@@ -339,27 +339,79 @@ public:
 		if (a.size() == 0) { return 0; }
 		if (a.size() == 1) { return 1; }
 		
-		unsigned idd = 0, j = 0;
+		unsigned end = 0, j = 0;
 		for (unsigned i = 0; i < a.size(); i = j)
 		{
 			for (j = i + 1; j < a.size(); ++j)
 			{
 				if (a[j] > a[i])
 				{
-					std::swap(a[i], a[idd]);
+					std::swap(a[i], a[end]);
 					break;
 				}
 			}
 
-			if (j == a.size() && idd > 0 && a[j - 1] > a[idd - 1])
+			if (j == a.size() && end > 0 && a[j - 1] > a[end - 1])
 			{
-				std::swap(a[j - 1], a[idd]);
+				std::swap(a[j - 1], a[end]);
 			}
 
-			++idd;
+			++end;
 		}
 
-		return idd;
+		return end;
+	}
+
+	/// EPI 13.5/Pramp. Intersection of two sorted arrays
+	/// Finds common items in 2 sorted arrays of size n and m.
+	/// Intuitive solution is the "loop join" algorithm, but its time complexity is O(n*m).
+	/// A better method is to use binary search (BS), applying it to the longer array (n << m, O(n*log m)).
+	/// For sorted arrays, we iterate through both of them with two pointers (TP) in tandem in increasing order (n ~ m, O(n + m)).
+	/// To handle duplicates in the first array, we simply advance the pointer one position up.
+	/// Time: O(n + m), space: O(1)
+	static std::vector<int> ArrayIntersectionBS(std::vector<int>& a1, std::vector<int>& a2)
+	{
+		std::vector<int> results;
+		if (a1.empty() || a2.empty()) { return results; };
+		if (a1.back() < a2[0] || a1[0] > a2.back()) { return results; };
+
+		std::vector<int>& a_small = a1.size() <= a2.size() ? a1 : a2;
+		std::vector<int>& a_big = a1.size() > a2.size() ? a1 : a2;
+		for (unsigned i = 0, j = 0; i < a_small.size(); ++i)
+		{
+			if ((i == 0 || a_small[i] != a_small[i - 1]) &&
+				std::binary_search(a_big.cbegin(), a_big.cend(), a_small[i]))
+			{
+				results.push_back(a_small[i]);
+			}
+		}
+
+		return results;
+	}
+	static std::vector<int> ArrayIntersectionTP(std::vector<int>& a1, std::vector<int>& a2)
+	{
+		std::vector<int> results;
+		if (a1.empty() || a2.empty()) { return results; };
+		if (a1.back() < a2[0] || a1[0] > a2.back()) { return results; };
+
+		for (unsigned i = 0, j = 0; i < a1.size() && j < a2.size();)
+		{
+			if (a1[i] == a2[j] && (i == 0 || a1[i] != a1[i -1]))
+			{
+				results.push_back(a1[i]);
+				++i, ++j;
+			}
+			else if (a1[i] > a2[j])
+			{
+				++j;
+			}
+			else
+			{
+				++i;
+			}
+		}
+
+		return results;
 	}
 };
 
