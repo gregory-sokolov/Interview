@@ -71,7 +71,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	cout << "- Power Set -" << endl;
 	{
 		vector<string> inputSet = { "A", "B", "C", "D" };
-		auto powerSet = Bitwise::GenereatePowerSet(inputSet);
+		auto powerSet = Bitwise::GenereatePowerSetA(inputSet);
 		cout << "Initial set: { ";
 		for (auto item = inputSet.cbegin(); item != inputSet.cend(); ++item)
 		{

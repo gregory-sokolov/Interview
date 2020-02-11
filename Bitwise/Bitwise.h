@@ -52,7 +52,7 @@ public:
 	static unsigned short GetBitCountTbl(long long value, const std::vector<unsigned short>& table)
 	{
 		unsigned short result = 0;
-		long long shortMax = std::numeric_limits<unsigned short>::max();
+		constexpr long long shortMax = std::numeric_limits<unsigned short>::max();
 		for (unsigned short wi = 0; wi < sizeof(long long)/sizeof(unsigned short); ++wi)
 		{
 			auto word = (unsigned short)((value >> wi * 16) & shortMax);
@@ -125,7 +125,7 @@ public:
 		std::vector<std::string> empty{ "-0-" };
 		results.push_back(empty);
 
-		auto power = 1 << input.size();
+		unsigned long long power = 1LL << input.size();
 		for (unsigned long long n = 1; n < power; ++n)
 		{
 			auto indexes = GetSetBitIndexes(n);
@@ -152,6 +152,30 @@ public:
 				results.push_back(i);
 			}
 			shifted >>= 1;
+		}
+
+		return results;
+	}
+
+	/// The same single-function solution
+	static std::vector<std::vector<std::string>> GenereatePowerSetA(const std::vector<std::string>& input)
+	{
+		std::vector<std::vector<std::string>> results;
+
+		std::vector<std::string> subset;
+		unsigned long long binary = 1LL << input.size();
+		for (unsigned i = 0; i < binary; ++i)
+		{
+			for (unsigned j = 0; j < input.size(); ++j)
+			{
+				unsigned long long bits = (i & (1LL << j));
+				if (bits > 0)
+				{
+					subset.push_back(input[j]);
+				}
+			}
+			results.push_back(subset);
+			subset.clear();
 		}
 
 		return results;
