@@ -413,5 +413,64 @@ public:
 
 		return result;
 	}
+
+	/// Leetcode 238. Product of Array Except Self
+	/// Operates with input and output arrays.
+	/// Basic case - no zeroes in the array. 
+	/// We run two pointers, backward and forward, calculating products in both directions in one pass.
+	/// On the second pass we calculate the result: result[i] = forward[i - 1] * backward[i + 1].
+	/// Indeed, the product except self is the product of the previous item in forward-processed array and 
+	/// the next item in backward-processed one. Carefully handle start and end index in the formula.
+	/// Special case - presence of zeroes.
+	/// We count zeroes on initial preprocessing pass. The only interesting case is when there's one zero in the array,
+	/// then the zero-item is replaced with the except-self product and other items are zeroes. 
+	/// When zeroes > 1, all the items become zero because of at least one of them participates in multiplication.
+	/// Time: O(n), space: O(n) (or O(1) if output array is not considered as extra space).
+	static std::vector<int> ProductExceptSelf(std::vector<int>& input)
+	{
+		if (input.empty() || input.size() == 1) { return input; }
+
+		unsigned zeroes = 0;
+		for (unsigned i = 0; i < input.size(); ++i)
+		{
+			zeroes += input[i] == 0 ? 1 : 0;
+		}
+		
+		std::vector<int> output;
+		if (zeroes == 0)
+		{
+			output = std::vector<int>(input);
+			for (unsigned i = 1; i < input.size(); ++i)
+			{
+				input[i] = input[i] * input[i - 1];
+				output[input.size() - i - 1] = output[input.size() - i - 1] * output[input.size() - i];
+			}
+			for (unsigned i = 0; i < input.size(); ++i)
+			{
+				output[i] = (i > 0 ? input[i - 1] : 1) * (i < input.size() - 1 ? output[i + 1] : 1);
+			}
+		}
+		else
+		{
+			int zeroProd = zeroes == 1 ? 1 : 0;
+			unsigned zeroIndex = 0;
+			for (unsigned i = 0; i < input.size(); ++i)
+			{
+				if (input[i] != 0)
+				{
+					zeroProd *= input[i];
+				}
+				else
+				{
+					zeroIndex = i;
+				}
+				input[i] = 0;
+			}
+			input[zeroIndex] = zeroProd;
+			output = input;
+		}
+
+		return output;
+	}
 };
 

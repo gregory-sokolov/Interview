@@ -202,6 +202,43 @@ int _tmain(int argc, _TCHAR* argv[])
 	}
 	cout << endl;
 
+	cout << "- Array product except self -" << endl;
+	{
+		vector<vector<int>> tests =
+		{
+			{},
+			{ 0 },
+			{ 1 },
+			{ 0, 1 },
+			{ 0, 0, 0 },
+			{ 0, 1, 2 },
+			{ 0, 2, 0, 0 },
+			{ 0, 1, 0, 2 },
+			{ 1, 2, 4, 0 },
+			{ 1, 2, 3, 4 },
+			{ 1, -2, 3, -4 },
+			{ 5, 2, 3, 1, 4, 2 },
+			{ 1, 2, 4, 0, 6, 8, 10, 12, 14, 16 }
+		};
+		for (unsigned i = 0; i < tests.size(); ++i)
+		{
+			string input;
+			for (auto it = tests[i].cbegin(); it != tests[i].cend(); ++it)
+			{
+				input += to_string(*it) + (it != tests[i].cend() - 1 ? ", " : "");
+			}
+			cout << "[" << input << "]: ";
+			auto result = Numerical::ProductExceptSelf(tests[i]);
+			string output;
+			for (auto it = result.cbegin(); it != result.cend(); ++it)
+			{
+				output += to_string(*it) + (it != result.cend() - 1 ? ", " : "");
+			}
+			cout << "[" << output << "]" << endl;
+		}
+	}
+	cout << endl;
+
 	cout << "== Completed ==" << endl;
 	system("PAUSE");
 	return 0;
