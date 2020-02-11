@@ -142,6 +142,33 @@ public:
 		}
 	}
 
+	/// Leetcode 230. K-th Smallest Element
+	public: static int kthSmallest(TreeNode<int>* root, int k)
+	{
+		unsigned count = 0;
+		auto node = kthSmallestR(root, k, count);
+
+		return node->data;
+	}
+	private: static TreeNode<int>* kthSmallestR(TreeNode<int>* tn, int k, unsigned& count)
+	{
+		TreeNode<int>* result = nullptr;
+		if (tn)
+		{
+			result = kthSmallestR(tn->left, k, count);
+			if (!result)
+			{
+				if (++count == k)
+				{
+					return tn;
+				}
+				result = kthSmallestR(tn->right, k, count);
+			}
+		}
+
+		return result;
+	}
+
 	/// Breadth-first search/traversal (BFS)
 	public: template<typename T, typename V>
 	static void Bfs(TreeNode<T>* root, V& visit)

@@ -114,7 +114,7 @@ public:
 		return result;
 	}
 
-	/// EPI 5.5. The power set
+	/// EPI 5.5/Leetcode 78. The power set
 	/// Generates the power set of an input set.
 	/// Input set size is limited to the ullong capacity (64 bits).
 	/// Note: in C++11, the returned vector will be handled by either RVO or its move constructor.
