@@ -326,7 +326,7 @@ public:
 		return dest;
 	}
 
-	/// Leetcode 26. Removing duplicates in a sorted array
+	/// EPI 13.8/Leetcode 26. Removing duplicates in a sorted array
 	/// Similar to std::unique.
 	/// Moves all unique values to the beginning of the vector in-place and returns the size of deduplicated subsequence (past-the-last iterator).
 	/// The inital vector is already sorted ascendingly. It doesn't matter what values and in what order are set beyond the returned size.
