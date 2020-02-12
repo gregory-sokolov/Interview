@@ -6,17 +6,7 @@
 #include <deque>
 #include <algorithm>
 
-/// Binary tree node
-template<typename T>
-struct TreeNode
-{
-	TreeNode* left;
-	TreeNode* right;
-	T data;
-
-	TreeNode() : left(nullptr), right(nullptr) {}
-	TreeNode(T value) : left(nullptr), right(nullptr), data(value) {}
-};
+#include "Tree.h"
 
 /// Binary search tree (BST)
 template<typename T>
@@ -35,8 +25,8 @@ public:
 		// @TODO:
 	}
 
-	TreeNode<T>* getRoot() const { return root; }
-	unsigned getSize() const { return size; }
+	TreeNode<T>* GetRoot() const { return root; }
+	unsigned GetSize() const { return size; }
 
 	void Insert(T value)
 	{

@@ -6,6 +6,7 @@
 #include <limits>
 #include <algorithm>
 
+#include "Tree.h"
 #include "TreeBst.h"
 
 ///
@@ -15,6 +16,7 @@ class Trees
 {
 public:
 	/// Depth-first search (DFS)
+	/// Time: O(V) - all nodes are visited, space: O(h), h - tree height
 	template<typename T, typename V>
 	static TreeNode<T>* DfsR(TreeNode<T>* node, V& visit)
 	{
@@ -170,6 +172,8 @@ public:
 	}
 
 	/// Breadth-first search/traversal (BFS)
+	/// Time: O(V) - every node is visited once, space: O(V) - holding all nodes in the queue in worst case
+	/// In contrast with graphs, where time complexity is O(V + E), for trees the O(E) factor is redundant.
 	public: template<typename T, typename V>
 	static void Bfs(TreeNode<T>* root, V& visit)
 	{
@@ -217,6 +221,39 @@ public:
 					qtn.push(vi);
 				}
 				vlv.clear();
+			}
+		}
+	}
+
+	/// Leetcode 116. Populating next right pointers in each node
+	template<typename T>
+	static void SetNextPointers(TreeNode<T>* root)
+	{
+		if (!root) return;
+		
+		std::queue<TreeNode<T>*> q;
+		q.push(root);
+
+		while (!q.empty())
+		{
+			std::vector<TreeNode<T>*> vlv;
+			while (!q.empty())
+			{
+				vlv.push_back(q.front());
+				q.pop();
+			}
+
+			for (unsigned i = 0; i < vlv.size(); ++i)
+			{
+				vlv[i]->next = i < vlv.size() - 1 ? vlv[i + 1] : nullptr;
+				if (vlv[i]->left)
+				{
+					q.push(vlv[i]->left);
+				}
+				if (vlv[i]->right)
+				{
+					q.push(vlv[i]->right);
+				}
 			}
 		}
 	}

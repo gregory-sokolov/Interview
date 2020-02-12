@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Trees.h"
+#include "Tree.h"
 
 // Tree node printer
 template<typename T>
@@ -43,6 +43,28 @@ public:
 		}
 		if (nonEmpty)
 		{
+			std::cout << level << std::endl;
+		}
+	}
+};
+
+// Next pointer printer
+template<typename T>
+class NextPointerPrinter
+{
+public:
+	void operator()(const std::vector<TreeNode<T>*>& nodes)
+	{
+		std::string level;
+		if (!nodes.empty())
+		{
+			TreeNode<T>* tn = nodes[0];
+			while (tn)
+			{
+				level += std::to_string(tn->data) + "-";
+				tn = tn->next;
+			}
+			level = level.substr(0, level.size() - 1);
 			std::cout << level << std::endl;
 		}
 	}
