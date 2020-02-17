@@ -96,6 +96,31 @@ public:
 		return result;
 	}
 
+	/// EPI 9.7/EPI 14.7/Leetcode 108. Reconstructing BST from a sorted array
+	/// Recursive solution: selects a pivot median in the input array, sets it to the current node and
+	/// continues with the left and right parts of the array.
+	/// Time: O(n) - traverse the array, space: O(log(n)) - height of the tree in recursion
+	public:	template<typename T>
+	static TreeNode<T>* ConstructTree(const std::vector<int>& a)
+	{
+		TreeNode<T>* root = InsertR<T>(a, 0, a.size());
+		return root;
+	}
+	private: template<typename T>
+	static TreeNode<T>* InsertR(const std::vector<int>& a, int start, int end)
+	{
+		TreeNode<T>* tn = nullptr;
+		if (start < end)
+		{
+			int median = start + (end - start)/2;
+			tn = new TreeNode<T>(a[median]);
+			tn->left = InsertR<T>(a, start, median);
+			tn->right = InsertR<T>(a, median + 1, end);
+		}
+
+		return tn;
+	}
+
 	/// Leetcode 104. Finds max tree depth
 	public: static unsigned MaxDepth(TreeNode<int>* tn)
 	{

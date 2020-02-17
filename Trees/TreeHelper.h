@@ -37,8 +37,8 @@ public:
 		bool nonEmpty = false;
 		for (auto it = vtn.cbegin(); it != vtn.cend(); ++it)
 		{
-			level += *it != nullptr ? std::to_string((*it)->data) : " ";
-			level += it != vtn.cend() - 1 ? "-" : "";
+			level += *it != nullptr ? std::to_string((*it)->data) : "*";
+			level += it != vtn.cend() - 1 ? " " : "";
 			nonEmpty = nonEmpty || *it != nullptr;
 		}
 		if (nonEmpty)
@@ -61,7 +61,7 @@ public:
 			TreeNode<T>* tn = nodes[0];
 			while (tn)
 			{
-				level += std::to_string(tn->data) + "-";
+				level += std::to_string(tn->data) + " ";
 				tn = tn->next;
 			}
 			level = level.substr(0, level.size() - 1);
