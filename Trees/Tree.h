@@ -11,17 +11,16 @@ struct TreeNode
 	T data;
 	TreeNode* left = nullptr;
 	TreeNode* right = nullptr;
-
 	TreeNode* next = nullptr;
 
 	TreeNode() = default;
 	TreeNode(T value): data(value) {}
 };
 
-/// Non-binary tree
+/// N-ary tree node
 template<typename T>
-struct TreeNodeNb
+struct TreeNodeN
 {
 	T data;
-	std::vector<TreeNodeNb*> children;
+	std::vector<TreeNodeN*> children;
 };
