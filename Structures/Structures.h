@@ -20,6 +20,7 @@ public:
 
 	/// Returns an item by key, null - if not found.
 	/// Moves requested item to the top of the cache.
+	/// Time: O(1) - hash access, list insertion
 	const T* Get(K key)
 	{
 		auto it = ht.find(key);
@@ -33,6 +34,7 @@ public:
 
 	/// Puts an item to the cache by key: either updates the existing or inserts a new one.
 	/// Each time moves the item to the top of the cache.
+	/// Time: O(1) - hash access, list insertion, list deletion at specified position
 	void Put(K key, const T& item)
 	{
 		auto it = ht.find(key);
