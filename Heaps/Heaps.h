@@ -3,8 +3,6 @@
 #include <utility>
 #include <vector>
 #include <queue>
-#include <map>
-#include <unordered_map>
 #include <functional>
 
 ///
@@ -13,38 +11,68 @@
 class Heaps
 {
 public:
-	/// Leetcode 347. Most frequent elements
-	/// Given a non-empty array of integers, return the k most frequent elements.
-	/// Uses STL multimap (RB-tree) instead of heap as the insertion complexitity is the same - O(log n).
-	/// Time: O(n), space: O(n)
-	static std::vector<std::pair<int, unsigned>> MostFrequent(const std::vector<int>& a, unsigned k)
+	/// EPI 10.8/Leetcode 295. Online median of a stream
+	/// Computes running median of a sequence.
+	/// We use two heaps, heap_left (max) and heap_right (min), to make a partition of the stream items around the 'virtual' median value. 
+	/// When we encounter a value less than median, we place it to the left heap, otherwise to the right one. We keep both heaps 'balanced', 
+	/// that is, we move the top items from one heap to another when the heap sizes differ for more than one. Such balancing allows to preserve
+	/// the median calculation context. 
+	/// The resulting median is either on the top of a larger heap (odd count of input), or is the average of both heap tops (even count).
+	/// Time: O(n*log(n)) - O(1)/O(log(n)) for heap operations, space: O(n) - heap allocation
+	static std::vector<double> OnlineMedian(const std::vector<int>& a)
 	{
-		if (a.size() == 0) { return std::vector< std::pair<int, unsigned>>(); }
-		if (a.size() == 1) { return std::vector<std::pair<int, unsigned>>({ std::make_pair(a[0], 1) }); }
+		if (a.empty()) { return std::vector<double>(); }
+		if (a.size() == 1) { return std::vector<double>(1, a[0]); }
 
-		std::unordered_map<int, unsigned> stats;
-		for (unsigned i = 0; i < a.size(); ++i)
+		std::vector<double> results;
+		std::priority_queue<int> heap_left;
+		std::priority_queue<int, std::vector<int>, std::greater<int>> heap_right;
+		if (a[0] <= a[1])
 		{
-			if (stats.find(a[i]) != stats.cend())
+			heap_left.push(a[0]);
+		}
+		else
+		{
+			heap_right.push(a[0]);
+		}
+		results.push_back(a[0]);
+
+		for (unsigned i = 1; i < a.size(); ++i)
+		{
+			double med = results.back();
+			if (a[i] <= med)
 			{
-				++stats[a[i]];
+				if (heap_left.size() > heap_right.size())
+				{
+					heap_right.push(heap_left.top());
+					heap_left.pop();
+				}
+				heap_left.push(a[i]);
 			}
 			else
 			{
-				stats[a[i]] = 1;
+				if (heap_right.size() > heap_left.size())
+				{
+					heap_left.push(heap_right.top());
+					heap_right.pop();
+				}
+				heap_right.push(a[i]);
 			}
+			
+			if (heap_right.size() > heap_left.size())
+			{
+				med = heap_right.top();
+			}
+			else if (heap_right.size() < heap_left.size())
+			{
+				med = heap_left.top();
+			}
+			else
+			{
+				med = ((double)heap_right.top() + (double)heap_left.top()) / 2;
+			}
+			results.push_back(med);
 		}
-
-		std::multimap<unsigned, int, std::greater<unsigned>> hist;
-		for (const auto& entry : stats)
-		{
-			hist.insert(std::make_pair(entry.second, entry.first));
-		}
-
-		std::vector<std::pair<int, unsigned>> values;
-		std::transform(hist.cbegin(), hist.cend(), std::back_inserter(values),
-			[](const std::pair<unsigned, int>& p) { return std::make_pair(p.second, p.first); });
-		std::vector< std::pair<int, unsigned>> results(values.cbegin(), k < values.size() ? values.cbegin() + k : values.cend());
 
 		return results;
 	}
