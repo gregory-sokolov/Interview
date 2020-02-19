@@ -12,13 +12,13 @@ class Heaps
 {
 public:
 	/// EPI 10.8/Leetcode 295. Online median of a stream
-	/// Computes running median of a sequence.
+	/// Computes running median of a stream sequence.
 	/// We use two heaps, heap_left (max) and heap_right (min), to make a partition of the stream items around the 'virtual' median value. 
 	/// When we encounter a value less than median, we place it to the left heap, otherwise to the right one. We keep both heaps 'balanced', 
 	/// that is, we move the top items from one heap to another when the heap sizes differ for more than one. Such balancing allows to preserve
 	/// the median calculation context. 
 	/// The resulting median is either on the top of a larger heap (odd count of input), or is the average of both heap tops (even count).
-	/// Time: O(n*log(n)) - O(1)/O(log(n)) for heap operations, space: O(n) - heap allocation
+	/// Time: O(n*log(n)) - scanning all the input, O(log(n)) - for heap operations at each iteration, space: O(n) - heap allocation
 	static std::vector<double> OnlineMedian(const std::vector<int>& a)
 	{
 		if (a.empty()) { return std::vector<double>(); }
