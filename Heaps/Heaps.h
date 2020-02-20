@@ -11,6 +11,30 @@
 class Heaps
 {
 public:
+	/// EPI 10.5/Leetcode 215/703. K-th largest element of a stream
+	/// Uses min-heap to store k largest values, where the top is the k-largest one, the required result.
+	/// As long as heap size less than the array size, return the minimum of the array.
+	/// Time: O(n*log(k)), space: O(k) - heap allocation
+	static std::vector<int> KthLargest(const std::vector<int>& a, unsigned k)
+	{
+		if (a.empty() || k == 0) { return std::vector<int>(); }
+
+		std::vector<int> results;
+		std::priority_queue<int, std::vector<int>, std::greater<int>> heap_min;
+		for (unsigned i = 0; i < a.size(); ++i)
+		{
+			heap_min.push(a[i]);
+			if (heap_min.size() > k)
+			{
+				heap_min.pop();
+			}
+			
+			results.push_back(heap_min.top());
+		}
+
+		return results;
+	}
+
 	/// EPI 10.8/Leetcode 295. Online median of a stream
 	/// Computes running median of a stream sequence.
 	/// We use two heaps, heap_left (max) and heap_right (min), to make a partition of the stream items around the 'virtual' median value. 
