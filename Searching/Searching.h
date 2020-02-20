@@ -38,11 +38,28 @@ public:
 	/// EPI 11.17, Leetcode 136. Unique Number Among Duplicates
 	/// Given a non-empty array of integers, every element appears twice except for one. Find that single one.
 	/// Do it with linear runtime complexity. Try to implement it without using extra memory.
-	/// Method 1: use hash table to store and check duplicates. Requires O(n) extra space.
+	/// Method 1: use a hash table to store and check duplicates. Requires O(n) extra space.
+	/// Time: O(n), space: O(n)
+	static int UniqueNumberHT(std::vector<int>& a) {
+		std::unordered_set<int> ht;
+		for (unsigned i = 0; i < a.size(); ++i)
+		{
+			if (ht.find(a[i]) == ht.cend())
+			{
+				ht.insert(a[i]);
+			}
+			else
+			{
+				ht.erase(a[i]);
+			}
+		}
+
+		return !ht.empty() ? *(ht.cbegin()) : 0;
+	}
+
 	/// Method 2: XOR all elements. Based on fact, that x ^ 0 = x, x ^ x = 0, hence a1 ^ a2 ^ ... ^ an ^ x ^ an ^ ... ^ a1 = x.
 	/// Time: O(n), space: O(1)
-	static int UniqueNumber(std::vector<int>& a) {
-		// Method 2: total XOR
+	static int UniqueNumberXOR(std::vector<int>& a) {
 		int x = 0;
 		for (unsigned i = 0; i < a.size(); ++i)
 		{
@@ -50,25 +67,9 @@ public:
 		}
 
 		return x;
-
-		// Method 1: hash table
-		/*
-		unordered_set<int> ht;
-		for (unsigned i = 0; i < nums.size(); ++i)
-		{
-			if (ht.find(nums[i]) == ht.cend())
-			{
-				ht.insert(nums[i]);
-			}
-			else
-			{
-				ht.erase(nums[i]);
-			}
-		}
-
-		return !ht.empty() ? *(ht.cbegin()) : 0;
-		*/
 	}
+
+
 
 	/// Leetcode 347. Most frequent elements
 	/// Given a non-empty array of integers, return the k most frequent elements.
@@ -106,8 +107,8 @@ public:
 		return results;
 	}
 
-	/// Find a number in an ascendingly sorted matrix m*n (Yandex Question)
-	/// Binary Search. Scans all sorted rows with standard binary search.
+	/// EPI 11.10. Find a number in an ascendingly sorted matrix m*n
+	/// Method 1: Binary Search. Scans all sorted rows with standard binary search.
 	/// Time: O(m*log(n)), space: O(1)
 	static std::pair<int, int> SearchSortedMatrixBs(const std::vector<std::vector<int>>& a, const int x)
 	{
@@ -125,8 +126,7 @@ public:
 		return result;
 	}
 
-	/// EPI 11.10. Search in a sorted 2D-array m*n
-	/// Diagonal Search. Compares x with the row ending element a[r][c - 1]:
+	/// Method 2: Diagonal Search. Compares x with the row ending element a[r][c - 1]:
 	/// - a[r][c - 1] == x - result is found,
 	/// - a[r][c - 1] < x - eliminate the column ñ - 1 by decrementing the column counter,
 	/// - a[r][c - 1] > x - eliminate the row r by incrementing the row counter
@@ -158,7 +158,7 @@ public:
 		return result;
 	}
 
-	/// EPI 11.4.2. 2-sum problem (Yandex Question)
+	/// EPI 11.4.2. 2-sum problem
 	/// Returns true if an input vector contains any 2 elements that sum up to the given value.
 	/// Places all the vector to the hash table for fast further searches.
 	/// Iterates through the array, calculates the diff beetween sum and a[i] and finds it in the hash.
@@ -228,7 +228,7 @@ public:
 	/// Returns true if an input vector contains any 3 elements that sum up to the given value.
 	/// Firstly, sort the array.
 	/// Then iterate through the array, fixing a[i] element and searching 2-sum in the rest of the array a[i+1..n-1].
-	/// 2-sum could be used either with min-max elimination, or with hash table algorithm.
+	/// 2-sum could be used either with min-max elimination (MME), or with hash table algorithm.
 	/// In MME, we move two indices i and j towards each other from start and end of the array.
 	/// If the sum is quite big and even bigger than max, remove the min element by decrementing i,
 	/// since all the pairs (min, a[i]) with that min will be anyway less than sum (too small).
