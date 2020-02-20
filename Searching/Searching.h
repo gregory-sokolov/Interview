@@ -69,7 +69,39 @@ public:
 		return x;
 	}
 
+	/// EPI 11.3, Pramp. Array element equal to its index
+	/// Returns the lowest index of an element which is equal to its index in an array: a[i] == i.
+	/// Based on the property: all items before a[i] == i are less than their indices, and the ones after a[i], are greater.
+	/// We use partitioning approach (similar to quick sort): select a pivot index = n/2, then
+	/// if a[pivot] @lt pivot - cut off the left part, a[pivot] @gt pivot - cut off the right part, otherwise - item found.
+	/// Cutting off array parts is done with adjusting start and end indices respectively, until they meet each other.
+	/// Time: O(log(n)), space: O(1)
+	static int EqualToIndex(const std::vector<int>& a)
+	{
+		int result = -1;
+		if (a.empty()) { return result; }
 
+		int start = 0, end = a.size() - 1;
+		while (start <= end)
+		{
+			int pivot = start + (end - start) / 2;
+			if (a[pivot] < pivot)
+			{
+				start = pivot + 1;
+			}
+			else if (a[pivot] > pivot)
+			{
+				end = pivot - 1;
+			}
+			else
+			{
+				result = pivot;
+				break;
+			}
+		}
+
+		return result;
+	}
 
 	/// Leetcode 347. Most frequent elements
 	/// Given a non-empty array of integers, return the k most frequent elements.
