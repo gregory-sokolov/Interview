@@ -69,7 +69,7 @@ public:
 		return x;
 	}
 
-	/// EPI 11.3, Pramp. Array element equal to its index
+	/// EPI 11.3/Pramp. Array element equal to its index
 	/// Returns the lowest index of an element which is equal to its index in an array: a[i] == i.
 	/// Based on the property: all items before a[i] == i are less than their indices, and the ones after a[i], are greater.
 	/// We use partitioning approach (similar to quick sort): select a pivot index = n/2, then
