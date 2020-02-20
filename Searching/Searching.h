@@ -103,6 +103,62 @@ public:
 		return result;
 	}
 
+	/// EPI 13.5/Pramp. Intersection of two sorted arrays
+	/// Finds common items in 2 sorted arrays of size n and m.
+	/// Intuitive solution is the "loop join" algorithm, but its time complexity is O(n*m).
+	/// Method 1: use binary search (BS), applying it to the longer array (n << m, O(n*log m)).
+	/// To handle duplicates in the first array, when found, we simply advance the pointer one position up.
+	/// Time: O(n*log m), space: O(1)
+	static std::vector<int> ArrayIntersectionBS(const std::vector<int>& a1, const std::vector<int>& a2)
+	{
+		std::vector<int> results;
+		if (a1.empty() || a2.empty()) { return results; };
+		if (a1.back() < a2[0] || a1[0] > a2.back()) { return results; };
+
+		const std::vector<int>& a_small = a1.size() <= a2.size() ? a1 : a2;
+		const std::vector<int>& a_big = a1.size() > a2.size() ? a1 : a2;
+		for (unsigned i = 0; i < a_small.size(); ++i)
+		{
+			if ((i == 0 || a_small[i] != a_small[i - 1]) &&
+				std::binary_search(a_big.cbegin(), a_big.cend(), a_small[i]))
+			{
+				results.push_back(a_small[i]);
+			}
+		}
+
+		return results;
+	}
+
+	/// Method 2: use two pointers (TP), iterating through both of them in tandem in increasing order (n ~ m, O(n + m)).
+	/// To handle duplicates in the first array, when found, we simply advance the pointer one position up.
+	/// Time: O(n + m), space: O(1)
+	static std::vector<int> ArrayIntersectionTP(const std::vector<int>& a1, const std::vector<int>& a2)
+	{
+		std::vector<int> results;
+		if (a1.empty() || a2.empty()) { return results; };
+		if (a1.back() < a2[0] || a1[0] > a2.back()) { return results; };
+
+		for (unsigned i = 0, j = 0; i < a1.size() && j < a2.size();)
+		{
+			if ((i == 0 || a1[i] != a1[i - 1]) &&
+				a1[i] == a2[j])
+			{
+				results.push_back(a1[i]);
+				++i, ++j;
+			}
+			else if (a1[i] > a2[j])
+			{
+				++j;
+			}
+			else
+			{
+				++i;
+			}
+		}
+
+		return results;
+	}
+
 	/// Leetcode 347. Most frequent elements
 	/// Given a non-empty array of integers, return the k most frequent elements.
 	/// Populates hash table with the occurence statistics, then instead of heap as the insertion complexitity is the same - O(log n).
