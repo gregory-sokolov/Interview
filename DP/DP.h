@@ -350,16 +350,16 @@ public:
 
 	/// EPI 15.12. Word breaking (bedbathandbeyond problem).
 	/// Checks if the text is a consequent concatenation of words and returns that sequence.
-	/// Non-DP searching algorithm with rollbacks and without memoization.
-	/// Time: O(n^2), space: O(n)
-	static std::vector<std::string> SplitByWords(const std::string& s, const std::set<std::string>& d)
+	/// Method 1: non-DP searching algorithm with rollbacks and without memoization.
+	/// Time: O(2^n), space: O(n)
+	static std::vector<std::string> BreakIntoWordsRB(const std::string& s, const std::unordered_set<std::string>& dict)
 	{
 		std::deque<std::pair<std::string, unsigned>> words;
 		std::string token;
 		for (unsigned i = 0; i < s.size(); ++i)
 		{
 			token += s[i];
-			if (d.find(token) != d.cend())
+			if (dict.find(token) != dict.cend())
 			{
 				words.push_back(std::make_pair(token, i));
 				token.clear();
@@ -368,11 +368,11 @@ public:
 			if (i == s.size() - 1 && !token.empty() && !words.empty())
 			{
 				token = words.back().first;
-				i = words.back().second;
+				i = words.back().second; // rollback
 				words.pop_back();
 			}
 
-			// TODO: debug tracing
+			// Debug tracing
 			if (token.empty())
 			{
 				LogResults(words, i + 1);
@@ -384,7 +384,6 @@ public:
 			[](const std::pair<std::string, unsigned>& x) { return x.first; });
 		return results;
 	}
-
 	/// Log helper
 	static void LogResults(std::deque<std::pair<std::string, unsigned>> words, unsigned i)
 	{
@@ -394,6 +393,47 @@ public:
 			std::cout << it->first << (it->first != words.crbegin()->first ? ", " : "");
 		}
 		std::cout << " ]" << std::endl;
+	}
+
+	/// Method 2: DP algorithm with memorizing the size of each valid word in a vector.
+	/// Time: O(n^2), space: O(n)
+	static std::vector<std::string> BreakIntoWordsDP(const std::string& s, const std::unordered_set<std::string>& dict)
+	{
+		std::vector<std::string> results;
+		if (s.empty() || dict.empty()) { return results; }
+		if (dict.size() == 1) { return s == *dict.cbegin() ? std::vector<std::string>(1, s) : results; }
+
+		std::vector<unsigned> dp(s.size(), 0);
+		for (unsigned i = 0; i < s.size(); ++i)
+		{
+			std::string si = s.substr(0, i + 1);
+			if (dict.find(si) != dict.cend())
+			{
+				dp[i] = i + 1;
+			}
+			else
+			{
+				for (unsigned j = 0; j < i; ++j)
+				{
+					std::string sj = s.substr(j + 1, i - j);
+					if (dp[j] > 0 && dict.find(sj) != dict.cend())
+					{
+						dp[i] = std::max(dp[i], i - j);
+					}
+				}
+			}
+		}
+
+		if (dp.back() > 0)
+		{
+			for (int i = dp.size() - 1; i > 0; i -= dp[i])
+			{
+				results.push_back(s.substr(i - dp[i] + 1, dp[i]));
+			}
+		}
+		std::reverse(results.begin(), results.end());
+
+		return results; 
 	}
 
 	/// EPI 15.7.1. Subarray sum (SSA)
