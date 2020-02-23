@@ -177,7 +177,7 @@ public:
 	/// Returns all anagrams from the list of strings.
 	/// Hash table unordered_map provides lookup operation in O(1).
 	/// Time: O(n), space: O(n)
-	static void FindAnagrams(const std::vector<std::string>& text, std::vector<std::vector<std::string>>& results)
+	static std::vector<std::vector<std::string>> FindAnagrams(const std::vector<std::string>& text)
 	{
 		std::unordered_map<std::string, std::vector<std::string>> filter;
 		for (auto&& word : text)
@@ -196,6 +196,7 @@ public:
 			}
 		}
 
+		std::vector<std::vector<std::string>> results;
 		for (auto it = filter.begin(); it != filter.end(); ++it)
 		{
 			if (it->second.size() > 1)
@@ -203,5 +204,35 @@ public:
 				results.push_back(it->second);
 			}
 		}
+		return results;
+	}
+
+	/// Leetcode 69. Group anagrams
+	/// Groups all anagrams in the list of strings.
+	/// Time: O(n*k*log(k)), space: O(n)
+	static std::vector<std::vector<std::string>> GroupAnagrams(const std::vector<std::string>& strings)
+	{
+		std::unordered_map<std::string, std::vector<std::string>> ht;
+		for (unsigned i = 0; i < strings.size(); ++i)
+		{
+			std::string sorted = strings[i];
+			std::sort(sorted.begin(), sorted.end());
+			if (ht.find(sorted) != ht.cend())
+			{
+				ht[sorted].push_back(strings[i]);
+			}
+			else
+			{
+				ht[sorted] = std::vector<std::string>({ strings[i] });
+			}
+		}
+
+		std::vector<std::vector<std::string>> results;
+		std::transform(ht.cbegin(), ht.cend(), std::back_inserter(results),
+			[](const std::pair<std::string, std::vector<std::string>>& p)
+			{ 
+				return std::vector<std::string>(p.second.cbegin(), p.second.cend()); 
+			});
+		return results;
 	}
 };

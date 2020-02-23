@@ -77,29 +77,71 @@ int _tmain(int argc, _TCHAR* argv[])
 	}
 	cout << endl;
 
-	cout << "- Anagrams -" << endl;
+	cout << "- Find anagrams -" << endl;
 	{
-		vector<string> vs4 = { "My", "palm", "level", "in", "this", "node", "is", "almost", "done", "and", "it's", "oden", "by", "lamp" };
+		vector<string> test = { "My", "palm", "level", "in", "this", "node", "is", "almost", "done", "and", "it's", "oden", "by", "lamp" };
 		cout << "Text: ";
-		for (auto&& word : vs4)
+		for (const auto& word : test)
 		{
 			cout << word << " ";
 		}
 		cout << endl;
-		vector<vector<string>> anagrams;
-		Strings::FindAnagrams(vs4, anagrams);
+
+		auto result = Strings::FindAnagrams(test);
 		cout << "Anagrams: ";
 		unsigned index = 0;
-		for (auto entry = anagrams.begin(); entry != anagrams.end(); ++entry)
+		for (auto entry = result.begin(); entry != result.end(); ++entry)
 		{
 			cout << "{";
 			for (auto ai = entry->begin(); ai != entry->end(); ++ai)
 			{
 				cout << *ai << (ai != entry->end() - 1 ? ", " : "}");
 			}
-			cout << (index++ < anagrams.size() - 1 ? ", " : "");
+			cout << (index++ < result.size() - 1 ? ", " : "");
 		}
 		cout << endl;
+	}
+	cout << endl;
+
+	cout << "- Group anagrams -" << endl;
+	{
+		vector<vector<string>> tests = 
+		{ 
+			{},
+			{ "" },
+			{ "", "" },
+			{ "a" },
+			{ "a", "a" },
+			{ "a", "a", "a", "a" },
+			{ "abcde" },
+			{ "abcde", "zxywu" },
+			{ "eat", "tea", "tan", "ate", "nat", "bat" } 
+		};
+		for (auto vs = tests.cbegin(); vs != tests.cend(); ++vs)
+		{
+			cout << "Input: ";
+			for (auto word = vs->cbegin(); word != vs->cend(); ++word)
+			{
+				cout << (word->empty() ? "\"\"" : *word) << (word != vs->cend() - 1 ? ", " : "");
+			}
+			cout << endl;
+
+			auto result = Strings::GroupAnagrams(*vs);
+			cout << "Anagrams: " << endl;
+			for (auto vs = result.cbegin(); vs != result.cend(); ++vs)
+			{
+				for (auto word = vs->cbegin(); word != vs->cend(); ++word)
+				{
+					cout << (word->empty() ? "\"\"" : *word) << (word != vs->cend() - 1 ? ", " : "");
+				}
+				cout << endl;
+			}
+
+			if (vs != tests.cend() - 1)
+			{
+				cout << "--" << endl;
+			}
+		}
 	}
 	cout << endl;
 
