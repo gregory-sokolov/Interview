@@ -153,6 +153,7 @@
     <ClInclude Include="TreeBst.h" />
     <ClInclude Include="TreeHelper.h" />
     <ClInclude Include="Trees.h" />
+    <ClInclude Include="Trie.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

@@ -62,7 +62,7 @@ public:
 			while (tn)
 			{
 				level += std::to_string(tn->data) + " ";
-				tn = tn->next;
+				tn = tn->other;
 			}
 			level = level.substr(0, level.size() - 1);
 			std::cout << level << std::endl;

@@ -270,7 +270,7 @@ public:
 
 			for (unsigned i = 0; i < vlv.size(); ++i)
 			{
-				vlv[i]->next = i < vlv.size() - 1 ? vlv[i + 1] : nullptr;
+				vlv[i]->other = i < vlv.size() - 1 ? vlv[i + 1] : nullptr;
 				if (vlv[i]->left)
 				{
 					q.push(vlv[i]->left);
