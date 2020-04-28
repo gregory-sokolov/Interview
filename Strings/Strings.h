@@ -113,6 +113,36 @@ public:
 		return result;
 	}
 
+	/// Facebook. Shuffling word encryption
+	/// You've devised a simple encryption method for alphabetic strings that shuffles the characters.
+	/// When you encrypt a string S, you start with an initially - empty resulting string R and append characters to it as follows:
+	/// - append the middle character of S(if S has even length, then we define the middle character as the left - most of the two central characters)
+	///	- append the encrypted version of the substring of S that's to the left of the middle character (if non-empty)
+	/// - append the encrypted version of the substring of S that's to the right of the middle character (if non-empty)
+	/// For example, to encrypt the string "abc", we first take "b", and then append the encrypted version of "a" (which is just "a") and the encrypted version of "c" (which is just "c") to get "bac".
+	static std::string EncryptWord(std::string s)
+	{
+		if (s.empty() || s.size() == 1)
+		{
+			return s;
+		}
+		if (s.size() == 2)
+		{
+			return std::string({ s[0], s[1] });
+		}
+
+		unsigned m = s.size() / 2, mc = m - (s.size() % 2 == 0 ? 1 : 0);
+		std::string result(1, s[mc]);
+
+		std::string left = s.substr(0, mc);
+		result += EncryptWord(left);
+
+		std::string right = s.substr(mc + 1, m);
+		result += EncryptWord(right);
+
+		return result;
+	}
+
 	/// 
 	/// Performs full-string primitive regex matching (with only '.' and '*')
 	/// 

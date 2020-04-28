@@ -77,6 +77,19 @@ int _tmain(int argc, _TCHAR* argv[])
 	}
 	cout << endl;
 
+	cout << "- Word encryption -" << endl;
+	{
+		vector<string> tests = { "", " ", "a", "aa", "ab", "aaa", "aba", "abc", "abcd", "abcxcba" },
+					   answs = { "", " ", "a", "aa", "ab", "aaa", "baa", "bac", "bacd", "xbacbca" };
+		for (unsigned i = 0; i < tests.size(); ++i)
+		{
+			auto result = Strings::EncryptWord(tests[i]);
+			cout << tests[i] << ":" << answs[i] << ":" << result << (i != tests.size() - 1 ? ", " : "");
+		}
+		cout << endl;
+	}
+	cout << endl;
+
 	cout << "- Find anagrams -" << endl;
 	{
 		vector<string> test = { "My", "palm", "level", "in", "this", "node", "is", "almost", "done", "and", "it's", "oden", "by", "lamp" };
