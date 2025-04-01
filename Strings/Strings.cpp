@@ -102,15 +102,14 @@ int _tmain(int argc, _TCHAR* argv[])
 
 		auto result = Strings::FindAnagrams(test);
 		cout << "Anagrams: ";
-		unsigned index = 0;
 		for (auto entry = result.begin(); entry != result.end(); ++entry)
 		{
 			cout << "{";
-			for (auto ai = entry->begin(); ai != entry->end(); ++ai)
+			for (auto ai = entry->cbegin(); ai != entry->cend(); ++ai)
 			{
-				cout << *ai << (ai != entry->end() - 1 ? ", " : "}");
+				cout << *ai << (ai != entry->cend() - 1 ? ", " : "}");
 			}
-			cout << (index++ < result.size() - 1 ? ", " : "");
+			cout << (entry != result.cend() - 1 ? ", " : "");
 		}
 		cout << endl;
 	}
@@ -166,11 +165,11 @@ int _tmain(int argc, _TCHAR* argv[])
 			{ "aa", "aa" }, { "aa", "ab" }, { "aa", "a*" }, { "aa", "a.*" }, { "aa", "a.*a" }, { "aa", "aa*a" },
 			{ "abbbc", "ab*c" }, { "abbc", "ab*bbc" }, { "abcbcd", "a.*c.*d" }
 		};
-		unsigned index = 0;
 		for (auto msi = ms1.begin(); msi != ms1.end(); ++msi)
 		{
 			auto is = Strings::IsMatch(msi->first.c_str(), msi->second.c_str());
-			cout << "\"" << msi->first << "\", \"" << msi->second << "\": " << (is ? "true" : "false") << (index++ < ms1.size() - 1 ? ", " : "");
+			cout << "\"" << msi->first << "\", \"" << msi->second << "\": " << (is ? "true" : "false") << 
+				(next(msi) != ms1.end() ? ", " : "");
 		}
 		cout << endl;
 	}

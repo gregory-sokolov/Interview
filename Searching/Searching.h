@@ -161,7 +161,7 @@ public:
 
 	/// Leetcode 347. Most frequent elements
 	/// Given a non-empty array of integers, return the k most frequent elements.
-	/// Populates hash table with the occurence statistics, then instead of heap as the insertion complexitity is the same - O(log n).
+	/// Populates hash table with the occurence statistics, then uses map instead of heap as the insertion complexitity is the same - O(log n).
 	/// Time: O(n), space: O(n)
 	static std::vector<std::pair<int, unsigned>> MostFrequent(const std::vector<int>& a, unsigned k)
 	{

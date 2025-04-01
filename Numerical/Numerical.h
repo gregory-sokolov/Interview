@@ -225,7 +225,7 @@ public:
 	}
 
 	/// EPI 5.10. Greatest common divisor (GCD)
-	/// Terms: summand/summand/sum; minuend/sutrahend/difference; multiplier/product; divident/divisor/quotient.
+	/// Terms: summand/summand/sum; minuend/subtrahend/difference; multiplier/product; divident/divisor/quotient.
 	/// Recursive version with remainders
 	static unsigned GcdR(int a, int b)
 	{
