@@ -53,7 +53,7 @@ class Base
 {
 public:
     Base() { init(); }
-    ~Base() {}
+    virtual ~Base() {}
 
     virtual void log() = 0;
 
@@ -65,9 +65,38 @@ class Derived : public Base
 {
 public:
     Derived() {}
-    ~Derived() {}
+    virtual ~Derived() {}
 
     virtual void log() { std::cout << "Derived created" << std::endl; }
+};
+
+
+template<class T, class U>
+void f()
+{
+    T t;
+    U u;
+    return t + u;
+}
+
+template<class T, int size = 10>
+class TInt
+{
+public:
+    T _arr[size];
+};
+
+template<class T, class U = double>
+class TDef;
+template<class T = int, class U>
+class TDef;
+template<class T, class U> class TDef
+{
+public:
+    TDef() : x(0), y(0.0) {}
+    TDef(int tx, double ty) : x(tx), y(ty) {}
+    T x;
+    U y;
 };
 
 template<typename T>
@@ -78,8 +107,8 @@ void typeInferer(T&& param)
 class Item
 {
 public:
-	virtual ~Item() { }
-	Item(const char* data) : m_data(std::make_unique<std::string>(data)) {  }
+	virtual ~Item() {}
+	Item(const char* data) : m_data(std::make_unique<std::string>(data)) {}
 	Item(Item&& item) = default; // interview fix: add a move ctor
 	virtual const std::string GetContent() const { return m_data ? *m_data : ""; }
 private:
@@ -106,3 +135,4 @@ T BuildFromString(const std::string& s)
 	}
 	return data;
 }
+
